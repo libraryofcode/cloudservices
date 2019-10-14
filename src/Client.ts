@@ -4,11 +4,17 @@ import fs from 'fs-extra';
 import path from 'path';
 import config from './config.json';
 
+const options: any = {
+  getAllUsers: true,
+  restMode: true,
+  defaultImageFormat: 'png'
+}
+
 export default class Client extends Eris.Client {
   public commands: Map<string, any>;
   public aliases: Map<string, string>;
   constructor() {
-    super(config.token);
+    super(config.token, options);
 
     this.commands = new Map();
     this.aliases = new Map();
@@ -18,14 +24,8 @@ export default class Client extends Eris.Client {
     // eslint-disable-next-line no-useless-catch
     try {
       const command = new (require(commandPath))(this);
-      if (command.init) { command.init(this); }
-      this.commands.set(command.help.name, command);
-      if (command.config.aliases) {
-        command.config.aliases.forEach(alias => {
-          this.aliases.set(alias, command.help.name);
-        });
-      }
-      return `Successfully loaded ${command.help.name}.`;
+      this.commands.set(command.name, command)
+      return `Successfully loaded ${command.name}.`;
     } catch (err) { throw err; }
   }
 
