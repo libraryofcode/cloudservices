@@ -9,6 +9,7 @@ export default class Command {
     aliases?: string[]
     client: Client
     permissions?: { roles: string[], users: string[] }
+    guildOnly?: boolean
     public run (message: Message, args: string[]) {}
     constructor(client: Client) {
         this.name = 'None'
@@ -16,6 +17,7 @@ export default class Command {
         this.usage = 'No usage given'
         this.enabled = false
         this.aliases = []
+        this.guildOnly = true
         this.client = client
     }
 }

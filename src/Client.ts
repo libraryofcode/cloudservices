@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import fs from 'fs-extra';
 import path from 'path';
 import config from './config.json';
+import Command from './class/Command'
 
 const options: any = {
   getAllUsers: true,
@@ -11,13 +12,11 @@ const options: any = {
 }
 
 export default class Client extends Eris.Client {
-  public commands: Map<string, any>;
-  public aliases: Map<string, string>;
+  public commands: Map<string, Command>;
   constructor() {
     super(config.token, options);
 
     this.commands = new Map();
-    this.aliases = new Map();
   }
 
   public loadCommand(commandPath: string) {
