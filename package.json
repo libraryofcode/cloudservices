@@ -1,0 +1,20 @@
+{
+  "name": "cloudservices-rewrite",
+  "version": "1.0.0",
+  "description": "The official LOC Cloud Services system, this is a rewrite of the original version. ",
+  "main": "dist/Client.js",
+  "author": "Library of Code sp-us Engineering Team",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "eris": "^0.10.1",
+    "fs-extra": "^8.1.0",
+    "mongoose": "^5.7.4",
+    "nodemailer": "^6.3.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
+    "@types/mongoose": "^5.5.20",
+    "@types/nodemailer": "^6.2.1"
+  }
+}
