@@ -15,6 +15,11 @@
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
     "@types/mongoose": "^5.5.20",
-    "@types/nodemailer": "^6.2.1"
+    "@types/nodemailer": "^6.2.1",
+    "@typescript-eslint/eslint-plugin": "^2.4.0",
+    "@typescript-eslint/parser": "^2.4.0",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }
