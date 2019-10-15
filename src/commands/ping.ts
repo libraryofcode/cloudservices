@@ -1,8 +1,11 @@
 import { Message } from 'eris';
 import Client from '../Client';
 import Command from '../class/Command';
+import Util from '../Util';
 
 export default class Ping extends Command {
+  util: Util = new Util(this.client)
+
   constructor(client: Client) {
     super(client);
     this.name = 'ping';
@@ -11,8 +14,12 @@ export default class Ping extends Command {
   }
 
   public async run(message: Message) {
-    const clientStart: number = Date.now();
-    const msg: Message = await message.channel.createMessage('🏓 Pong!');
-    msg.edit(`🏓 Pong!\nClient: \`${Date.now() - clientStart}ms\`\nResponse: \`${msg.createdAt - message.createdAt}ms\``);
+    try {
+      const clientStart: number = Date.now();
+      const msg: Message = await message.channel.createMessage('🏓 Pong!');
+      msg.edit(`🏓 Pong!\nClient: \`${Date.now() - clientStart}ms\`\nResponse: \`${msg.createdAt - message.createdAt}ms\``);
+    } catch (error) {
+      this.util.handleError(error, message, this);
+    }
   }
 }

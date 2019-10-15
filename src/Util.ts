@@ -1,6 +1,7 @@
 import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
+import { Message } from 'eris';
 import Client from './Client';
 import Command from './class/Command';
 
@@ -38,5 +39,12 @@ export default class Util {
       }
     }
     return undefined;
+  }
+
+  public async handleError(error: Error, message?: Message, command?: Command): Promise<Message> {
+    const stack = await this.client.createMessage('595788220764127272', `\`\`\`js\n${error.stack}\n\`\`\``);
+    if (command) this.client.commands.get(command.name).enabled = false;
+    if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
+    return stack;
   }
 }
