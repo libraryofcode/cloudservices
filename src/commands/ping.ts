@@ -7,6 +7,7 @@ export default class Ping extends Command {
     super(client);
     this.name = 'ping';
     this.description = 'Pings the bot';
+    this.enabled = true;
   }
 
   public async run(message: Message) {

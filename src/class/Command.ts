@@ -24,7 +24,7 @@ export default class Command {
       this.name = 'None';
       this.description = 'No description given';
       this.usage = 'No usage given';
-      this.enabled = false;
+      this.enabled = true;
       this.aliases = [];
       this.guildOnly = true;
       this.client = client;
