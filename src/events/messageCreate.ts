@@ -10,6 +10,7 @@ export default class {
     constructor(client: Client) {
       this.client = client;
     }
+
     util: Util = new Util(this.client)
 
     async run(message: Message) {

@@ -18,7 +18,7 @@ export default class Command {
 
     guildOnly?: boolean
 
-    public run(message: Message, args: string[]) {}
+    public run(message: Message, args: string[]) {} // eslint-disable-line
 
     constructor(client: Client) {
       this.name = 'None';

@@ -1,12 +1,14 @@
+/* eslint-disable no-console */
+
 import Eris from 'eris';
 import mongoose from 'mongoose';
 import fs from 'fs-extra';
 import path from 'path';
 import config from './config.json';
-import Account, { AccountInterface } from './models/Account.js';
-import Moderation, { ModerationInterface } from './models/Moderation.js';
-import emojis from './stores/emojis.js';
-import Util from './Util.js';
+import Account, { AccountInterface } from './models/Account';
+import Moderation, { ModerationInterface } from './models/Moderation';
+import emojis from './stores/emojis';
+import Util from './Util';
 import Command from './class/Command';
 
 

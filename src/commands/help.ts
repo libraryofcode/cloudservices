@@ -1,1 +1,1 @@
-import { Message } from 'eris'
+import { Message } from 'eris';
