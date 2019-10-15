@@ -25,11 +25,6 @@ export default class Util {
     return result;
   }
 
-  public sendError(error: Error): void {
-    // @ts-ignore
-    this.client.guilds.get('446067825673633794').channels.get('595788220764127272').createMessage(`\`\`\`ts\n${error.stack}\`\`\``);
-  }
-
   public resolveCommand(command: string): Command {
     if (this.client.commands.has(command)) return this.client.commands.get(command);
     for (const cmd of this.client.commands.values()) {
