@@ -27,6 +27,7 @@ export default class {
         }
       }
       if (!hasRolePerms && !hasUserPerms) return;
+      if (!resolved.enabled) { message.channel.createMessage(`***${this.client.stores.emojis.error} This command has been disabled***`); return; }
       const args: string[] = noPrefix.slice(1);
       resolved.run(message, args);
     }
