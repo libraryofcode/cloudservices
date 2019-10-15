@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "The official LOC Cloud Services system, this is a rewrite of the original version. ",
   "main": "dist/Client.js",
-  "scripts": { "lint": "eslint ./ --ext ts --fix" },
+  "scripts": {
+    "lint": "eslint ./ --ext ts --fix"
+  },
   "author": "Library of Code sp-us Engineering Team",
   "license": "MIT",
   "private": false,
