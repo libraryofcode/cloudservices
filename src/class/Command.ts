@@ -1,21 +1,29 @@
-import { Message } from 'eris'
-import Client from '../Client'
+import { Message } from 'eris';
+import Client from '../Client';
 
 export default class Command {
     name: string
+
     description?: string
+
     usage?: string
+
     enabled: boolean
+
     aliases?: string[]
+
     client: Client
-    permissions?: { roles: string[], users: string[] }
-    public run (message: Message, args: string[]) {}
+
+    permissions?: { roles?: string[], users?: string[] }
+
+    public run(message: Message, args: string[]) {}
+
     constructor(client: Client) {
-        this.name = 'None'
-        this.description = 'No description given'
-        this.usage = 'No usage given'
-        this.enabled = false
-        this.aliases = []
-        this.client = client
+      this.name = 'None';
+      this.description = 'No description given';
+      this.usage = 'No usage given';
+      this.enabled = false;
+      this.aliases = [];
+      this.client = client;
     }
 }
