@@ -32,6 +32,9 @@
         "import/no-dynamic-require": "off",
         "global-require": "off",
         "class-methods-use-this":"off",
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": "off",
+        "camelcase": "off",
+        "indent": "warn",
+        "object-curly-newline": "off"
     }
 }
