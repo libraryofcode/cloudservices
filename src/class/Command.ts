@@ -13,17 +13,16 @@ export default class Command {
     aliases?: string[]
 
     client: Client
-
     permissions?: { roles?: string[], users?: string[] }
-
-    public run(message: Message, args: string[]) {}
-
+    guildOnly?: boolean
+    public run (message: Message, args: string[]) {}
     constructor(client: Client) {
-      this.name = 'None';
-      this.description = 'No description given';
-      this.usage = 'No usage given';
-      this.enabled = false;
-      this.aliases = [];
-      this.client = client;
+        this.name = 'None'
+        this.description = 'No description given'
+        this.usage = 'No usage given'
+        this.enabled = false
+        this.aliases = []
+        this.guildOnly = true
+        this.client = client
     }
 }

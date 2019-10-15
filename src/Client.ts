@@ -7,12 +7,13 @@ import Account, { AccountInterface } from './models/Account.js';
 import Moderation, { ModerationInterface } from './models/Moderation.js';
 import emojis from './stores/emojis.js';
 import Util from './Util.js';
+import Command from './class/Command'
 
 
 export default class Client extends Eris.Client {
   public util: Util;
 
-  public commands: Map<string, any>;
+  public commands: Map<string, Command>;
 
   public aliases: Map<string, string>;
 
