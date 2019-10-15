@@ -7,7 +7,7 @@ export interface ModerationInterface extends Document {
   moderatorID: string,
   reason: string,
   type: string,
-  date: string
+  date: Date
 }
 
 const Moderation: Schema = new Schema({

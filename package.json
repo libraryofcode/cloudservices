@@ -11,6 +11,7 @@
   "private": false,
   "dependencies": {
     "eris": "^0.10.1",
+    "eris-pagination": "bsian03/eris-pagination",
     "fs-extra": "^8.1.0",
     "mongoose": "^5.7.4",
     "nodemailer": "^6.3.1"
