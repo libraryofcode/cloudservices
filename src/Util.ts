@@ -14,10 +14,10 @@ export default class Util {
   public async exec(command: string): Promise<string> {
     const ex = promisify(childProcess.exec);
     let result: string;
+    // eslint-disable-next-line no-useless-catch
     try {
       const res = await ex(command);
-      if (res.stderr) result = res.stderr;
-      else result = res.stdout;
+      result = res.stderr || res.stdout;
     } catch (err) {
       throw err;
     }
@@ -32,10 +32,11 @@ export default class Util {
   public resolveCommand(command: string): Command {
     if (this.client.commands.has(command)) return this.client.commands.get(command);
     for (const cmd of this.client.commands.values()) {
-      if (!cmd.aliases) continue;
+      if (!cmd.aliases) continue;// eslint-disable-line no-continue
       for (const alias of cmd.aliases) {
         if (command === alias.toLowerCase()) return cmd;
       }
     }
+    return undefined;
   }
 }
