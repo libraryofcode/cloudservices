@@ -10,11 +10,12 @@ export default class {
     constructor(client: Client) {
       this.client = client;
     }
+    util: Util = new Util(this.client)
 
     async run(message: Message) {
       const noPrefix: string[] = message.content.slice(prefix.length).trim().split(/ +/g);
       const command: string = noPrefix[0].toLowerCase();
-      const resolved: Command = new Util().resolveCommand(this.client, command);
+      const resolved: Command = this.util.resolveCommand(command);
       if (!resolved) return;
       if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
       const hasUserPerms: boolean = resolved.permissions.users.includes(message.author.id);

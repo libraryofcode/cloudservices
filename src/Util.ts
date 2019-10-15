@@ -29,9 +29,9 @@ export default class Util {
     this.client.guilds.get('446067825673633794').channels.get('595788220764127272').createMessage(`\`\`\`ts\n${error.stack}\`\`\``);
   }
 
-  public resolveCommand(client: Client, command: string): Command {
-    if (client.commands.has(command)) return client.commands.get(command);
-    for (const cmd of client.commands.values()) {
+  public resolveCommand(command: string): Command {
+    if (this.client.commands.has(command)) return this.client.commands.get(command);
+    for (const cmd of this.client.commands.values()) {
       if (!cmd.aliases) continue;
       for (const alias of cmd.aliases) {
         if (command === alias.toLowerCase()) return cmd;
