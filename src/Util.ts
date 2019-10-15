@@ -2,7 +2,7 @@ import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import Client from './Client';
-import Command from './class/Command'
+import Command from './class/Command';
 
 export default class Util {
   public client: Client;
@@ -28,13 +28,13 @@ export default class Util {
     // @ts-ignore
     this.client.guilds.get('446067825673633794').channels.get('595788220764127272').createMessage(`\`\`\`ts\n${error.stack}\`\`\``);
   }
-  
+
   public resolveCommand(client: Client, command: string): Command {
-    if (client.commands.has(command)) return client.commands.get(command)
+    if (client.commands.has(command)) return client.commands.get(command);
     for (const cmd of client.commands.values()) {
-      if (!cmd.aliases) continue
+      if (!cmd.aliases) continue;
       for (const alias of cmd.aliases) {
-        if (command === alias.toLowerCase()) return cmd
+        if (command === alias.toLowerCase()) return cmd;
       }
     }
   }

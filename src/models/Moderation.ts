@@ -4,7 +4,7 @@ export interface ModerationInterface extends Document {
   account: string,
   userID: string,
   logID: string,
-  moderatorID: string, 
+  moderatorID: string,
   reason: string,
   type: string,
   date: string
@@ -17,7 +17,7 @@ const Moderation: Schema = new Schema({
   moderatorID: String,
   reason: String,
   type: String,
-  date: Date
+  date: Date,
 });
-  
+
 export default model<ModerationInterface>('Moderation', Moderation);

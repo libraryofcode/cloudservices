@@ -29,9 +29,9 @@ const Account: Schema = new Schema({
     staff: Boolean,
     supervisor: Boolean,
     communityManager: Boolean,
-    engineer: Boolean
+    engineer: Boolean,
   },
-  root: Boolean
+  root: Boolean,
 });
 
 export default model<AccountInterface>('Account', Account);
