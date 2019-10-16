@@ -35,6 +35,7 @@
         "no-restricted-syntax": "off",
         "camelcase": "off",
         "indent": "warn",
-        "object-curly-newline": "off"
+        "object-curly-newline": "off",
+        "import/prefer-default-export": "off"
     }
 }

@@ -2,8 +2,8 @@ import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import { Message } from 'eris';
-import Client from './Client';
-import Command from './class/Command';
+import { Client } from '.';
+import { Command } from './class';
 
 export default class Util {
   public client: Client;

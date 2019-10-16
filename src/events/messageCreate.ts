@@ -1,8 +1,8 @@
 import { Message, TextChannel } from 'eris';
-import Client from '../Client';
-import { prefix } from '../config.json';
-import Util from '../Util';
+import { Client, config, Util } from '..';
 import Command from '../class/Command';
+
+const { prefix } = config;
 
 export default class {
     client: Client

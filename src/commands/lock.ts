@@ -1,8 +1,7 @@
 import fs from 'fs-extra';
 import { Message } from 'eris';
-import Client from '../Client';
-import Command from '../class/Command';
-import Util from '../Util';
+import { Client, Util } from '..';
+import { Command } from '../class';
 
 export default class Lock extends Command {
   util: Util = new Util(this.client)

@@ -1,7 +1,6 @@
 import { Message } from 'eris';
-import Client from '../Client';
-import Command from '../class/Command';
-import Util from '../Util';
+import { Client, Util } from '..';
+import { Command } from '../class';
 
 export default class Ping extends Command {
   util: Util = new Util(this.client)

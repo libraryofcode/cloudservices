@@ -1,9 +1,7 @@
 import { Message } from 'eris';
 import { createPaginationEmbed } from 'eris-pagination';
-import Client from '../Client';
-import Command from '../class/Command';
-import RichEmbed from '../class/RichEmbed';
-import Util from '../Util';
+import { Client, Util } from '..';
+import { Command, RichEmbed } from '../class';
 
 export default class Modlogs extends Command {
   util: Util = new Util(this.client)

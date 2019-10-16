@@ -1,5 +1,5 @@
 import { Message } from 'eris';
-import Client from '../Client';
+import { Client } from '..';
 
 export default class Command {
     name: string

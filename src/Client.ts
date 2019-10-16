@@ -4,12 +4,10 @@ import Eris from 'eris';
 import mongoose from 'mongoose';
 import fs from 'fs-extra';
 import path from 'path';
-import config from './config.json';
-import Account, { AccountInterface } from './models/Account';
-import Moderation, { ModerationInterface } from './models/Moderation';
-import emojis from './stores/emojis';
-import Util from './Util';
-import Command from './class/Command';
+import { config, Util } from '.';
+import { Account, AccountInterface, Moderation, ModerationInterface } from './models';
+import { emojis } from './stores';
+import { Command } from './class';
 
 
 export default class Client extends Eris.Client {
