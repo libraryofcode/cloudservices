@@ -1,4 +1,5 @@
 import { Message } from 'eris';
+// eslint-disable-next-line import/no-unresolved
 import { createPaginationEmbed } from 'eris-pagination';
 import { Client, Util } from '..';
 import { Command, RichEmbed } from '../class';

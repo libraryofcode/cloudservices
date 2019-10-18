@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import fs from 'fs-extra';
 import path from 'path';
 import { config, Util } from '.';
-import { Account, AccountInterface, Moderation, ModerationInterface } from './models';
+import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
 import { Command } from './class';
 
@@ -17,7 +17,7 @@ export default class Client extends Eris.Client {
 
   public aliases: Map<string, string>;
 
-  public db: { Account: mongoose.Model<AccountInterface>; Moderation: mongoose.Model<ModerationInterface>; };
+  public db: { Account: mongoose.Model<AccountInterface>; Domain: mongoose.Model<DomainInterface>; Moderation: mongoose.Model<ModerationInterface>; };
 
   public stores: { emojis: { success: string, loading: string, error: string }; };
 
@@ -27,7 +27,7 @@ export default class Client extends Eris.Client {
     this.util = new Util(this);
     this.commands = new Map();
     this.aliases = new Map();
-    this.db = { Account, Moderation };
+    this.db = { Account, Domain, Moderation };
     this.stores = { emojis };
   }
 

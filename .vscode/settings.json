@@ -1,4 +1,10 @@
 {
     "eslint.enable": true,
-    "eslint.validate": [ { "language": "typescript", "autoFix": true } ]
+    "eslint.validate": [
+        {
+            "language": "typescript",
+            "autoFix": true
+        }
+    ],
+    "editor.tabSize": 2
 }

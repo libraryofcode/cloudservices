@@ -1,10 +1,8 @@
 import { Message } from 'eris';
-import { Client, Util } from '..';
+import { Client } from '..';
 import { Command } from '../class';
 
 export default class Ping extends Command {
-  util: Util = new Util(this.client)
-
   constructor(client: Client) {
     super(client);
     this.name = 'ping';
@@ -18,7 +16,7 @@ export default class Ping extends Command {
       const msg: Message = await message.channel.createMessage('🏓 Pong!');
       msg.edit(`🏓 Pong!\nClient: \`${Date.now() - clientStart}ms\`\nResponse: \`${msg.createdAt - message.createdAt}ms\``);
     } catch (error) {
-      this.util.handleError(error, message, this);
+      this.client.util.handleError(error, message, this);
     }
   }
 }

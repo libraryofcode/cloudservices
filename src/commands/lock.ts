@@ -1,11 +1,9 @@
 import fs from 'fs-extra';
 import { Message } from 'eris';
-import { Client, Util } from '..';
+import { Client } from '..';
 import { Command } from '../class';
 
 export default class Lock extends Command {
-  util: Util = new Util(this.client)
-
   constructor(client: Client) {
     super(client);
     this.name = 'lock';
@@ -20,7 +18,7 @@ export default class Lock extends Command {
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locking account...***`);
     } catch (error) {
-      return this.util.handleError(error, message, this);
+      return this.client.util.handleError(error, message, this);
     }
   }
 }
