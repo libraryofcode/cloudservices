@@ -42,4 +42,14 @@ export default class Util {
     if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
     return stack;
   }
+
+  public splitFields(fields: {name: string, value: string, inline?: boolean}[]): {name: string, value: string, inline?: boolean}[][] {
+    let index = 0;
+    const array: {name: string, value: string, inline?: boolean}[][] = [[]];
+    while (fields.length) {
+      if (array[index].length >= 25) { index += 1; array[index] = []; }
+      array[index].push(fields[0]); fields.shift();
+    }
+    return array;
+  }
 }

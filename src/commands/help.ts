@@ -32,6 +32,7 @@ export default class Help extends Command {
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
       embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
+      embed.setDescription(`Command list for ${this.client.user.username}`);
     }
   }
 }

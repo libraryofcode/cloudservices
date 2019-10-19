@@ -22,7 +22,6 @@ export default class Modlogs extends Command {
       const query = await this.client.db.Moderation.find({ $or: [{ account: args.join(' ') }, { userID: args.filter((a) => a)[0].replace(/[<@!>]/g, '') }] });
       if (!query.length) return msg.edit(`***${this.client.stores.emojis.error} Cannot locate modlogs for ${args.join(' ')}***`);
 
-      let index = 0; const logs: {name: string, value: string, inline: boolean}[][] = [[]];
       const formatted = query.map((log) => {
         const { account, moderatorID, reason, type, date } = log;
         const name = type;
@@ -32,10 +31,7 @@ export default class Modlogs extends Command {
       });
       const users = [...new Set(query.map((log) => log.userID))].map((u) => `<@${u}>`);
 
-      while (query.length) {
-        if (logs[index].length >= 25) { index += 1; logs[index] = []; }
-        logs[index].push(formatted[0]); formatted.shift();
-      }
+      const logs = this.util.splitFields(formatted);
 
       const embeds = logs.map((l) => {
         const embed = new RichEmbed();
