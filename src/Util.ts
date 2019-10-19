@@ -1,9 +1,9 @@
 import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
-import { Message } from 'eris';
+import { Message, TextChannel, PrivateChannel } from 'eris';
 import { Client } from '.';
-import { Command } from './class';
+import { Command, RichEmbed } from './class';
 
 export default class Util {
   public client: Client;
@@ -36,11 +36,27 @@ export default class Util {
     return undefined;
   }
 
-  public async handleError(error: Error, message?: Message, command?: Command): Promise<Message> {
-    const stack = await this.client.createMessage('595788220764127272', `\`\`\`js\n${error.stack}\n\`\`\``);
+  public async handleError(error: Error, message?: Message, command?: Command): Promise<void> {
+    const info = { content: `\`\`\`js\n${error.stack}\n\`\`\``, embed: null }
+    if (message) {
+      const embed = new RichEmbed();
+      embed.setColor('FF0000');
+      embed.setAuthor(`Error caused by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
+      embed.setTitle('Message content');
+      embed.setDescription(message.content);
+      embed.addField('User', `${message.author.mention} (\`${message.author.id}\`)`, true);
+      embed.addField('Channel', message.channel.mention, true);
+      let guild: string;
+      if (message.channel instanceof PrivateChannel)  guild = '@me';
+      else guild = message.channel.guild.id
+      embed.addField('Message link', `[Click here](https://discordapp.com/channels/${guild}/${message.channel.id}/${message.id})`, true)
+      embed.setTimestamp(new Date(message.timestamp));
+      info.embed = embed;
+    }
+    await this.client.createMessage('595788220764127272', info);
+    if (message) this.client.createMessage('595788220764127272', `Message content for above error`)
     if (command) this.client.commands.get(command.name).enabled = false;
     if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
-    return stack;
   }
 
   public splitFields(fields: {name: string, value: string, inline?: boolean}[]): {name: string, value: string, inline?: boolean}[][] {
