@@ -16,7 +16,8 @@ export default class Help extends Command {
   util: Util = new Util(this.client);
 
   public async run(message: Message, args?: string[]) {
-    const cmd = args.filter((c) => c)[0];
+    try {
+      const cmd = args.filter((c) => c)[0];
     if (!cmd) {
       const cmdList: Command[] = [];
       this.client.commands.forEach((c) => cmdList.push(c));
@@ -61,5 +62,8 @@ export default class Help extends Command {
     embed.setDescription(description);
     // @ts-ignore
     return message.channel.createMessage({ embed });
+    } catch (error) {
+      this.util.handleError(error, message, this)
+    }
   }
 }
