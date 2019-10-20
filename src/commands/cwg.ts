@@ -40,13 +40,21 @@ export default class CWG extends Command {
         embed.addField('Certificate Issuer', cert.issuer.organizationName, true);
         embed.addField('Certificate Subject', cert.subject.commonName, true);
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
-        embed.setTimestamp();
+        embed.setTimestamp(new Date(message.timestamp));
         // @ts-ignore
         message.channel.createMessage({ embed });
+        // @ts-ignore
+        this.client.createMessage('580950455581147146', { embed });
+        // @ts-ignore
+        this.client.getDMChannel(account.userID).then((r) => r.createMessage({ embed }));
+        if (!domain.domain.includes('cloud.libraryofcode.org')) {
+          const content = `_**DNS Record Setup**__\nYou recently a binded a custom domain to your Library of Code sp-us Account. You'll have to update your DNS records. We've provided the records below.\n\n\`${domain.domain} IN CNAME cloud.libraryofcode.us AUTO/500\`\nThis basically means you need to make a CNAME record with the key/host of ${domain.domain} and the value/point to cloud.libraryofcode.org. If you have any questions, don't hesitate to ask us.`;
+          this.client.getDMChannel(account.userID).then((r) => r.createMessage(content));
+        }
       } catch (err) {
         this.client.util.handleError(err, message, this);
       }
-    }
+    } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
     return true;
   }
 
