@@ -106,7 +106,7 @@ export default class CWG extends Command {
       enabled: true,
     });
     if (domain.includes('cloud.libraryofcode.org')) {
-      const method = await axios({
+      await axios({
         method: 'post',
         url: 'https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records',
         headers: { Authorization: `Bearer ${this.client.config.cloudflare}`, 'Content-Type': 'application/json' },
