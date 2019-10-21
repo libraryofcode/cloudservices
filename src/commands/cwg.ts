@@ -59,7 +59,7 @@ export default class CWG extends Command {
           <strong>Port:</strong> ${domain.port}
           <strong>Certificate Issuer:</strong> ${cert.issuer.organizationName}
           <strong>Certificate Subject:</strong> ${cert.subject.commonName}
-          <strong>Responsible Engineer</strong> ${message.author.username}#${message.author.discriminator}
+          <strong>Responsible Engineer:</strong> ${message.author.username}#${message.author.discriminator}
 
           If you have any questions about additional setup, you can reply to this email or send a message in #cloud-support in our Discord server.
           Thanks.
