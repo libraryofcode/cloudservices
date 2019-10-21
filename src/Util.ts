@@ -8,8 +8,14 @@ import { Command, RichEmbed } from './class';
 export default class Util {
   public client: Client;
 
+  public transport: nodemailer.Transporter;
+
   constructor(client: Client) {
     this.client = client;
+    this.transport = nodemailer.createTransport({
+      host: 'staff.libraryofcode.us',
+      auth: { user: 'support', pass: this.client.config.emailPass },
+    });
   }
 
   public async exec(command: string): Promise<string> {
