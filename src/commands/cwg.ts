@@ -47,6 +47,24 @@ export default class CWG extends Command {
         this.client.createMessage('580950455581147146', { embed });
         // @ts-ignore
         this.client.getDMChannel(account.userID).then((r) => r.createMessage({ embed }));
+        await this.client.util.transport.sendMail({
+          to: account.emailAddress,
+          from: 'Library of Code sp-us | Support Team <support@libraryofcode.org>',
+          subject: 'Your domain has been binded',
+          html: `
+          <h1>Library of Code sp-us | Cloud Services</h1>
+          <p>Hello, this is an email informing you that a new domain under your account has been binded.
+          Information is below.</p>
+          <strong>Domain:</strong> ${domain.domain}
+          <strong>Port:</strong> ${domain.port}
+          <strong>Certificate Issuer:</strong> ${cert.issuer.organizationName}
+          <strong>Certificate Subject:</strong> ${cert.subject.commonName}
+          <strong>Responsible Engineer</strong> ${message.author.username}#${message.author.discriminator}
+
+          If you have any questions about additional setup, you can reply to this email or send a message in #cloud-support in our Discord server.
+          Thanks.
+          `,
+        });
         if (!domain.domain.includes('cloud.libraryofcode.org')) {
           const content = `_**DNS Record Setup**__\nYou recently a binded a custom domain to your Library of Code sp-us Account. You'll have to update your DNS records. We've provided the records below.\n\n\`${domain.domain} IN CNAME cloud.libraryofcode.us AUTO/500\`\nThis basically means you need to make a CNAME record with the key/host of ${domain.domain} and the value/point to cloud.libraryofcode.org. If you have any questions, don't hesitate to ask us.`;
           this.client.getDMChannel(account.userID).then((r) => r.createMessage(content));
