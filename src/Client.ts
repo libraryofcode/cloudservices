@@ -10,7 +10,7 @@ import { Command } from './class';
 
 
 export default class Client extends Eris.Client {
-  public config: { 'token': string; 'cloudflare': string; 'prefix': string; };
+  public config: { 'token': string; 'cloudflare': string; 'prefix': string; 'emailPass': string; };
 
   public util: Util;
 

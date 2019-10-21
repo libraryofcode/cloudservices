@@ -20,7 +20,7 @@ export default class Announce extends Command {
       if (args[0] === '-e') await this.client.util.exec(`echo "\n\n**************************************************************************\nEMERGENCY SYSTEM BROADCAST MESSAGE | Library of Code sp-us (root enforced)\n--------------------------------------------------------------------------\n\n\n${args.slice(1).join(' ')}\n\n\n\n\n\n\n\n\n\n\n\n\n" | wall -n`);
       else await this.client.util.exec(`echo "\nSYSTEM BROADCAST MESSAGE | Library of Code sp-us (root enforced)\n\n\n${args.join(' ')}" | wall -n`);
       message.delete();
-      return notification.edit(`${this.client.stores.emojis.success} ***Sent announcement to all active terminals***`);
+      return notification.edit(`${this.client.stores.emojis.success} ***Sent${args[0] === '-e' ? ' emergency' : ''} announcement to all active terminals***`);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
