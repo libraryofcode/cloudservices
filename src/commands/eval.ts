@@ -44,9 +44,7 @@ export default class Eval extends Command {
         }
       }
 
-      return display.forEach((m) => {
-        message.channel.createMessage(`\`\`\`js\n${m}\n\`\`\``);
-      });
+      return display.forEach((m) => message.channel.createMessage(`\`\`\`js\n${m}\n\`\`\``));
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
