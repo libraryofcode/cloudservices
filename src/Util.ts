@@ -1,7 +1,9 @@
-import { promisify } from 'util';
+/* eslint-disable no-param-reassign */
+import { promisify, isArray } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import { Message, TextChannel, PrivateChannel } from 'eris';
+import { outputFile } from 'fs-extra';
 import { Client } from '.';
 import { Command, RichEmbed } from './class';
 
@@ -73,5 +75,22 @@ export default class Util {
       array[index].push(fields[0]); fields.shift();
     }
     return array;
+  }
+
+  public splitString(string: string, length: number): string[] {
+    if (!string) return [];
+    if (Array.isArray(string)) string = string.join('\n');
+    if (string.length <= length) return [string];
+    const arrayString: string[] = [];
+    let str: string = '';
+    let pos: number;
+    while (string.length > 0) {
+      pos = string.length > length ? string.lastIndexOf('\n', length) : outputFile.length;
+      if (pos > length) pos = length;
+      str = string.substr(0, pos);
+      string = string.substr(pos);
+      arrayString.push(str);
+    }
+    return arrayString;
   }
 }
