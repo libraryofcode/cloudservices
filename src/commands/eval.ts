@@ -36,8 +36,12 @@ export default class Eval extends Command {
 
       const display = this.client.util.splitString(output, 1975);
       if (display[5]) {
-        const { data } = await axios.post('https://snippets.cloud.libraryofcode.org/documents', display.join(''));
-        return message.channel.createMessage(`${this.client.stores.emojis.success} Your evaluation output can be found on https://snippets.cloud.libraryofcode.org/${data.key}`);
+        try {
+          const { data } = await axios.post('https://snippets.cloud.libraryofcode.org/documents', display.join(''));
+          return message.channel.createMessage(`${this.client.stores.emojis.success} Your evaluation output can be found on https://snippets.cloud.libraryofcode.org/${data.key}`);
+        } catch (error) {
+          return message.channel.createMessage(`${this.client.stores.emojis.error} ${error}`);
+        }
       }
 
       return display.forEach((m) => {
