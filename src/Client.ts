@@ -3,10 +3,10 @@ import mongoose from 'mongoose';
 import signale from 'signale';
 import fs from 'fs-extra';
 import path from 'path';
-import { config, Util } from '.';
+import { config } from '.';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
-import { Command } from './class';
+import { Command, Util } from './class';
 
 
 export default class Client extends Eris.Client {
@@ -38,6 +38,19 @@ export default class Client extends Eris.Client {
       displayDate: true,
       displayTimestamp: true,
       displayFilename: true,
+    });
+    this.loadFunctions();
+    this.init();
+  }
+
+  private async loadFunctions() {
+    const functions = await fs.readdir('./functions');
+    functions.forEach(async (func) => {
+      try {
+        require(`./functions/${func}`).default(this);
+      } catch (error) {
+        await this.util.handleError(error);
+      }
     });
   }
 
