@@ -1,4 +1,5 @@
-import Client from '../Client';
+import uuid from 'uuid/v4';
+import { Client } from '..';
 import { RichEmbed } from '../class';
 
 export default function checkLock(client: Client) {
@@ -12,8 +13,19 @@ export default function checkLock(client: Client) {
           const account = await client.db.Account.findOne({ username: moderation.username });
           if (!account) return;
           await client.util.exec(`unlock ${account.username}`);
+          await moderation.update({ 'expiration.processed': true });
+          const mod = new client.db.Moderation({
+            username: account.username,
+            userID: account.userID,
+            logID: uuid(),
+            moderatorID: client.user.id,
+            reason: 'Auto',
+            type: 3,
+            date: new Date(),
+          });
+          await mod.save();
           const embed = new RichEmbed();
-          embed.setTitle('Cloud Infraction | Unlock');
+          embed.setTitle('Account Infraction | Unlock');
           embed.setColor(3066993);
           embed.addField('User', `${account.username} | <@${account.userID}>`, true);
           embed.addField('Supervisor', 'SYSTEM', true);
