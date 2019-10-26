@@ -19,13 +19,24 @@ export default class Modlogs extends Command {
   public async run(message: Message, args: string[]) {
     try {
       const msg: Message = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locating modlogs...***`);
-      const query = await this.client.db.Moderation.find({ $or: [{ account: args.join(' ') }, { userID: args.filter((a) => a)[0].replace(/[<@!>]/g, '') }] });
+      const query = await this.client.db.Moderation.find({ $or: [{ username: args.join(' ') }, { userID: args.filter((a) => a)[0].replace(/[<@!>]/g, '') }] });
       if (!query.length) return msg.edit(`***${this.client.stores.emojis.error} Cannot locate modlogs for ${args.join(' ')}***`);
 
       const formatted = query.map((log) => {
-        const { account, moderatorID, reason, type, date } = log;
-        const name = type;
-        const value = `**Account name:** ${account}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason}\n**Date:** ${date.toLocaleString('en-us')} EST`;
+        const { username, moderatorID, reason, type, date } = log;
+        let name: string;
+        if (type === 0) {
+          name = 'Create';
+        } else if (type === 1) {
+          name = 'Warn';
+        } else if (type === 2) {
+          name = 'Lock';
+        } else if (type === 3) {
+          name = 'Unlock';
+        } else if (type === 4) {
+          name = 'Delete';
+        }
+        const value = `**Account name:** ${username}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason}\n**Date:** ${date.toLocaleString('en-us')} EST`;
         const inline = true;
         return { name, value, inline };
       });
