@@ -1,7 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
 
 export interface AccountInterface extends Document {
-  account: string,
+  username: string,
   userID: string,
   emailAddress: string,
   createdBy: string,
@@ -18,7 +18,7 @@ export interface AccountInterface extends Document {
 }
 
 const Account: Schema = new Schema({
-  account: String,
+  username: String,
   userID: String,
   emailAddress: String,
   createdBy: String,
