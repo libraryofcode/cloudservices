@@ -1,12 +1,10 @@
 import { Message } from 'eris';
 // eslint-disable-next-line import/no-unresolved
 import { createPaginationEmbed } from 'eris-pagination';
-import { Client, Util } from '..';
+import { Client } from '..';
 import { Command, RichEmbed } from '../class';
 
 export default class Modlogs extends Command {
-  util: Util = new Util(this.client)
-
   constructor(client: Client) {
     super(client);
     this.name = 'modlogs';
@@ -42,7 +40,7 @@ export default class Modlogs extends Command {
       });
       const users = [...new Set(query.map((log) => log.userID))].map((u) => `<@${u}>`);
 
-      const logs = this.util.splitFields(formatted);
+      const logs = this.client.util.splitFields(formatted);
 
       const embeds = logs.map((l) => {
         const embed = new RichEmbed();
@@ -59,7 +57,7 @@ export default class Modlogs extends Command {
       createPaginationEmbed(message, this.client, embeds, {}, msg);
       return msg;
     } catch (error) {
-      return this.util.handleError(error, message, this);
+      return this.client.util.handleError(error, message, this);
     }
   }
 }
