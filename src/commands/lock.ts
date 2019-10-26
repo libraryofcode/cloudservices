@@ -20,8 +20,9 @@ export default class Lock extends Command {
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locking account...***`);
       if (account.locked) return edit.edit(`***${this.client.stores.emojis.error} This account is already locked.***`);
-      if (account.username === 'matthew') return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
+      if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`lock ${account.username}`);
+      await account.update({ locked: true });
 
       const expiry = new Date();
       // @ts-ignore
@@ -39,7 +40,7 @@ export default class Lock extends Command {
         logID: uuid(),
         moderatorID: message.author.id,
         reason: momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' '),
-        type: 3,
+        type: 2,
         date: new Date(),
         expiration: {
           expirationDate: momentMilliseconds ? expiry : null,
@@ -53,7 +54,7 @@ export default class Lock extends Command {
       embed.setColor(15158332);
       embed.addField('User', `${account.username} | <@${account.userID}>`, true);
       embed.addField('Supervisor', `<@${message.author.id}>`, true);
-      if ((momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ')).length > 0) embed.addField('Reason', momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' '));
+      if ((momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ')).length > 0) embed.addField('Reason', momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' '), true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
       embed.setTimestamp();
       // @ts-ignore
