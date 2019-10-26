@@ -17,7 +17,7 @@ export default class Unlock extends Command {
     try {
       const account = await this.client.db.Account.findOne({ $or: [{ account: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
-      const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locking account...***`);
+      const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Unlocking account...***`);
       if (!account.locked) return edit.edit(`***${this.client.stores.emojis.error} This account is already unlocked.***`);
       if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`unlock ${account.username}`);
@@ -41,7 +41,6 @@ export default class Unlock extends Command {
       if (args.slice(1).join(' ').length > 0) embed.addField('Reason', args.slice(1).join(' '), true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
       embed.setTimestamp();
-      // @ts-ignore
       this.client.getDMChannel(account.userID).then((user) => {
         // @ts-ignore
         user.createMessage({ embed });
