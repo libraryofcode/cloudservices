@@ -18,22 +18,20 @@ export default class Lock extends Command {
     try {
       const account = await this.client.db.Account.findOne({ $or: [{ account: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
+      if (account.locked) return message.channel.createMessage(`***${this.client.stores.emojis.error} This account is already locked.***`);
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locking account...***`);
-      if (account.locked) return edit.edit(`***${this.client.stores.emojis.error} This account is already locked.***`);
       if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`lock ${account.username}`);
       await account.update({ locked: true });
 
       const expiry = new Date();
+      const lockLength = args[1].match(/[a-z]+|[^a-z]+/gi);
       // @ts-ignore
-      const momentMilliseconds = moment.duration(Number(args[1].split('')[0]), args[1].split('')[1]).asMilliseconds;
+      const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds;
       expiry.setMilliseconds(momentMilliseconds);
-      let processed: boolean;
-      if (momentMilliseconds) {
-        processed = false;
-      } else {
-        processed = true;
-      }
+      let processed: boolean = false;
+      if (!momentMilliseconds) processed = true;
+
       const moderation = new this.client.db.Moderation({
         username: account.username,
         userID: account.userID,
@@ -71,11 +69,11 @@ export default class Lock extends Command {
         html: `
         <h1>Library of Code | Cloud Services</h1>
         <p>Your Cloud Account has been locked until ${momentMilliseconds ? moment(expiry).calendar() : 'indefinitely'} under the EULA.</p>
-        <p><strong>Reason:</strong> ${momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ')}</p>
-        <p><strong>Supervisor:</strong> ${message.author.username}</p>
-        <p><strong>Expiration:</strong> ${momentMilliseconds ? moment(expiry).format('dddd, MMMM Do YYYY, h:mm:ss A') : 'N/A'}</p>
+        <p><b>Reason:</b> ${momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ')}</p>
+        <p><b>Supervisor:</b> ${message.author.username}</p>
+        <p><b>Expiration:</b> ${momentMilliseconds ? moment(expiry).format('dddd, MMMM Do YYYY, h:mm:ss A') : 'N/A'}</p>
         
-        <strong><i>Library of Code sp-us | Support Team</i></strong>
+        <b><i>Library of Code sp-us | Support Team</i></b>
         `,
       });
     } catch (error) {

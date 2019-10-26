@@ -1,5 +1,4 @@
 import uuid from 'uuid/v4';
-import moment from 'moment';
 import { Message } from 'eris';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
@@ -17,8 +16,8 @@ export default class Unlock extends Command {
     try {
       const account = await this.client.db.Account.findOne({ $or: [{ account: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
+      if (!account.locked) return message.channel.createMessage(`***${this.client.stores.emojis.error} This account is already unlocked.***`);
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Unlocking account...***`);
-      if (!account.locked) return edit.edit(`***${this.client.stores.emojis.error} This account is already unlocked.***`);
       if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`unlock ${account.username}`);
 
