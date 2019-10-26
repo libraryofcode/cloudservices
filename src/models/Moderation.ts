@@ -1,23 +1,39 @@
 import { Document, Schema, model } from 'mongoose';
+import { ModerationInterface } from '.';
 
 export interface ModerationInterface extends Document {
-  account: string,
+  username: string,
   userID: string,
   logID: string,
   moderatorID: string,
   reason: string,
-  type: string,
-  date: Date
+  /**
+   * @field 0 - Create
+   * @field 1 - Warn
+   * @field 2 - Lock
+   * @field 3 - Unlock
+   * @field 4 - Delete
+   */
+  type: 0 | 1 | 2 | 3 | 4
+  date: Date,
+  expiration: {
+    date: Date,
+    processed: boolean
+  }
 }
 
 const Moderation: Schema = new Schema({
-  account: String,
+  username: String,
   userID: String,
   logID: Number,
   moderatorID: String,
   reason: String,
   type: String,
   date: Date,
+  expiration: {
+    date: Date,
+    processed: Boolean,
+  },
 });
 
 export default model<ModerationInterface>('Moderation', Moderation);
