@@ -31,7 +31,7 @@ export default class CWG extends Command {
         const embed = new RichEmbed();
         embed.setTitle('Domain Creation');
         embed.setColor(3066993);
-        embed.addField('Account Username', account.account, true);
+        embed.addField('Account Username', account.username, true);
         embed.addField('Account ID', account.id, true);
         embed.addField('Engineer', `<@${message.author.id}>`, true);
         embed.addField('Domain', domain.domain, true);
@@ -62,7 +62,8 @@ export default class CWG extends Command {
           <strong>Responsible Engineer:</strong> ${message.author.username}#${message.author.discriminator}
 
           If you have any questions about additional setup, you can reply to this email or send a message in #cloud-support in our Discord server.
-          Thanks.
+          
+          <strong><i>Library of Code sp-us | Support Team</i></strong>
           `,
         });
         if (!domain.domain.includes('cloud.libraryofcode.org')) {
@@ -88,7 +89,7 @@ export default class CWG extends Command {
     if (port <= 1024 || port >= 65535) throw new RangeError(`Port range must be between 1024 and 65535, received ${port}.`);
     if (await this.client.db.Domain.exists({ port })) throw new Error(`Port ${port} already exists in the database.`);
     if (await this.client.db.Domain.exists({ domain })) throw new Error(`Domain ${domain} already exists in the database.`);
-    if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.id}.`);
+    if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.userID}.`);
     await fs.access(x509Certificate.cert, fs.constants.R_OK);
     await fs.access(x509Certificate.key, fs.constants.R_OK);
     let config = await fs.readFile('./static/nginx.conf', { encoding: 'utf8' });
