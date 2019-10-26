@@ -15,15 +15,18 @@
     "eris": "^0.10.1",
     "eris-pagination": "bsian03/eris-pagination",
     "fs-extra": "^8.1.0",
+    "moment": "^2.24.0",
     "mongoose": "^5.7.4",
     "nodemailer": "^6.3.1",
-    "signale": "^1.4.0"
+    "signale": "^1.4.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
     "@types/mongoose": "^5.5.20",
     "@types/nodemailer": "^6.2.1",
     "@types/signale": "^1.2.1",
+    "@types/uuid": "^3.4.5",
     "@typescript-eslint/eslint-plugin": "^2.4.0",
     "@typescript-eslint/parser": "^2.4.0",
     "eslint": "^6.5.1",
