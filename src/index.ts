@@ -1,6 +1,5 @@
 export { default as Client } from './Client';
 export { default as config } from './config.json';
-export { default as Util } from './Util';
 export { default as Classes } from './class';
 export { default as Commands } from './commands';
 export { default as Events } from './events';
