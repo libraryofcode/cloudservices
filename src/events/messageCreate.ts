@@ -1,23 +1,21 @@
 import { Message, TextChannel } from 'eris';
-import { Client, config, Util } from '..';
+import { Client, config } from '..';
 import Command from '../class/Command';
 
 const { prefix } = config;
 
 export default class {
-    client: Client
+    public client: Client
 
     constructor(client: Client) {
       this.client = client;
     }
 
-    util: Util = new Util(this.client)
-
-    async run(message: Message) {
+    public async run(message: Message) {
       try {
         const noPrefix: string[] = message.content.slice(prefix.length).trim().split(/ +/g);
         const command: string = noPrefix[0].toLowerCase();
-        const resolved: Command = this.util.resolveCommand(command);
+        const resolved: Command = this.client.util.resolveCommand(command);
         if (!resolved) return;
         if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
         const hasUserPerms: boolean = resolved.permissions.users.includes(message.author.id);
@@ -32,7 +30,7 @@ export default class {
         const args: string[] = noPrefix.slice(1);
         resolved.run(message, args);
       } catch (error) {
-        this.util.handleError(error, message);
+        this.client.util.handleError(error, message);
       }
     }
 }
