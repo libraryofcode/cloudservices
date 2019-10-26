@@ -43,8 +43,8 @@ export default class Unlock extends Command {
       embed.setTimestamp();
       this.client.getDMChannel(account.userID).then((user) => {
         // @ts-ignore
-        user.createMessage({ embed });
-      }).catch();
+        user.createMessage({ embed }).catch();
+      });
       // @ts-ignore
       this.client.createMessage('580950455581147146', { embed });
     } catch (error) {
