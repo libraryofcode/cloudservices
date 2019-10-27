@@ -8,7 +8,7 @@ export default class CreateAccount extends Command {
     this.name = 'createaccount';
     this.description = 'Create an account on the Cloud VM';
     this.usage = `${config.prefix}createaccount [User ID] [Email] [Account name]`;
-    this.aliases = ['createacc', 'cacc', 'caccount'];
+    this.aliases = ['createacc', 'cacc', 'caccount', 'create'];
     this.permissions = { roles: ['475817826251440128', '525441307037007902'] };
     this.enabled = true;
   }
