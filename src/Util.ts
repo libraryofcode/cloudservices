@@ -93,4 +93,23 @@ export default class Util {
     }
     return arrayString;
   }
+
+  public async createHash(password: string) {
+    const hashed = await this.exec(`mkpasswd -m sha-512 "${password}"`);
+    return hashed;
+  }
+
+  public isValidEmail(email: string): boolean {
+    const checkAt = email.indexOf('@');
+    if (checkAt < 1) return false;
+    const checkDomain = email.indexOf('.', checkAt + 2);
+    if (checkDomain < checkAt) return false;
+    return true;
+  }
+
+  public randomPassword(): string {
+    let tempPass = ''; const passChars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    tempPass += passChars[Math.floor(Math.random() * passChars.length)];
+    return tempPass;
+  }
 }
