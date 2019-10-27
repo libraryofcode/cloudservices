@@ -4,7 +4,6 @@ import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import { Message, TextChannel, PrivateChannel } from 'eris';
 import { outputFile } from 'fs-extra';
-import uuid from 'uuid/v4';
 import { Client } from '.';
 import { Command, RichEmbed } from './class';
 
@@ -112,19 +111,5 @@ export default class Util {
     let tempPass = ''; const passChars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
     tempPass += passChars[Math.floor(Math.random() * passChars.length)];
     return tempPass;
-  }
-
-  public async createAccount(hash: string, etcPasswd: string, username: string, userID: string, emailAddress: string, moderatorID: string): Promise<void> {
-    await this.exec(`useradd -m -p ${hash} -c ${etcPasswd} -s /bin/bash ${username}`);
-    await this.exec(`chage -d0 ${username}`);
-
-    const log = await new this.client.db.Moderation({
-      username, userID, logID: uuid(), moderatorID, reason: 'User requested account creation', type: 0, date: new Date(),
-    });
-    const account = await new this.client.db.Account({
-      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false,
-    });
-    await log.save();
-    await account.save();
   }
 }
