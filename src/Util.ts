@@ -4,7 +4,6 @@ import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import { Message, TextChannel, PrivateChannel } from 'eris';
 import { outputFile } from 'fs-extra';
-import uuid from 'uuid/v4';
 import { Client } from '.';
 import { Command, RichEmbed } from './class';
 
@@ -118,20 +117,21 @@ export default class Util {
     await this.exec(`useradd -m -p ${hash} -c ${etcPasswd} -s /bin/bash ${username}`);
     await this.exec(`chage -d0 ${username}`);
 
-    const log = await new this.client.db.Moderation({
-      username, userID, logID: uuid(), moderatorID, reason: 'User requested account creation', type: 0, date: new Date(),
-    });
     const account = await new this.client.db.Account({
       username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false,
     });
-    await log.save();
     await account.save();
   }
 
-  public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}) {
+  public async deleteAccount(username: string): Promise<void> {
+    await this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`);
+    await this.client.db.Account.deleteOne({ username });
+  }
+
+  public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<string> {
     const msg = await message.channel.createMessage(question);
     return new Promise((res, rej) => {
-      setTimeout(() => rej(new Error('Did not supply a valid input in time')), timeout);
+      setTimeout(() => { if (shouldDelete) msg.delete(); rej(new Error('Did not supply a valid input in time')); }, timeout);
       this.client.on('messageCreate', (Msg) => {
         if (filter(Msg) === false) return;
         const verif = choices ? choices.includes(Msg.content) : Msg.content;
