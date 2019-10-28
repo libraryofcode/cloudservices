@@ -63,7 +63,7 @@ export default class DeleteAccount extends Command {
         subject: 'Your account has been deleted',
         html: `
         <h1>Library of Code | Cloud Services</h1>
-        <p>Your Cloud Account has been deleted by our Engineers. There is no way to recover your files and this desicion cannot be appealed. We're sorry to see you go.</p>
+        <p>Your Cloud Account has been deleted by our Engineers. There is no way to recover your files and this decision cannot be appealed. We're sorry to see you go.</p>
         <p><b>Reason:</b> ${reason}</p>
         <p><b>Engineer:</b> ${message.author.username}</p>
         
