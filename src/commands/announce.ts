@@ -1,5 +1,5 @@
 import { Message } from 'eris';
-import { Client, config } from '..';
+import { Client } from '..';
 import { Command } from '../class';
 
 export default class Announce extends Command {
@@ -7,7 +7,7 @@ export default class Announce extends Command {
     super(client);
     this.name = 'announce';
     this.description = 'Sends an announcement to all active terminals';
-    this.usage = `${config.prefix}announce Hi there! | ${config.prefix}announce -e EMERGENCY!`;
+    this.usage = `${this.client.config.prefix}announce Hi there! | ${this.client.config.prefix}announce -e EMERGENCY!`;
     this.aliases = ['ann'];
     this.permissions = { roles: ['608095934399643649', '521312697896271873'] };
     this.enabled = true;
