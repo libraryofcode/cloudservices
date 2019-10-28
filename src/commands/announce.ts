@@ -17,8 +17,8 @@ export default class Announce extends Command {
     try {
       if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
       const notification = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Sending announcement, please wait...***`);
-      if (args[0] === '-e') await this.client.util.exec(`echo "\n\n**************************************************************************\nEMERGENCY SYSTEM BROADCAST MESSAGE | Library of Code sp-us (root enforced)\n--------------------------------------------------------------------------\n\n\n${args.slice(1).join(' ')}\n\n\n\n\n\n\n\n\n\n\n\n\n" | wall -n`);
-      else await this.client.util.exec(`echo "\nSYSTEM BROADCAST MESSAGE | Library of Code sp-us (root enforced)\n\n\n${args.join(' ')}" | wall -n`);
+      if (args[0] === '-e') await this.client.util.exec(`echo "\n\n**************************************************************************\nEMERGENCY SYSTEM BROADCAST MESSAGE | Library of Code sp-us (root enforced)\n--------------------------------------------------------------------------\n\n\n${args.slice(1).join(' ').trim()}\n\n\n\n\n\n\n\n\n\n\n\n\n" | wall -n`);
+      else await this.client.util.exec(`echo "\nSYSTEM BROADCAST MESSAGE | Library of Code sp-us (root enforced)\n\n\n${args.join(' ').trim()}" | wall -n`);
       message.delete();
       return notification.edit(`${this.client.stores.emojis.success} ***Sent${args[0] === '-e' ? ' emergency' : ''} announcement to all active terminals***`);
     } catch (error) {
