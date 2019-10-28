@@ -28,12 +28,12 @@ export default class {
         if (resolved.permissions.roles) {
           for (const role of resolved.permissions.roles) {
             if (message.member && message.member.roles.includes(role)) {
-              this.client.signale.debug(message.member.roles.includes(role));
+              // this.client.signale.debug(message.member.roles.includes(role));
               hasRolePerms = true; break;
             }
           }
         }
-        if (!hasRolePerms && !hasUserPerms) return;
+        if (!hasRolePerms || !hasUserPerms) return;
         if (!resolved.enabled) { message.channel.createMessage(`***${this.client.stores.emojis.error} This command has been disabled***`); return; }
         const args: string[] = noPrefix.slice(1);
         resolved.run(message, args);
