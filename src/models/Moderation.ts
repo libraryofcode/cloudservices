@@ -28,7 +28,7 @@ const Moderation: Schema = new Schema({
   logID: String,
   moderatorID: String,
   reason: String,
-  type: String,
+  type: Number,
   date: Date,
   expiration: {
     date: Date,
