@@ -19,7 +19,6 @@ export default class Eval extends Command {
     try {
       // const evalMessage = message.content.slice(this.client.config.prefix.length).split(' ').slice(1).join(' ');
       let evaled: any;
-      let output: string;
 
       try {
         evaled = await eval(args.join(' ').trim());
@@ -27,7 +26,7 @@ export default class Eval extends Command {
           evaled = inspect(evaled, { depth: 0 });
         }
       } catch (error) {
-        output = error.stack;
+        evaled = error.stack;
       }
 
       /*
@@ -38,9 +37,7 @@ export default class Eval extends Command {
       }
       */
 
-      this.client.signale.debug(output);
-      const display = this.client.util.splitString(output, 1975);
-      this.client.signale.debug(display);
+      const display = this.client.util.splitString(evaled, 1975);
       if (display[5]) {
         try {
           const { data } = await axios.post('https://snippets.cloud.libraryofcode.org/documents', display.join(''));
