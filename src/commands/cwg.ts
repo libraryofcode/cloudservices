@@ -4,13 +4,14 @@ import x509 from '@ghaiklor/x509';
 import { Message } from 'eris';
 import { AccountInterface } from '../models';
 import { Command, RichEmbed } from '../class';
-import Client from '../Client';
+import { Client, config } from '..';
 
 export default class CWG extends Command {
   constructor(client: Client) {
     super(client);
     this.name = 'cwg';
     this.description = 'Manages aspects for the CWG.';
+    this.usage = `${config.prefix}cwg [User ID/Username] [Domain] [Port] <Path to x509 certificate> <Path to x509 key>`;
     this.permissions = { roles: ['525441307037007902'] };
     this.enabled = true;
   }
@@ -93,11 +94,11 @@ export default class CWG extends Command {
     if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.userID}.`);
     await fs.access(x509Certificate.cert, fs.constants.R_OK);
     await fs.access(x509Certificate.key, fs.constants.R_OK);
-    let config = await fs.readFile('./static/nginx.conf', { encoding: 'utf8' });
-    config = config.replace(/\[DOMAIN]/g, domain);
-    config = config.replace(/\[PORT]/g, String(port));
-    config = config.replace(/\[CERTIFICATE]/g, x509Certificate.cert);
-    config = config.replace(/\[KEY]/g, x509Certificate.key);
+    let cfg = await fs.readFile('./static/nginx.conf', { encoding: 'utf8' });
+    cfg = cfg.replace(/\[DOMAIN]/g, domain);
+    cfg = cfg.replace(/\[PORT]/g, String(port));
+    cfg = cfg.replace(/\[CERTIFICATE]/g, x509Certificate.cert);
+    cfg = cfg.replace(/\[KEY]/g, x509Certificate.key);
     await fs.writeFile(`/etc/nginx/sites-available/${domain}`, config, { encoding: 'utf8' });
     await fs.symlink(`/etc/nginx/sites-available/${domain}`, `/etc/nginx/sites-enabled/${domain}`);
     const entry = new this.client.db.Domain({
