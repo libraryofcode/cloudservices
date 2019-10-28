@@ -56,7 +56,7 @@ export default class Client extends Eris.Client {
     functions.forEach(async (func) => {
       if (func === 'index.ts') return;
       try {
-        require(`./functions/${func}`).default(this);
+        (require(`./functions/${func}`).default)(this);
       } catch (error) {
         await this.util.handleError(error);
       }
