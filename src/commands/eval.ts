@@ -23,7 +23,9 @@ export default class Eval extends Command {
 
       try {
         evaled = await eval(args.join(' ').trim());
-        if (typeof evaled !== 'string') output = output && inspect(evaled, { depth: 1 });
+        if (typeof evaled === 'object') {
+          evaled = inspect(evaled, { depth: 0 });
+        }
       } catch (error) {
         output = error.stack;
       }
