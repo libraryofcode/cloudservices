@@ -13,7 +13,8 @@ export default function checkLock(client: Client) {
           const account = await client.db.Account.findOne({ username: moderation.username });
           if (!account) return;
           await client.util.exec(`unlock ${account.username}`);
-          await moderation.update({ 'expiration.processed': true });
+          await moderation.updateOne({ 'expiration.processed': true });
+          await account.updateOne({ locked: false });
           const mod = new client.db.Moderation({
             username: account.username,
             userID: account.userID,
