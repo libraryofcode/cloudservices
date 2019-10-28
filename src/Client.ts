@@ -90,7 +90,7 @@ export default class Client extends Eris.Client {
       delete require.cache[require.resolve(`./events/${file}`)];
     });
 
-    await mongoose.connect(config.mongoURL);
+    await mongoose.connect(config.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
     await this.connect();
   }
 }
