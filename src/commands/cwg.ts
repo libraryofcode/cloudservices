@@ -31,7 +31,9 @@ export default class CWG extends Command {
         const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
         if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
         try {
-          const domain = await this.createDomain(account, args[2], Number(args[3]), { cert: args[4], key: args[5] });
+          if (args[4] && !args[5]) return message.channel.createMessage(`${this.client.stores.emojis.error} x509 Certificate key required`);
+          let certs: { cert?: string, key?: string }; if (args[5]) certs = { cert: args[4], key: args[5] }; else certs = {};
+          const domain = await this.createDomain(account, args[2], Number(args[3]), certs);
           const embed = new RichEmbed();
           embed.setTitle('Domain Creation');
           embed.setColor(3066993);
@@ -92,7 +94,7 @@ export default class CWG extends Command {
    * @param x509 The paths to the certificate and key files. Must be already existant.
    * @example await CWG.createDomain('mydomain.cloud.libraryofcode.org', 6781);
    */
-  public async createDomain(account: AccountInterface, domain: string, port: number, x509Certificate: { cert: string, key: string } = { cert: '/etc/nginx/ssl/cloud-org.chain.crt', key: '/etc/nginx/ssl/cloud-org.key.pem' }) {
+  public async createDomain(account: AccountInterface, domain: string, port: number, x509Certificate: { cert?: string, key?: string } = { cert: '/etc/nginx/ssl/cloud-org.chain.crt', key: '/etc/nginx/ssl/cloud-org.key.pem' }) {
     if (port <= 1024 || port >= 65535) throw new RangeError(`Port range must be between 1024 and 65535, received ${port}.`);
     if (await this.client.db.Domain.exists({ port })) throw new Error(`Port ${port} already exists in the database.`);
     if (await this.client.db.Domain.exists({ domain })) throw new Error(`Domain ${domain} already exists in the database.`);
