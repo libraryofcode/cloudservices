@@ -95,34 +95,42 @@ export default class CWG extends Command {
    * @example await CWG.createDomain('mydomain.cloud.libraryofcode.org', 6781);
    */
   public async createDomain(account: AccountInterface, domain: string, port: number, x509Certificate: { cert?: string, key?: string } = { cert: '/etc/nginx/ssl/cloud-org.chain.crt', key: '/etc/nginx/ssl/cloud-org.key.pem' }) {
-    if (port <= 1024 || port >= 65535) throw new RangeError(`Port range must be between 1024 and 65535, received ${port}.`);
-    if (await this.client.db.Domain.exists({ port })) throw new Error(`Port ${port} already exists in the database.`);
-    if (await this.client.db.Domain.exists({ domain })) throw new Error(`Domain ${domain} already exists in the database.`);
-    if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.userID}.`);
-    await fs.access(x509Certificate.cert, fs.constants.R_OK);
-    await fs.access(x509Certificate.key, fs.constants.R_OK);
-    let cfg = await fs.readFile('/var/CloudServices/dist/static/nginx.conf', { encoding: 'utf8' });
-    cfg = cfg.replace(/\[DOMAIN]/g, domain);
-    cfg = cfg.replace(/\[PORT]/g, String(port));
-    cfg = cfg.replace(/\[CERTIFICATE]/g, x509Certificate.cert);
-    cfg = cfg.replace(/\[KEY]/g, x509Certificate.key);
-    await fs.writeFile(`/etc/nginx/sites-available/${domain}`, cfg, { encoding: 'utf8' });
-    await fs.symlink(`/etc/nginx/sites-available/${domain}`, `/etc/nginx/sites-enabled/${domain}`);
-    const entry = new this.client.db.Domain({
-      account,
-      domain,
-      port,
-      x509: x509Certificate,
-      enabled: true,
-    });
-    if (domain.includes('cloud.libraryofcode.org')) {
-      await axios({
-        method: 'post',
-        url: 'https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records',
-        headers: { Authorization: `Bearer ${this.client.config.cloudflare}`, 'Content-Type': 'application/json' },
-        data: JSON.stringify({ type: 'CNAME', name: domain, content: 'cloud.libraryofcode.org', proxied: false }),
+    try {
+      if (port <= 1024 || port >= 65535) throw new RangeError(`Port range must be between 1024 and 65535, received ${port}.`);
+      if (await this.client.db.Domain.exists({ port })) throw new Error(`Port ${port} already exists in the database.`);
+      if (await this.client.db.Domain.exists({ domain })) throw new Error(`Domain ${domain} already exists in the database.`);
+      if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.userID}.`);
+      await fs.access(x509Certificate.cert, fs.constants.R_OK);
+      await fs.access(x509Certificate.key, fs.constants.R_OK);
+      let cfg = await fs.readFile('/var/CloudServices/dist/static/nginx.conf', { encoding: 'utf8' });
+      cfg = cfg.replace(/\[DOMAIN]/g, domain);
+      cfg = cfg.replace(/\[PORT]/g, String(port));
+      cfg = cfg.replace(/\[CERTIFICATE]/g, x509Certificate.cert);
+      cfg = cfg.replace(/\[KEY]/g, x509Certificate.key);
+      await fs.writeFile(`/etc/nginx/sites-available/${domain}`, cfg, { encoding: 'utf8' });
+      await fs.symlink(`/etc/nginx/sites-available/${domain}`, `/etc/nginx/sites-enabled/${domain}`);
+      const entry = new this.client.db.Domain({
+        account,
+        domain,
+        port,
+        x509: x509Certificate,
+        enabled: true,
       });
+      if (domain.includes('cloud.libraryofcode.org')) {
+        const dmn = domain.split('.');
+        await axios({
+          method: 'post',
+          url: 'https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records',
+          headers: { Authorization: `Bearer ${this.client.config.cloudflare}`, 'Content-Type': 'application/json' },
+          data: JSON.stringify({ type: 'CNAME', name: `${dmn[0]}.${dmn[1]}`, content: 'cloud.libraryofcode.org', proxied: false }),
+        });
+      }
+      return entry.save();
+    } catch (error) {
+      await fs.unlink(`/etc/nginx/sites-available/${domain}`);
+      await fs.unlink(`/etc/nginx/sites-enabled/${domain}`);
+      await this.client.db.Domain.deleteMany({ domain });
+      throw error;
     }
-    return entry.save();
   }
 }
