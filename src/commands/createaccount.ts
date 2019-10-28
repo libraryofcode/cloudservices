@@ -1,6 +1,6 @@
 import { Message, PrivateChannel } from 'eris';
 import uuid from 'uuid/v4';
-import { Client, config } from '..';
+import { Client } from '..';
 import { Command, RichEmbed } from '../class';
 
 export default class CreateAccount extends Command {
@@ -8,7 +8,7 @@ export default class CreateAccount extends Command {
     super(client);
     this.name = 'createaccount';
     this.description = 'Create an account on the Cloud VM';
-    this.usage = `${config.prefix}createaccount [User ID] [Email] [Account name]`;
+    this.usage = `${this.client.config.prefix}createaccount [User ID] [Email] [Account name]`;
     this.aliases = ['createacc', 'cacc', 'caccount', 'create'];
     this.permissions = { roles: ['475817826251440128', '525441307037007902'] };
     this.enabled = true;
