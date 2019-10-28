@@ -21,6 +21,7 @@ export default class Unlock extends Command {
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Unlocking account...***`);
       if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`unlock ${account.username}`);
+      await account.updateOne({ locked: false });
 
       const moderation = new this.client.db.Moderation({
         username: account.username,
