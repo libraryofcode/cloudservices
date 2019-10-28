@@ -16,7 +16,6 @@ export default class {
         const noPrefix: string[] = message.content.slice(this.client.config.prefix.length).trim().split(/ +/g);
         const command: string = noPrefix[0].toLowerCase();
         const resolved: Command = this.client.util.resolveCommand(command);
-        this.client.signale.debug(resolved);
         if (!resolved) return;
         if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
         let hasUserPerms: boolean;
