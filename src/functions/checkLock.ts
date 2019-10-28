@@ -39,10 +39,11 @@ export default function checkLock(client: Client) {
           });
           // @ts-ignore
           client.createMessage('580950455581147146', { embed });
+          client.signale.complete(`Unlocked account ${account.username} | Queue date at ${moderation.expiration.date.toLocaleString('en-us')}`);
         }
       });
     } catch (error) {
       await client.util.handleError(error);
     }
-  });
+  }, 10000);
 }
