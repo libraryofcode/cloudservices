@@ -15,14 +15,14 @@ export default class Eval extends Command {
     this.permissions = { users: ['253600545972027394', '278620217221971968'] };
   }
 
-  public async run(message: Message) {
+  public async run(message: Message, args: string[]) {
     try {
       // const evalMessage = message.content.slice(this.client.config.prefix.length).split(' ').slice(1).join(' ');
       let evaled: any;
       let output: string;
 
       try {
-        evaled = await eval(message.content);
+        evaled = await eval(args.join(' ').trim());
         if (typeof evaled !== 'string') output = output && inspect(evaled, { depth: 1 });
       } catch (error) {
         output = error.stack;
