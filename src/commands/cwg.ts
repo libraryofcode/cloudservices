@@ -27,7 +27,7 @@ export default class CWG extends Command {
     args[5] should be the path to the x509 key; not required
     */
       if (args[0] === 'create') {
-        if (!args[5]) return this.client.commands.get('help').run(message, [this.name]);
+        if (!args[3]) return this.client.commands.get('help').run(message, [this.name]);
         const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
         if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
         try {
