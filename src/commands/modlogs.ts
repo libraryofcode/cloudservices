@@ -45,7 +45,7 @@ export default class Modlogs extends Command {
       const embeds = logs.map((l) => {
         const embed = new RichEmbed();
         embed.setDescription(`List of Cloud moderation logs for ${users.join(', ')}`);
-        embed.setAuthor('Library of Code | Cloud Services', this.client.user.avatarURL, 'https://libraryofcode.us');
+        embed.setAuthor('Library of Code | Cloud Services', this.client.user.avatarURL, 'https://libraryofcode.org/');
         embed.setTitle('Cloud Modlogs/Infractions');
         embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
         l.forEach((f) => embed.addField(f.name, f.value, f.inline));
