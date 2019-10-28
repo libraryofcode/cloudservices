@@ -58,7 +58,8 @@ export default class Client extends Eris.Client {
   public loadCommand(commandPath: string) {
     // eslint-disable-next-line no-useless-catch
     try {
-      const command = new (require(commandPath))(this);
+      // eslint-disable-next-line
+      const command = new (require(commandPath).default)(this);
       this.commands.set(command.name, command);
       this.signale.complete(`Loaded command ${command.name}`);
     } catch (err) { throw err; }
@@ -74,7 +75,9 @@ export default class Client extends Eris.Client {
 
     evtFiles.forEach((file) => {
       const eventName = file.split('.')[0];
-      const event = new (require(`./events/${file}`))(this);
+      if (file === 'index.js') return;
+      // eslint-disable-next-line
+      const event = new (require(`./events/${file}`).default)(this);
       this.signale.complete(`Loaded event ${eventName}`);
       this.on(eventName, (...args) => event.run(...args));
       delete require.cache[require.resolve(`./events/${file}`)];
