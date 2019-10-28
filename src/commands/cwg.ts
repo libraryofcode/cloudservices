@@ -32,7 +32,7 @@ export default class CWG extends Command {
         if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
         try {
           if (args[4] && !args[5]) return message.channel.createMessage(`${this.client.stores.emojis.error} x509 Certificate key required`);
-          let certs: { cert?: string, key?: string }; if (args[5]) certs = { cert: args[4], key: args[5] }; else certs = {};
+          let certs: { cert?: string, key?: string }; if (args[5]) certs = { cert: args[4], key: args[5] }; else certs = null;
           const domain = await this.createDomain(account, args[2], Number(args[3]), certs);
           const embed = new RichEmbed();
           embed.setTitle('Domain Creation');
