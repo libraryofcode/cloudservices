@@ -78,6 +78,7 @@ export default class Client extends Eris.Client {
       delete require.cache[require.resolve(`./events/${file}`)];
     });
 
+    await mongoose.connect(config.mongoURL);
     this.connect();
   }
 }
