@@ -45,6 +45,8 @@ export default class Util {
   }
 
   public async handleError(error: Error, message?: Message, command?: Command): Promise<void> {
+    this.client.signale.error(error);
+    /*
     const info = { content: `\`\`\`js\n${error.stack}\n\`\`\``, embed: null };
     if (message) {
       const embed = new RichEmbed();
@@ -65,6 +67,7 @@ export default class Util {
     if (message) this.client.createMessage('595788220764127272', 'Message content for above error');
     if (command) this.client.commands.get(command.name).enabled = false;
     if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
+    */
   }
 
   public splitFields(fields: {name: string, value: string, inline?: boolean}[]): {name: string, value: string, inline?: boolean}[][] {
