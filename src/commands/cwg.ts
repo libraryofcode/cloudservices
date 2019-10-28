@@ -101,8 +101,6 @@ export default class CWG extends Command {
     if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.userID}.`);
     await fs.access(x509Certificate.cert, fs.constants.R_OK);
     await fs.access(x509Certificate.key, fs.constants.R_OK);
-    const staticFiles = await fs.readdir('../static')
-    console.log(staticFiles);
     let cfg = await fs.readFile('../static/nginx.conf', { encoding: 'utf8' });
     cfg = cfg.replace(/\[DOMAIN]/g, domain);
     cfg = cfg.replace(/\[PORT]/g, String(port));
