@@ -39,6 +39,7 @@ export default class Eval extends Command {
       */
 
       const display = this.client.util.splitString(output, 1975);
+      this.client.signale.debug(display);
       if (display[5]) {
         try {
           const { data } = await axios.post('https://snippets.cloud.libraryofcode.org/documents', display.join(''));
