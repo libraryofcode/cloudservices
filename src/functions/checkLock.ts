@@ -3,7 +3,7 @@ import { Client } from '..';
 import { RichEmbed } from '../class';
 
 export default function checkLock(client: Client) {
-  setTimeout(async () => {
+  setInterval(async () => {
     try {
       const moderations = await client.db.Moderation.find();
       moderations.forEach(async (moderation) => {
