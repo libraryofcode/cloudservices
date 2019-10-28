@@ -42,6 +42,7 @@ export default class Unlock extends Command {
       if (args.slice(1).join(' ').length > 0) embed.addField('Reason', args.slice(1).join(' '), true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
       embed.setTimestamp();
+      message.delete();
       this.client.getDMChannel(account.userID).then((user) => {
         // @ts-ignore
         user.createMessage({ embed }).catch();
