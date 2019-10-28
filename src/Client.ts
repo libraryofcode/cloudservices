@@ -79,6 +79,7 @@ export default class Client extends Eris.Client {
     });
 
     await mongoose.connect(config.mongoURL);
-    this.connect();
+    await this.connect();
+    this.signale.success(`Successfully connected to Discord | ${this.user.username}#${this.user.discriminator}`);
   }
 }
