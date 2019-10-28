@@ -1,8 +1,6 @@
 import { Message, TextChannel } from 'eris';
-import { Client, config } from '..';
+import { Client } from '..';
 import Command from '../class/Command';
-
-const { prefix } = config;
 
 export default class {
     public client: Client
@@ -13,7 +11,7 @@ export default class {
 
     public async run(message: Message) {
       try {
-        const noPrefix: string[] = message.content.slice(prefix.length).trim().split(/ +/g);
+        const noPrefix: string[] = message.content.slice(this.client.config.prefix.length).trim().split(/ +/g);
         const command: string = noPrefix[0].toLowerCase();
         const resolved: Command = this.client.util.resolveCommand(command);
         if (!resolved) return;
