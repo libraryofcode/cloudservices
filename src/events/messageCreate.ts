@@ -19,6 +19,7 @@ export default class {
         if (!resolved) return;
         if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
         let hasUserPerms: boolean;
+        this.client.signale.debug(hasUserPerms);
         if (resolved.permissions.users) {
           hasUserPerms = resolved.permissions.users.includes(message.author.id);
         } else {
@@ -27,13 +28,17 @@ export default class {
         let hasRolePerms: boolean = false;
         if (resolved.permissions.roles) {
           for (const role of resolved.permissions.roles) {
+            this.client.signale.debug(message.member.roles.includes(role));
             if (message.member && message.member.roles.includes(role)) {
               // this.client.signale.debug(message.member.roles.includes(role));
               hasRolePerms = true; break;
             }
           }
         }
-        if (!hasRolePerms || !hasUserPerms) return;
+        this.client.signale.debug('---');
+        this.client.signale.debug(hasUserPerms);
+        this.client.signale.debug(hasRolePerms);
+        if (!hasRolePerms && !hasUserPerms) return;
         if (!resolved.enabled) { message.channel.createMessage(`***${this.client.stores.emojis.error} This command has been disabled***`); return; }
         const args: string[] = noPrefix.slice(1);
         resolved.run(message, args);
