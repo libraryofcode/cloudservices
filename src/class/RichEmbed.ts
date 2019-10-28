@@ -170,7 +170,6 @@ export default class RichEmbed {
   setFooter(text: string, icon_url?: string) {
     if (typeof text !== 'string') throw new TypeError('RichEmbed Footers must be a string.');
     if (icon_url && typeof icon_url !== 'string') throw new TypeError('RichEmbed Footer icon URLs must be a string.');
-    if (!icon_url.startsWith('http://') || !icon_url.startsWith('https://')) icon_url = `https://${icon_url}`;
     if (text.length > 2048) throw new RangeError('RichEmbed footer text may not exceed 2048 characters.');
     this.footer = { text, icon_url };
     return this;
