@@ -19,11 +19,8 @@ export default class {
         if (!resolved) return;
         if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
         let hasUserPerms: boolean;
-        this.client.signale.debug(hasUserPerms);
         if (resolved.permissions.users) {
           hasUserPerms = resolved.permissions.users.includes(message.author.id);
-        } else {
-          hasUserPerms = true;
         }
         let hasRolePerms: boolean = false;
         if (resolved.permissions.roles) {
@@ -34,6 +31,10 @@ export default class {
               hasRolePerms = true; break;
             }
           }
+        }
+        if (!resolved.permissions.users && !resolved.permissions.roles) {
+          hasUserPerms = true;
+          hasRolePerms = true;
         }
         this.client.signale.debug('---');
         this.client.signale.debug(hasUserPerms);
