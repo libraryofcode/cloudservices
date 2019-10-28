@@ -59,7 +59,64 @@ export default class CreateAccount extends Command {
       embed.setTimestamp();
       // @ts-ignore
       this.client.createMessage('580950455581147146', { embed });
-      return confirmation.edit(`${this.client.stores.emojis.success} ***Account successfully created***\n**Username:** \`${args[2]}\`\n**Temporary Password:** \`${tempPass}\``);
+
+      this.client.util.transport.sendMail({
+        to: args[1],
+        from: 'Library of Code sp-us | Cloud Services <support@libraryofcode.org>',
+        subject: 'Your account has been created',
+        html: `
+        <body>
+          <style>* {font-family: 'Calibri';}</style>
+          <h1>Library of Code | Cloud Services</h1>
+          <h2>Your Cloud Account has been created, welcome! Please see below for some details regarding your account and our services</h2>
+          <p><b>Username:</b> ${args[2]}</p>
+          <p><b>SSH Login:</b> <pre><code style="font-family: Courier;">ssh ${args[2]}@cloud.libraryofcode.org</code></pre>
+          <p><b>Email address (see below for further information):</b> ${args[2]}@cloud.libraryofcode.org</p>
+          <h2>Useful information</h2>
+          <h3>How to log in:</h3>
+          <ol>
+            <li>Open your desired terminal application - we recommend using <a target="_blank" href="https://www.gnu.org/software/bash/">Bash</a>, but you can use your computer's default</li>
+            <li>Type in your SSH Login as above</li>
+            <li>When prompted, enter your password <em>Please note that inputs will be blank, so be careful not to type in your password incorrectly</em></li>
+          </ol>
+          <p>If you fail to authenticate yourself too many times, you will be IP banned and will fail to connect. If this is the case, feel free to DM Ramirez with your <a target="_blank" href="https://whatismyip.com">public IPv4 address</a>.
+  
+          <h3>Setting up your cloud email</h3>
+          <p>All email applications are different, so here are some information you can use to connect your email</p>
+          <ul>
+            <li><b>Server:</b> cloud.libraryofcode.org</li>
+            <li><b>Account username/password:</b> Normal login</li>
+            <li><b>Account type (incoming):</b> IMAP</li>
+            <li><b>Incoming port:</b> 143 (993 if you're using TLS security type)</li>
+            <li><b>Incoming Security Type:</b> STARTTLS (TLS if you're using port 993)</li>
+            <li><b>Outgoing port:</b> 587 (If that doesn't work, try 25)</li>
+            <li><b>Outgoing Security Type:</b> STARTTLS</li>
+          </ul>
+          <h3>Channels and Links</h3>
+          <ul>
+            <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/622856541325885453">#status</a> - You can find the status of all our services, including the cloud machine, here</li>
+            <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/620355063088414769">#cloud-announcements</a> - Announcements regarding the cloud machine will be here. These include planned maintenance, updates to preinstalled services etc.</li>
+            <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/620349128295186472">#cloud-info</a> - Important information you will need to, or should, know to a certain extent. These include our infractions system and Tier limits</li>
+            <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/546457788184789013">#cloud-support</a> - A support channel specifically for the cloud machine, you can use this to ask how to renew your certificates, for example</li>
+            <li><a target="_blank" href="https://support.libraryofcode.us">Library of Code Support Desk</a> - Our Support desk, you will find some handy info there</li>
+            <li><a target="_blank" href="https://www.securesign.org">SecureSign</a> - our certificates manager</li>
+          </ul>
+          <h3>Want to support us?</h3>
+          <p>You can support us on Patreon! Head to <a target="_blank" href="https://www.patreon.com/libraryofcode">our Patreon page</a> and feel free to donate as much or as little as you want!<br>Donating $5 or more will grant you Tier 3, which means we will manage your account at your request, longer certificates, increased Tier limits as well as some roles in the server!</p>
+          <b><i>Library of Code sp-us | Support Team</i></b>
+          </body>        
+        `,
+      });
+
+      const dmChannel = await this.client.getDMChannel(args[0]).catch();
+      dmChannel.createMessage('<:loc:607695848612167700> **Thank you for creating an account with us!** <:loc:607695848612167700>\n'
+      + `Please log into your account by running \`ssh ${args[2]}@cloud.libraryofcode.us\` in your terminal, then use the password \`${tempPass}\` to log in.\n`
+      + `You will be asked to change your password, \`(current) UNIX password\` is \`${tempPass}\`, then create a password that is at least 12 characters long, with at least one number, special character, and an uppercase letter\n`
+      + 'Bear in mind that when you enter your password, it will be blank, so be careful not to type in your password incorrectly.\n'
+      + 'You may now return to Modmail, and continue setting up your account from there.\n\n'
+      + 'An email containing some useful information has also been sent').catch();
+
+      return confirmation.edit(`${this.client.stores.emojis.success} ***Account successfully created***\n**Username:** \`${args[3]}\`\n**Temporary Password:** \`${tempPass}\``);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }

@@ -16,6 +16,7 @@ export default class Modlogs extends Command {
 
   public async run(message: Message, args: string[]) {
     try {
+      if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
       const msg: Message = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locating modlogs...***`);
       const query = await this.client.db.Moderation.find({ $or: [{ username: args.join(' ') }, { userID: args.filter((a) => a)[0].replace(/[<@!>]/g, '') }] });
       if (!query.length) return msg.edit(`***${this.client.stores.emojis.error} Cannot locate modlogs for ${args.join(' ')}***`);
@@ -45,7 +46,7 @@ export default class Modlogs extends Command {
       const embeds = logs.map((l) => {
         const embed = new RichEmbed();
         embed.setDescription(`List of Cloud moderation logs for ${users.join(', ')}`);
-        embed.setAuthor('Library of Code | Cloud Services', this.client.user.avatarURL, 'https://libraryofcode.us');
+        embed.setAuthor('Library of Code | Cloud Services', this.client.user.avatarURL, 'https://libraryofcode.org/');
         embed.setTitle('Cloud Modlogs/Infractions');
         embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
         l.forEach((f) => embed.addField(f.name, f.value, f.inline));
@@ -54,7 +55,12 @@ export default class Modlogs extends Command {
         return embed;
       });
 
-      createPaginationEmbed(message, this.client, embeds, {}, msg);
+      if (embeds.length === 1) {
+        // @ts-ignore
+        message.channel.createMessage({ embed: embeds[0] });
+      } else {
+        createPaginationEmbed(message, this.client, embeds, {}, msg);
+      }
       return msg;
     } catch (error) {
       return this.client.util.handleError(error, message, this);

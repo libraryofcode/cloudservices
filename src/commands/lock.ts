@@ -16,22 +16,26 @@ export default class Lock extends Command {
 
   public async run(message: Message, args: string[]) { // eslint-disable-line
     try {
-      const account = await this.client.db.Account.findOne({ $or: [{ account: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
+      if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
+      const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
       if (account.locked) return message.channel.createMessage(`***${this.client.stores.emojis.error} This account is already locked.***`);
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locking account...***`);
       if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`lock ${account.username}`);
-      await account.update({ locked: true });
+      await account.updateOne({ locked: true });
 
       const expiry = new Date();
       const lockLength = args[1].match(/[a-z]+|[^a-z]+/gi);
       // @ts-ignore
-      const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds;
+      const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds();
       expiry.setMilliseconds(momentMilliseconds);
       let processed: boolean = false;
       if (!momentMilliseconds) processed = true;
 
+      this.client.signale.debug(lockLength);
+      this.client.signale.debug(expiry);
+      this.client.signale.debug(momentMilliseconds);
       const moderation = new this.client.db.Moderation({
         username: account.username,
         userID: account.userID,
@@ -41,7 +45,7 @@ export default class Lock extends Command {
         type: 2,
         date: new Date(),
         expiration: {
-          expirationDate: momentMilliseconds ? expiry : null,
+          date: momentMilliseconds ? expiry : null,
           processed,
         },
       });
@@ -53,8 +57,10 @@ export default class Lock extends Command {
       embed.addField('User', `${account.username} | <@${account.userID}>`, true);
       embed.addField('Supervisor', `<@${message.author.id}>`, true);
       if ((momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ')).length > 0) embed.addField('Reason', momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' '), true);
+      embed.addField('Lock Expiration', `${momentMilliseconds ? moment(expiry).format('dddd, MMMM Do YYYY, h:mm:ss A') : 'Indefinitely'}`, true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
       embed.setTimestamp();
+      message.delete();
       this.client.getDMChannel(account.userID).then((user) => {
         // @ts-ignore
         user.createMessage({ embed }).catch();

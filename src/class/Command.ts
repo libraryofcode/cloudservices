@@ -28,5 +28,6 @@ export default class Command {
       this.aliases = [];
       this.guildOnly = true;
       this.client = client;
+      this.permissions = {};
     }
 }

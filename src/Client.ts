@@ -3,10 +3,10 @@ import mongoose from 'mongoose';
 import signale from 'signale';
 import fs from 'fs-extra';
 import path from 'path';
-import { config, Util } from '.';
+import { config } from '.';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
-import { Command } from './class';
+import { Command, Util } from './class';
 
 
 export default class Client extends Eris.Client {
@@ -27,6 +27,7 @@ export default class Client extends Eris.Client {
   constructor() {
     super(config.token, { getAllUsers: true, restMode: true, defaultImageFormat: 'png' });
 
+    process.title = 'cloudservices';
     this.config = config;
     this.util = new Util(this);
     this.commands = new Map();
@@ -39,13 +40,21 @@ export default class Client extends Eris.Client {
       displayTimestamp: true,
       displayFilename: true,
     });
+    this.events();
     this.loadFunctions();
     this.init();
+  }
+
+  private async events() {
+    process.on('unhandledRejection', (error) => {
+      this.signale.error(error);
+    });
   }
 
   private async loadFunctions() {
     const functions = await fs.readdir('./functions');
     functions.forEach(async (func) => {
+      if (func === 'index.ts') return;
       try {
         require(`./functions/${func}`).default(this);
       } catch (error) {
@@ -57,7 +66,8 @@ export default class Client extends Eris.Client {
   public loadCommand(commandPath: string) {
     // eslint-disable-next-line no-useless-catch
     try {
-      const command = new (require(commandPath))(this);
+      // eslint-disable-next-line
+      const command = new (require(commandPath).default)(this);
       this.commands.set(command.name, command);
       this.signale.complete(`Loaded command ${command.name}`);
     } catch (err) { throw err; }
@@ -67,17 +77,24 @@ export default class Client extends Eris.Client {
     const evtFiles = await fs.readdir('./events/');
     const commands = await fs.readdir(path.join(__dirname, './commands/'));
     commands.forEach((command) => {
+      if (command === 'index.js') return;
       this.loadCommand(`./commands/${command}`);
     });
 
     evtFiles.forEach((file) => {
       const eventName = file.split('.')[0];
-      const event = new (require(`./events/${file}`))(this);
+      if (file === 'index.js') return;
+      // eslint-disable-next-line
+      const event = new (require(`./events/${file}`).default)(this);
       this.signale.complete(`Loaded event ${eventName}`);
       this.on(eventName, (...args) => event.run(...args));
       delete require.cache[require.resolve(`./events/${file}`)];
     });
 
-    this.connect();
+    await mongoose.connect(config.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
+    await this.connect();
   }
 }
+
+// eslint-disable-next-line
+new Client();

@@ -5,4 +5,3 @@ export { default as Commands } from './commands';
 export { default as Events } from './events';
 export { default as Models } from './models';
 export { default as Stores } from './stores';
-export { default as Util } from './Util';

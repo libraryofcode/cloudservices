@@ -3,7 +3,7 @@ import { Client } from '..';
 import { RichEmbed } from '../class';
 
 export default function checkLock(client: Client) {
-  setTimeout(async () => {
+  setInterval(async () => {
     try {
       const moderations = await client.db.Moderation.find();
       moderations.forEach(async (moderation) => {
@@ -13,7 +13,8 @@ export default function checkLock(client: Client) {
           const account = await client.db.Account.findOne({ username: moderation.username });
           if (!account) return;
           await client.util.exec(`unlock ${account.username}`);
-          await moderation.update({ 'expiration.processed': true });
+          await moderation.updateOne({ 'expiration.processed': true });
+          await account.updateOne({ locked: false });
           const mod = new client.db.Moderation({
             username: account.username,
             userID: account.userID,
@@ -38,10 +39,11 @@ export default function checkLock(client: Client) {
           });
           // @ts-ignore
           client.createMessage('580950455581147146', { embed });
+          client.signale.complete(`Unlocked account ${account.username} | Queue date at ${moderation.expiration.date.toLocaleString('en-us')}`);
         }
       });
     } catch (error) {
       await client.util.handleError(error);
     }
-  });
+  }, 10000);
 }

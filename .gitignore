@@ -2,3 +2,4 @@ node_modules
 yarn.lock
 src/config.json
 package-lock.json
+htmlEmail_templates

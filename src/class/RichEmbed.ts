@@ -33,16 +33,24 @@ export default class RichEmbed {
     thumbnail?: { url?: string, proxy_url?: string, height?: number, width?: number }, video?: { url?: string, height?: number, width?: number },
     provider?: { name?: string, url?: string}, author?: { name?: string, url?: string, proxy_icon_url?: string, icon_url?: string},
   } = {}) {
+    /*
     let types: {
       title?: string, type?: string, description?: string, url?: string, timestamp?: Date, color?: number, fields?: {name: string, value: string, inline?: boolean}[]
       footer?: { text: string, icon_url?: string, proxy_icon_url?: string}, image?: { url?: string, proxy_url?: string, height?: number, width?: number },
       thumbnail?: { url?: string, proxy_url?: string, height?: number, width?: number }, video?: { url?: string, height?: number, width?: number },
       provider?: { name?: string, url?: string}, author?: { name?: string, url?: string, proxy_icon_url?: string, icon_url?: string}
     };
-    this.fields = [];
-    for (const key of Object.keys(types)) {
-      if (data[key]) this[key] = data[key];
-    }
+    */
+    this.title = data.title;
+    this.description = data.description;
+    this.url = data.url;
+    this.color = data.color;
+    this.author = data.author;
+    this.timestamp = data.timestamp;
+    this.fields = data.fields || [];
+    this.thumbnail = data.thumbnail;
+    this.image = data.image;
+    this.footer = data.footer;
   }
 
   /**
@@ -97,10 +105,8 @@ export default class RichEmbed {
    */
   setAuthor(name: string, icon_url?: string, url?: string) {
     if (typeof name !== 'string') throw new TypeError('RichEmbed Author names must be a string.');
-    if (typeof url !== 'string') throw new TypeError('RichEmbed Author URLs must be a string.');
-    if (typeof icon_url !== 'string') throw new TypeError('RichEmbed Author icons must be a string.');
-    if (!url.startsWith('http://') || !url.startsWith('https://')) url = `https://${url}`;
-    if (!icon_url.startsWith('http://') || !icon_url.startsWith('https://')) icon_url = `https://${icon_url}`;
+    if (url && typeof url !== 'string') throw new TypeError('RichEmbed Author URLs must be a string.');
+    if (icon_url && typeof icon_url !== 'string') throw new TypeError('RichEmbed Author icons must be a string.');
     this.author = { name, icon_url, url };
     return this;
   }
@@ -164,7 +170,6 @@ export default class RichEmbed {
   setFooter(text: string, icon_url?: string) {
     if (typeof text !== 'string') throw new TypeError('RichEmbed Footers must be a string.');
     if (icon_url && typeof icon_url !== 'string') throw new TypeError('RichEmbed Footer icon URLs must be a string.');
-    if (!icon_url.startsWith('http://') || !icon_url.startsWith('https://')) icon_url = `https://${icon_url}`;
     if (text.length > 2048) throw new RangeError('RichEmbed footer text may not exceed 2048 characters.');
     this.footer = { text, icon_url };
     return this;

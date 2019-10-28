@@ -25,10 +25,10 @@ export interface ModerationInterface extends Document {
 const Moderation: Schema = new Schema({
   username: String,
   userID: String,
-  logID: Number,
+  logID: String,
   moderatorID: String,
   reason: String,
-  type: String,
+  type: Number,
   date: Date,
   expiration: {
     date: Date,

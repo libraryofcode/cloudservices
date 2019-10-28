@@ -1,8 +1,6 @@
 import { Message, TextChannel } from 'eris';
-import { Client, config } from '..';
+import { Client } from '..';
 import Command from '../class/Command';
-
-const { prefix } = config;
 
 export default class {
     public client: Client
@@ -13,17 +11,29 @@ export default class {
 
     public async run(message: Message) {
       try {
-        const noPrefix: string[] = message.content.slice(prefix.length).trim().split(/ +/g);
+        if (message.author.bot) return;
+        if (message.content.indexOf(this.client.config.prefix) !== 0) return;
+        const noPrefix: string[] = message.content.slice(this.client.config.prefix.length).trim().split(/ +/g);
         const command: string = noPrefix[0].toLowerCase();
         const resolved: Command = this.client.util.resolveCommand(command);
         if (!resolved) return;
         if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
-        const hasUserPerms: boolean = resolved.permissions.users.includes(message.author.id);
+        let hasUserPerms: boolean;
+        if (resolved.permissions.users) {
+          hasUserPerms = resolved.permissions.users.includes(message.author.id);
+        }
         let hasRolePerms: boolean = false;
-        for (const role of resolved.permissions.roles) {
-          if (message.member && message.member.roles.includes(role)) {
-            hasRolePerms = true; break;
+        if (resolved.permissions.roles) {
+          for (const role of resolved.permissions.roles) {
+            if (message.member && message.member.roles.includes(role)) {
+              // this.client.signale.debug(message.member.roles.includes(role));
+              hasRolePerms = true; break;
+            }
           }
+        }
+        if (!resolved.permissions.users && !resolved.permissions.roles) {
+          hasUserPerms = true;
+          hasRolePerms = true;
         }
         if (!hasRolePerms && !hasUserPerms) return;
         if (!resolved.enabled) { message.channel.createMessage(`***${this.client.stores.emojis.error} This command has been disabled***`); return; }

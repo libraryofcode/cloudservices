@@ -2,10 +2,10 @@
 import { promisify, isArray } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
-import { Message, TextChannel, PrivateChannel } from 'eris';
+import { Message, PrivateChannel } from 'eris';
 import { outputFile } from 'fs-extra';
-import { Client } from '.';
-import { Command, RichEmbed } from './class';
+import { Client } from '..';
+import { Command, RichEmbed } from '.';
 
 export default class Util {
   public client: Client;
@@ -45,6 +45,8 @@ export default class Util {
   }
 
   public async handleError(error: Error, message?: Message, command?: Command): Promise<void> {
+    this.client.signale.error(error);
+    /*
     const info = { content: `\`\`\`js\n${error.stack}\n\`\`\``, embed: null };
     if (message) {
       const embed = new RichEmbed();
@@ -65,6 +67,7 @@ export default class Util {
     if (message) this.client.createMessage('595788220764127272', 'Message content for above error');
     if (command) this.client.commands.get(command.name).enabled = false;
     if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
+    */
   }
 
   public splitFields(fields: {name: string, value: string, inline?: boolean}[]): {name: string, value: string, inline?: boolean}[][] {
@@ -93,6 +96,7 @@ export default class Util {
     }
     return arrayString;
   }
+
 
   public async createHash(password: string) {
     const hashed = await this.exec(`mkpasswd -m sha-512 "${password}"`);
@@ -128,14 +132,14 @@ export default class Util {
     await this.client.db.Account.deleteOne({ username });
   }
 
-  public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<string> {
+  public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {
     const msg = await message.channel.createMessage(question);
     return new Promise((res, rej) => {
       setTimeout(() => { if (shouldDelete) msg.delete(); rej(new Error('Did not supply a valid input in time')); }, timeout);
       this.client.on('messageCreate', (Msg) => {
         if (filter(Msg) === false) return;
         const verif = choices ? choices.includes(Msg.content) : Msg.content;
-        if (verif) { if (shouldDelete) msg.delete(); res(Msg.content); }
+        if (verif) { if (shouldDelete) msg.delete(); res(Msg); }
       });
     });
   }
