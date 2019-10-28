@@ -28,7 +28,7 @@ export default class Help extends Command {
           let allowedUsers = c.permissions && c.permissions.users && c.permissions.users.map((u) => `<@${u}>`).join(', ');
           if (allowedUsers) { allowedUsers = `**Users:** ${allowedUsers}`; perms.push(allowedUsers); }
           const displayedPerms = perms.length ? `**Permissions:**\n${perms.join('\n')}` : '';
-          return { name: `${this.client.config.prefix}${c.name}`, value: `**Description:** ${c.description}\n**Aliases:** ${aliases}\n**Usage:** ${c.usage}\n${displayedPerms}`, inline: true };
+          return { name: `${this.client.config.prefix}${c.name}`, value: `**Description:** ${c.description}\n**Aliases:** ${aliases}\n**Usage:** ${c.usage}\n${displayedPerms}`, inline: false };
         });
 
         const splitCommands = this.client.util.splitFields(commands);
