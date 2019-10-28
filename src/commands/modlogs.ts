@@ -37,6 +37,7 @@ export default class Modlogs extends Command {
         }
         const value = `**Account name:** ${username}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason}\n**Date:** ${date.toLocaleString('en-us')} EST`;
         const inline = true;
+        this.client.signale.debug(name);
         return { name, value, inline };
       });
       const users = [...new Set(query.map((log) => log.userID))].map((u) => `<@${u}>`);
