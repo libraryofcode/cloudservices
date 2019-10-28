@@ -84,3 +84,6 @@ export default class Client extends Eris.Client {
     this.signale.success(`Successfully connected to Discord | ${this.user.username}#${this.user.discriminator}`);
   }
 }
+
+// eslint-disable-next-line
+new Client();
