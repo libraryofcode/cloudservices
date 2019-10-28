@@ -33,6 +33,7 @@ export default class Lock extends Command {
       let processed: boolean = false;
       if (!momentMilliseconds) processed = true;
 
+      this.client.signale.debug(lockLength);
       this.client.signale.debug(expiry);
       this.client.signale.debug(momentMilliseconds);
       const moderation = new this.client.db.Moderation({
