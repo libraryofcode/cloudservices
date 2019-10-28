@@ -16,6 +16,7 @@ export default class Modlogs extends Command {
 
   public async run(message: Message, args: string[]) {
     try {
+      if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
       const msg: Message = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locating modlogs...***`);
       const query = await this.client.db.Moderation.find({ $or: [{ username: args.join(' ') }, { userID: args.filter((a) => a)[0].replace(/[<@!>]/g, '') }] });
       if (!query.length) return msg.edit(`***${this.client.stores.emojis.error} Cannot locate modlogs for ${args.join(' ')}***`);

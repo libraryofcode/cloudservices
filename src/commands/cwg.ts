@@ -16,6 +16,7 @@ export default class CWG extends Command {
   }
 
   public async run(message: Message, args?: string[]) {
+    if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
     /*
     args[1] should be the user's ID OR account username; required
     args[2] should be the domain; required

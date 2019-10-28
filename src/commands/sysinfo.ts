@@ -27,7 +27,7 @@ export default class SysInfo extends Command {
     embed.addField('Load Average (last 15 minutes)', os.loadavg()[2].toFixed(3), true);
     embed.addField('Memory/RAM', `${usedMemory} / ${dataConversion(totalmem())}`, true);
     embed.addField('Network Interfaces (IPv4)', os.networkInterfaces().eth0.filter((r) => r.family === 'IPv4')[0].address, true);
-    embed.addField('Network Interfaces (IPv6)', os.networkInterfaces().eth0.filter((r) => r.family === 'IPv6')[0].address, true);
+    embed.addField('Network Interfaces (IPv6)', os.networkInterfaces().eth0.filter((r) => r.family === 'IPv6')[0].address.replace(/:/gi, '\:'), true); // eslint-disable-line
     embed.setFooter(this.client.user.username, this.client.user.avatarURL);
     embed.setTimestamp();
     // @ts-ignore
