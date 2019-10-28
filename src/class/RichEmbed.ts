@@ -107,8 +107,6 @@ export default class RichEmbed {
     if (typeof name !== 'string') throw new TypeError('RichEmbed Author names must be a string.');
     if (url && typeof url !== 'string') throw new TypeError('RichEmbed Author URLs must be a string.');
     if (icon_url && typeof icon_url !== 'string') throw new TypeError('RichEmbed Author icons must be a string.');
-    if (!url.startsWith('http://') || !url.startsWith('https://')) url = `https://${url}`;
-    if (!icon_url.startsWith('http://') || !icon_url.startsWith('https://')) icon_url = `https://${icon_url}`;
     this.author = { name, icon_url, url };
     return this;
   }
