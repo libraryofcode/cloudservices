@@ -112,7 +112,7 @@ export default class CWG extends Command {
       account,
       domain,
       port,
-      x509,
+      x509: x509Certificate,
       enabled: true,
     });
     if (domain.includes('cloud.libraryofcode.org')) {
