@@ -23,7 +23,7 @@ export default class Lock extends Command {
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Locking account...***`);
       if (account.username === 'matthew' || account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.exec(`lock ${account.username}`);
-      await account.update({ locked: true });
+      await account.updateOne({ locked: true });
 
       const expiry = new Date();
       const lockLength = args[1].match(/[a-z]+|[^a-z]+/gi);
