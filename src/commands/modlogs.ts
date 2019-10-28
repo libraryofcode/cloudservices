@@ -23,6 +23,8 @@ export default class Modlogs extends Command {
 
       const formatted = query.map((log) => {
         const { username, moderatorID, reason, type, date } = log;
+        this.client.signale.debug(log);
+        this.client.signale.debug(type);
         let name: string;
         if (type === 0) {
           name = 'Create';
