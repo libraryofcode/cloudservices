@@ -49,6 +49,7 @@ export default class Modlogs extends Command {
         embed.setAuthor('Library of Code | Cloud Services', this.client.user.avatarURL, 'https://libraryofcode.org/');
         embed.setTitle('Cloud Modlogs/Infractions');
         embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
+        this.client.signale.debug(l);
         l.forEach((f) => embed.addField(f.name, f.value, f.inline));
         embed.setTimestamp();
         embed.setColor(3447003);
