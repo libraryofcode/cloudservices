@@ -57,6 +57,7 @@ export default class Lock extends Command {
       embed.addField('User', `${account.username} | <@${account.userID}>`, true);
       embed.addField('Supervisor', `<@${message.author.id}>`, true);
       if ((momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ')).length > 0) embed.addField('Reason', momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' '), true);
+      embed.addField('Lock Expiration', `${momentMilliseconds ? moment(expiry).format('dddd, MMMM Do YYYY, h:mm:ss A') : 'N/A'}`, true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
       embed.setTimestamp();
       message.delete();
