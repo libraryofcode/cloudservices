@@ -34,7 +34,7 @@ export default class Unlock extends Command {
       await moderation.save();
       edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been unlocked by Supervisor ${message.author.username}#${message.author.discriminator}.***`);
       const embed = new RichEmbed();
-      embed.setTitle('Account Infraction | UnLock');
+      embed.setTitle('Account Infraction | Unlock');
       embed.setColor(15158332);
       embed.addField('User', `${account.username} | <@${account.userID}>`, true);
       embed.addField('Supervisor', `<@${message.author.id}>`, true);
