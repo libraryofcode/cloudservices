@@ -28,7 +28,7 @@ export default class Lock extends Command {
       const expiry = new Date();
       const lockLength = args[1].match(/[a-z]+|[^a-z]+/gi);
       // @ts-ignore
-      const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds;
+      const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds();
       expiry.setMilliseconds(momentMilliseconds);
       let processed: boolean = false;
       if (!momentMilliseconds) processed = true;
