@@ -27,6 +27,7 @@ export default class Client extends Eris.Client {
   constructor() {
     super(config.token, { getAllUsers: true, restMode: true, defaultImageFormat: 'png' });
 
+    process.title = 'cloudservices';
     this.config = config;
     this.util = new Util(this);
     this.commands = new Map();
