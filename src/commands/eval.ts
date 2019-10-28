@@ -28,11 +28,13 @@ export default class Eval extends Command {
         output = error.stack;
       }
 
+      /*
       if (output) {
         output = output.replace(RegExp(this.client.config.prefix, 'gi'), 'juul');
         output = output.replace(RegExp(this.client.config.emailPass, 'gi'), 'juul');
         output = output.replace(RegExp(this.client.config.cloudflare, 'gi'), 'juul');
       }
+      */
 
       const display = this.client.util.splitString(output, 1975);
       if (display[5]) {
