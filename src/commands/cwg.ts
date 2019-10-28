@@ -11,49 +11,51 @@ export default class CWG extends Command {
     super(client);
     this.name = 'cwg';
     this.description = 'Manages aspects for the CWG.';
-    this.usage = `${this.client.config.prefix}cwg [User ID/Username] [Domain] [Port] <Path to x509 certificate> <Path to x509 key>`;
+    this.usage = `${this.client.config.prefix}cwg create [User ID/Username] [Domain] [Port] <Path to x509 certificate> <Path to x509 key>`;
     this.permissions = { roles: ['525441307037007902'] };
     this.enabled = true;
   }
 
   public async run(message: Message, args?: string[]) {
-    if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
-    /*
+    try {
+      if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
+      /*
     args[1] should be the user's ID OR account username; required
     args[2] should be the domain; required
     args[3] should be the port; required
     args[4] should be the path to the x509 certificate; not required
     args[5] should be the path to the x509 key; not required
     */
-    if (args[0] === 'create') {
-      const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
-      if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
-      try {
-        const domain = await this.createDomain(account, args[2], Number(args[3]), { cert: args[4], key: args[5] });
-        const embed = new RichEmbed();
-        embed.setTitle('Domain Creation');
-        embed.setColor(3066993);
-        embed.addField('Account Username', account.username, true);
-        embed.addField('Account ID', account.id, true);
-        embed.addField('Engineer', `<@${message.author.id}>`, true);
-        embed.addField('Domain', domain.domain, true);
-        embed.addField('Port', String(domain.port), true);
-        const cert = x509.parseCert(await fs.readFile(domain.x509.cert, { encoding: 'utf8' }));
-        embed.addField('Certificate Issuer', cert.issuer.organizationName, true);
-        embed.addField('Certificate Subject', cert.subject.commonName, true);
-        embed.setFooter(this.client.user.username, this.client.user.avatarURL);
-        embed.setTimestamp(new Date(message.timestamp));
-        // @ts-ignore
-        message.channel.createMessage({ embed });
-        // @ts-ignore
-        this.client.createMessage('580950455581147146', { embed });
-        // @ts-ignore
-        this.client.getDMChannel(account.userID).then((r) => r.createMessage({ embed }));
-        await this.client.util.transport.sendMail({
-          to: account.emailAddress,
-          from: 'Library of Code sp-us | Support Team <support@libraryofcode.org>',
-          subject: 'Your domain has been binded',
-          html: `
+      if (args[0] === 'create') {
+        if (!args[5]) return this.client.commands.get('help').run(message, [this.name]);
+        const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
+        if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
+        try {
+          const domain = await this.createDomain(account, args[2], Number(args[3]), { cert: args[4], key: args[5] });
+          const embed = new RichEmbed();
+          embed.setTitle('Domain Creation');
+          embed.setColor(3066993);
+          embed.addField('Account Username', account.username, true);
+          embed.addField('Account ID', account.id, true);
+          embed.addField('Engineer', `<@${message.author.id}>`, true);
+          embed.addField('Domain', domain.domain, true);
+          embed.addField('Port', String(domain.port), true);
+          const cert = x509.parseCert(await fs.readFile(domain.x509.cert, { encoding: 'utf8' }));
+          embed.addField('Certificate Issuer', cert.issuer.organizationName, true);
+          embed.addField('Certificate Subject', cert.subject.commonName, true);
+          embed.setFooter(this.client.user.username, this.client.user.avatarURL);
+          embed.setTimestamp(new Date(message.timestamp));
+          // @ts-ignore
+          message.channel.createMessage({ embed });
+          // @ts-ignore
+          this.client.createMessage('580950455581147146', { embed });
+          // @ts-ignore
+          this.client.getDMChannel(account.userID).then((r) => r.createMessage({ embed }));
+          await this.client.util.transport.sendMail({
+            to: account.emailAddress,
+            from: 'Library of Code sp-us | Support Team <support@libraryofcode.org>',
+            subject: 'Your domain has been binded',
+            html: `
           <h1>Library of Code sp-us | Cloud Services</h1>
           <p>Hello, this is an email informing you that a new domain under your account has been binded.
           Information is below.</p>
@@ -67,16 +69,19 @@ export default class CWG extends Command {
           
           <b><i>Library of Code sp-us | Support Team</i></b>
           `,
-        });
-        if (!domain.domain.includes('cloud.libraryofcode.org')) {
-          const content = `_**DNS Record Setup**__\nYou recently a binded a custom domain to your Library of Code sp-us Account. You'll have to update your DNS records. We've provided the records below.\n\n\`${domain.domain} IN CNAME cloud.libraryofcode.us AUTO/500\`\nThis basically means you need to make a CNAME record with the key/host of ${domain.domain} and the value/point to cloud.libraryofcode.org. If you have any questions, don't hesitate to ask us.`;
-          this.client.getDMChannel(account.userID).then((r) => r.createMessage(content));
+          });
+          if (!domain.domain.includes('cloud.libraryofcode.org')) {
+            const content = `_**DNS Record Setup**__\nYou recently a binded a custom domain to your Library of Code sp-us Account. You'll have to update your DNS records. We've provided the records below.\n\n\`${domain.domain} IN CNAME cloud.libraryofcode.us AUTO/500\`\nThis basically means you need to make a CNAME record with the key/host of ${domain.domain} and the value/point to cloud.libraryofcode.org. If you have any questions, don't hesitate to ask us.`;
+            this.client.getDMChannel(account.userID).then((r) => r.createMessage(content));
+          }
+        } catch (err) {
+          this.client.util.handleError(err, message, this);
         }
-      } catch (err) {
-        this.client.util.handleError(err, message, this);
-      }
-    } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
-    return true;
+      } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
+      return true;
+    } catch (error) {
+      return this.client.util.handleError(error, message, this);
+    }
   }
 
   /**
