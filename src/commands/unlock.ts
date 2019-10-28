@@ -15,7 +15,7 @@ export default class Unlock extends Command {
   public async run(message: Message, args: string[]) { // eslint-disable-line
     try {
       if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
-      const account = await this.client.db.Account.findOne({ $or: [{ account: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
+      const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
       if (!account.locked) return message.channel.createMessage(`***${this.client.stores.emojis.error} This account is already unlocked.***`);
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Unlocking account...***`);
