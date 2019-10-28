@@ -42,7 +42,7 @@ export default class Lock extends Command {
         type: 2,
         date: new Date(),
         expiration: {
-          expirationDate: momentMilliseconds ? expiry : null,
+          date: momentMilliseconds ? expiry : null,
           processed,
         },
       });
