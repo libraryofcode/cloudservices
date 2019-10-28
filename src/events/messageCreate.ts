@@ -24,9 +24,11 @@ export default class {
           hasUserPerms = resolved.permissions.users.includes(message.author.id);
         }
         let hasRolePerms: boolean = false;
-        for (const role of resolved.permissions.roles) {
-          if (message.member && message.member.roles.includes(role)) {
-            hasRolePerms = true; break;
+        if (resolved.permissions.roles) {
+          for (const role of resolved.permissions.roles) {
+            if (message.member && message.member.roles.includes(role)) {
+              hasRolePerms = true; break;
+            }
           }
         }
         if (!hasRolePerms && !hasUserPerms) return;
