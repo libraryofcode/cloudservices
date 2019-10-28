@@ -2,7 +2,7 @@
 import { Message } from 'eris';
 import { inspect } from 'util';
 import axios from 'axios';
-import { Client, config } from '..';
+import { Client } from '..';
 import { Command } from '../class';
 
 export default class Eval extends Command {
@@ -17,21 +17,21 @@ export default class Eval extends Command {
 
   public async run(message: Message) {
     try {
-      const evalMessage = message.content.slice(config.prefix.length).split(' ').slice(1).join(' ');
+      // const evalMessage = message.content.slice(this.client.config.prefix.length).split(' ').slice(1).join(' ');
       let evaled: any;
       let output: string;
 
       try {
-        evaled = await eval(evalMessage);
+        evaled = await eval(message.content);
         if (typeof evaled !== 'string') output = output && inspect(evaled, { depth: 1 });
       } catch (error) {
         output = error.stack;
       }
 
       if (output) {
-        output = output.replace(RegExp(config.prefix, 'gi'), 'juul');
-        output = output.replace(RegExp(config.emailPass, 'gi'), 'juul');
-        output = output.replace(RegExp(config.cloudflare, 'gi'), 'juul');
+        output = output.replace(RegExp(this.client.config.prefix, 'gi'), 'juul');
+        output = output.replace(RegExp(this.client.config.emailPass, 'gi'), 'juul');
+        output = output.replace(RegExp(this.client.config.cloudflare, 'gi'), 'juul');
       }
 
       const display = this.client.util.splitString(output, 1975);
