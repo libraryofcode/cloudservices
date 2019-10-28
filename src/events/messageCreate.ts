@@ -36,9 +36,6 @@ export default class {
           hasUserPerms = true;
           hasRolePerms = true;
         }
-        this.client.signale.debug('---');
-        this.client.signale.debug(hasUserPerms);
-        this.client.signale.debug(hasRolePerms);
         if (!hasRolePerms && !hasUserPerms) return;
         if (!resolved.enabled) { message.channel.createMessage(`***${this.client.stores.emojis.error} This command has been disabled***`); return; }
         const args: string[] = noPrefix.slice(1);
