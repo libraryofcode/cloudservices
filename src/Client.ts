@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import signale from 'signale';
 import fs from 'fs-extra';
 import path from 'path';
-import { config } from '.';
+import config from './config.json';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
 import { Command, Util } from './class';
