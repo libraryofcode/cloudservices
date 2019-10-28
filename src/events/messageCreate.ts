@@ -28,6 +28,7 @@ export default class {
         if (resolved.permissions.roles) {
           for (const role of resolved.permissions.roles) {
             if (message.member && message.member.roles.includes(role)) {
+              this.client.signale.debug(message.member.roles.includes(role));
               hasRolePerms = true; break;
             }
           }
