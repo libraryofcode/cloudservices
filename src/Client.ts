@@ -68,6 +68,7 @@ export default class Client extends Eris.Client {
     const evtFiles = await fs.readdir('./events/');
     const commands = await fs.readdir(path.join(__dirname, './commands/'));
     commands.forEach((command) => {
+      if (command === 'index.js') return;
       this.loadCommand(`./commands/${command}`);
     });
 
