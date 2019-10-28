@@ -25,6 +25,9 @@ export default class Eval extends Command {
         if (typeof evaled === 'object') {
           evaled = inspect(evaled, { depth: 0 });
         }
+        if (evaled === undefined) {
+          evaled = 'undefined';
+        }
       } catch (error) {
         evaled = error.stack;
       }
