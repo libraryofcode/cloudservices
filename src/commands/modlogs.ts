@@ -23,8 +23,6 @@ export default class Modlogs extends Command {
 
       const formatted = query.map((log) => {
         const { username, moderatorID, reason, type, date } = log;
-        this.client.signale.debug(log);
-        this.client.signale.debug(type);
         let name: string;
         if (type === 0) {
           name = 'Create';
@@ -39,7 +37,6 @@ export default class Modlogs extends Command {
         }
         const value = `**Account name:** ${username}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason}\n**Date:** ${date.toLocaleString('en-us')} EST`;
         const inline = true;
-        this.client.signale.debug(name);
         return { name, value, inline };
       });
       const users = [...new Set(query.map((log) => log.userID))].map((u) => `<@${u}>`);
@@ -59,7 +56,12 @@ export default class Modlogs extends Command {
         return embed;
       });
 
-      createPaginationEmbed(message, this.client, embeds, {}, msg);
+      if (embeds.length === 1) {
+        // @ts-ignore
+        message.channel.createMessage({ embed: embeds[0] });
+      } else {
+        createPaginationEmbed(message, this.client, embeds, {}, msg);
+      }
       return msg;
     } catch (error) {
       return this.client.util.handleError(error, message, this);
