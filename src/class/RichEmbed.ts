@@ -33,16 +33,24 @@ export default class RichEmbed {
     thumbnail?: { url?: string, proxy_url?: string, height?: number, width?: number }, video?: { url?: string, height?: number, width?: number },
     provider?: { name?: string, url?: string}, author?: { name?: string, url?: string, proxy_icon_url?: string, icon_url?: string},
   } = {}) {
+    /*
     let types: {
       title?: string, type?: string, description?: string, url?: string, timestamp?: Date, color?: number, fields?: {name: string, value: string, inline?: boolean}[]
       footer?: { text: string, icon_url?: string, proxy_icon_url?: string}, image?: { url?: string, proxy_url?: string, height?: number, width?: number },
       thumbnail?: { url?: string, proxy_url?: string, height?: number, width?: number }, video?: { url?: string, height?: number, width?: number },
       provider?: { name?: string, url?: string}, author?: { name?: string, url?: string, proxy_icon_url?: string, icon_url?: string}
     };
-    this.fields = [];
-    for (const key of Object.keys(types)) {
-      if (data[key]) this[key] = data[key];
-    }
+    */
+    this.title = data.title;
+    this.description = data.description;
+    this.url = data.url;
+    this.color = data.color;
+    this.author = data.author;
+    this.timestamp = data.timestamp;
+    this.fields = data.fields || [];
+    this.thumbnail = data.thumbnail;
+    this.image = data.image;
+    this.footer = data.footer;
   }
 
   /**
