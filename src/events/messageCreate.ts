@@ -19,8 +19,10 @@ export default class {
         if (!resolved) return;
         if (resolved.guildOnly && !(message.channel instanceof TextChannel)) return;
         let hasUserPerms: boolean;
-        if (resolved.permissions.users.length > 0) {
+        if (resolved.permissions.users) {
           hasUserPerms = resolved.permissions.users.includes(message.author.id);
+        } else {
+          hasUserPerms = true;
         }
         let hasRolePerms: boolean = false;
         if (resolved.permissions.roles) {
