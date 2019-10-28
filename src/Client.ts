@@ -40,8 +40,15 @@ export default class Client extends Eris.Client {
       displayTimestamp: true,
       displayFilename: true,
     });
+    this.events();
     this.loadFunctions();
     this.init();
+  }
+
+  private async events() {
+    process.on('unhandledRejection', (error) => {
+      this.signale.error(error);
+    });
   }
 
   private async loadFunctions() {
