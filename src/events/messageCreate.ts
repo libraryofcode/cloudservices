@@ -21,18 +21,12 @@ export default class {
         let hasUserPerms: boolean;
         if (resolved.permissions.users) {
           hasUserPerms = resolved.permissions.users.includes(message.author.id);
-        } else {
-          hasUserPerms = true;
         }
         let hasRolePerms: boolean = false;
-        if (resolved.permissions.roles) {
-          for (const role of resolved.permissions.roles) {
-            if (message.member && message.member.roles.includes(role)) {
-              hasRolePerms = true; break;
-            }
+        for (const role of resolved.permissions.roles) {
+          if (message.member && message.member.roles.includes(role)) {
+            hasRolePerms = true; break;
           }
-        } else {
-          hasRolePerms = true;
         }
         if (!hasRolePerms && !hasUserPerms) return;
         if (!resolved.enabled) { message.channel.createMessage(`***${this.client.stores.emojis.error} This command has been disabled***`); return; }
