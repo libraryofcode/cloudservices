@@ -25,7 +25,6 @@ export default class {
         let hasRolePerms: boolean = false;
         if (resolved.permissions.roles) {
           for (const role of resolved.permissions.roles) {
-            this.client.signale.debug(message.member.roles.includes(role));
             if (message.member && message.member.roles.includes(role)) {
               // this.client.signale.debug(message.member.roles.includes(role));
               hasRolePerms = true; break;
