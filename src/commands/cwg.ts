@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import axios from 'axios';
+import moment from 'moment';
 import x509 from '@ghaiklor/x509';
 import { Message } from 'eris';
 import { AccountInterface } from '../models';
@@ -28,11 +29,14 @@ export default class CWG extends Command {
     */
       if (args[0] === 'create') {
         if (!args[3]) return this.client.commands.get('help').run(message, [this.name]);
-        const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
-        if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
         try {
-          if (args[4] && !args[5]) return message.channel.createMessage(`${this.client.stores.emojis.error} x509 Certificate key required`);
+          const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Binding domain...`);
+          const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
+          if (!account) return edit.edit(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
+          if (args[4] && !args[5]) return edit.edit(`${this.client.stores.emojis.error} x509 Certificate key required`);
           let certs: { cert?: string, key?: string }; if (args[5]) certs = { cert: args[4], key: args[5] };
+          if (await this.client.db.Domain.exists({ domain: args[2] })) return edit.edit(`***${this.client.stores.emojis.error} This domain already exists.***`);
+          if (await this.client.db.Domain.exists({ port: Number(args[3]) })) return edit.edit(`***${this.client.stores.emojis.error} This port is already binded to a domain.***`);
           const domain = await this.createDomain(account, args[2], Number(args[3]), certs);
           const embed = new RichEmbed();
           embed.setTitle('Domain Creation');
@@ -47,8 +51,8 @@ export default class CWG extends Command {
           embed.addField('Certificate Subject', cert.subject.commonName, true);
           embed.setFooter(this.client.user.username, this.client.user.avatarURL);
           embed.setTimestamp(new Date(message.timestamp));
-          // @ts-ignore
-          message.channel.createMessage({ embed });
+          message.delete();
+          edit.edit(`***${this.client.stores.emojis.success} Successfully binded ${domain.domain} to port ${domain.port} for ${account.userID}.***`);
           // @ts-ignore
           this.client.createMessage('580950455581147146', { embed });
           // @ts-ignore
@@ -79,6 +83,22 @@ export default class CWG extends Command {
         } catch (err) {
           this.client.util.handleError(err, message, this);
         }
+      } else if (args[0] === 'data') {
+        if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
+        const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: args[1] }] });
+        const embed = new RichEmbed();
+        embed.setTitle('Domain Information');
+        embed.addField('Account Username', domain.account.username, true);
+        embed.addField('Account ID', domain.account.userID, true);
+        embed.addField('Domain', domain.domain, true);
+        embed.addField('Port', String(domain.port), true);
+        embed.addField('Certificate Issuer', x509.getIssuer(await fs.readFile(domain.x509.cert, { encoding: 'utf8 ' })).organizationName, true);
+        embed.addField('Certificate Subject', x509.getSubject(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).commonName, true);
+        embed.addField('Certificate Expiration Date', moment(x509.parseCert(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).notAfter).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
+        embed.setFooter(this.client.user.username, this.client.user.avatarURL);
+        embed.setTimestamp();
+        // @ts-ignore
+        message.channel.createMessage({ embed });
       } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
       return true;
     } catch (error) {
