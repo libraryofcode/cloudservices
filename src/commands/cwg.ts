@@ -12,7 +12,7 @@ export default class CWG extends Command {
     super(client);
     this.name = 'cwg';
     this.description = 'Manages aspects for the CWG.';
-    this.usage = `${this.client.config.prefix}cwg create [User ID/Username] [Domain] [Port] <Path to x509 certificate> <Path to x509 key>`;
+    this.usage = `${this.client.config.prefix}cwg create [User ID/Username] [Domain] [Port] <Path to x509 cert> <Path to x509 key>\n${this.client.config.prefix}cwg data [Domain/Port]`;
     this.permissions = { roles: ['525441307037007902'] };
     this.enabled = true;
   }
@@ -85,7 +85,7 @@ export default class CWG extends Command {
         }
       } else if (args[0] === 'data') {
         if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
-        const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: Number(args[1]) ? Number(args[1]) : '' }] });
+        const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: Number(args[1]) || '' }] });
         if (!domain) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
         const embed = new RichEmbed();
         embed.setTitle('Domain Information');
