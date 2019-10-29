@@ -199,7 +199,7 @@ export default class Util {
       .setFooter(this.client.user.username, this.client.user.avatarURL)
       .setTimestamp();
     if (reason) embed.addField('Reason', reason || 'Not specified');
-    if (type === 2) embed.addField('Lock Expiration', `${moment(date).format('dddd, MMMM Do YYYY, h:mm:ss A')}`);
+    if (type === 2) embed.addField('Lock Expiration', `${date ? moment(date).format('dddd, MMMM Do YYYY, h:mm:ss A') : 'Indefinitely'}`);
     // @ts-ignore
     this.client.createMessage('580950455581147146', { embed }); this.client.getDMChannel(userID).then((channel) => channel.createMessage({ embed })).catch();
 
