@@ -92,7 +92,7 @@ export default class Util {
     let str: string = '';
     let pos: number;
     while (string.length > 0) {
-      pos = string.length > length ? string.lastIndexOf('\n', length) : outputFile.length;
+      pos = string.length > length ? string.lastIndexOf('\n', length) : string.length;
       if (pos > length) pos = length;
       str = string.substr(0, pos);
       string = string.substr(pos);
