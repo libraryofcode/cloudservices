@@ -94,6 +94,9 @@ export default class Client extends Eris.Client {
 
     await mongoose.connect(config.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
     await this.connect();
+    this.on('ready', () => {
+      this.signale.info(`Connected to Discord as ${this.user.username}#${this.user.discriminator}`);
+    });
   }
 }
 
