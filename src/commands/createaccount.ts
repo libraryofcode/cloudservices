@@ -44,6 +44,8 @@ export default class CreateAccount extends Command {
       const etcPasswd = `${acctName},${args[0]},,`;
 
       await this.client.util.createAccount(passHash, etcPasswd, args[2], args[0], args[1], message.author.id);
+      await this.client.util.createModerationLog(args[0], message.member, 0);
+      /*
       const log = await new this.client.db.Moderation({
         username: args[2], userID: args[0], logID: uuid(), moderatorID: message.author.id, reason: 'User requested account creation', type: 0, date: new Date(),
       });
@@ -59,6 +61,7 @@ export default class CreateAccount extends Command {
       embed.setTimestamp();
       // @ts-ignore
       this.client.createMessage('580950455581147146', { embed });
+      */
 
       this.client.util.transport.sendMail({
         to: args[1],

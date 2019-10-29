@@ -168,10 +168,13 @@ export default class Util {
     let date: Date;
     let processed = true;
     if (reason) logInput.reason = reason;
-    if (duration) {
-      date = new Date(now + duration);
-      processed = false;
-    } else date = null;
+    if (type === 2) {
+      if (duration) {
+        date = new Date(now + duration);
+        processed = false;
+      } else date = null;
+    }
+
     const expiration = { date, processed };
 
     logInput.expiration = expiration;
