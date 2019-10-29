@@ -39,6 +39,8 @@ export default class DeleteAccount extends Command {
       const reason = args.slice(1).join(' ');
       const logInput = { username, userID, logID: uuid(), moderatorID: message.author.id, type: 4, date: new Date(), reason: null };
       if (reason) logInput.reason = reason;
+      await this.client.util.createModerationLog(args[0], message.member, 4, reason);
+      /*
       const log = await new this.client.db.Moderation(logInput);
       await log.save();
 
@@ -56,6 +58,7 @@ export default class DeleteAccount extends Command {
         // @ts-ignore
         user.createMessage({ embed }).catch();
       });
+      */
 
       this.client.util.transport.sendMail({
         to: account.emailAddress,

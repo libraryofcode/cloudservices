@@ -2,7 +2,7 @@
 import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
-import { Message, PrivateChannel, Member } from 'eris';
+import { Message, PrivateChannel, Member, User } from 'eris';
 import { outputFile } from 'fs-extra';
 import uuid from 'uuid/v4';
 import moment from 'moment';
@@ -155,7 +155,7 @@ export default class Util {
    * `3` - Unlock
    * `4` - Delete
    */
-  public async createModerationLog(user: string, moderator: Member, type: number, reason?: string, duration?: number): Promise<ModerationInterface> {
+  public async createModerationLog(user: string, moderator: Member|User, type: number, reason?: string, duration?: number): Promise<ModerationInterface> {
     const moderatorID = moderator.id;
     const account = await this.client.db.Account.findOne({ $or: [{ username: user }, { userID: user }] });
     if (!account) return Promise.reject(new Error(`Account ${user} not found`));
@@ -195,7 +195,7 @@ export default class Util {
       .setTitle(embedTitle)
       .setColor(color)
       .addField('User', `${username} | <@${userID}>`, true)
-      .addField('Supervisor', `<@${moderatorID}>`, true)
+      .addField('Supervisor', moderatorID === this.client.user.id ? 'SYSTEM' : `<@${moderatorID}>`, true)
       .setFooter(this.client.user.username, this.client.user.avatarURL)
       .setTimestamp();
     if (reason) embed.addField('Reason', reason || 'Not specified');

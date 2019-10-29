@@ -29,13 +29,20 @@ export default class Lock extends Command {
       const lockLength = args[1].match(/[a-z]+|[^a-z]+/gi);
       // @ts-ignore
       const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds();
+      /*
       expiry.setMilliseconds(momentMilliseconds);
       let processed: boolean = false;
       if (!momentMilliseconds) processed = true;
+      */
 
       this.client.signale.debug(lockLength);
       this.client.signale.debug(expiry);
       this.client.signale.debug(momentMilliseconds);
+      const reason = momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ');
+
+      await this.client.util.createModerationLog(account.userID, message.member, 2, reason, momentMilliseconds);
+
+      /*
       const moderation = new this.client.db.Moderation({
         username: account.username,
         userID: account.userID,
@@ -67,6 +74,7 @@ export default class Lock extends Command {
       });
       // @ts-ignore
       this.client.createMessage('580950455581147146', { embed });
+      */
 
       this.client.util.transport.sendMail({
         to: account.emailAddress,

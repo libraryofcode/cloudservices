@@ -23,6 +23,8 @@ export default class Unlock extends Command {
       await this.client.util.exec(`unlock ${account.username}`);
       await account.updateOne({ locked: false });
 
+      await this.client.util.createModerationLog(account.userID, message.member, 3, args.slice(1).join(' '));
+      /*
       const moderation = new this.client.db.Moderation({
         username: account.username,
         userID: account.userID,
@@ -33,7 +35,11 @@ export default class Unlock extends Command {
         date: new Date(),
       });
       await moderation.save();
+      */
+
       edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been unlocked by Supervisor ${message.author.username}#${message.author.discriminator}.***`);
+
+      /*
       const embed = new RichEmbed();
       embed.setTitle('Account Infraction | Unlock');
       embed.setColor(15158332);
@@ -49,6 +55,7 @@ export default class Unlock extends Command {
       });
       // @ts-ignore
       this.client.createMessage('580950455581147146', { embed });
+      */
     } catch (error) {
       await this.client.util.handleError(error, message, this);
     }

@@ -15,6 +15,8 @@ export default function checkLock(client: Client) {
           await client.util.exec(`unlock ${account.username}`);
           await moderation.updateOne({ 'expiration.processed': true });
           await account.updateOne({ locked: false });
+          await client.util.createModerationLog(account.userID, client.user, 3, 'Auto');
+          /*
           const mod = new client.db.Moderation({
             username: account.username,
             userID: account.userID,
@@ -39,6 +41,7 @@ export default function checkLock(client: Client) {
           });
           // @ts-ignore
           client.createMessage('580950455581147146', { embed });
+          */
           client.signale.complete(`Unlocked account ${account.username} | Queue date at ${moderation.expiration.date.toLocaleString('en-us')}`);
         }
       });
