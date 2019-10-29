@@ -18,6 +18,8 @@ export default class Command {
 
     guildOnly?: boolean
 
+    subcommands: Map<string, Command>
+
     public run(message: Message, args: string[]) {} // eslint-disable-line
 
     constructor(client: Client) {
@@ -28,6 +30,7 @@ export default class Command {
       this.aliases = [];
       this.guildOnly = true;
       this.client = client;
+      this.subcommands = new Map();
       this.permissions = {};
     }
 }
