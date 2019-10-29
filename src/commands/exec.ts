@@ -18,7 +18,12 @@ export default class Exec extends Command {
       if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
 
       const response = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Executing \`${args.join(' ')}\`***`);
-      const result = await this.client.util.exec(args.join(' '));
+      let result: string;
+      try {
+        result = await this.client.util.exec(args.join(' '));
+      } catch (error) {
+        result = error.message;
+      }
 
       if (result.length <= 1975) return response.edit(`\`\`\`bash\n${result}\n\`\`\``);
       const splitResult = this.client.util.splitString(result, 1975);
