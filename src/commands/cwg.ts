@@ -53,6 +53,7 @@ export default class CWG extends Command {
           embed.setFooter(this.client.user.username, this.client.user.avatarURL);
           embed.setTimestamp(new Date(message.timestamp));
           message.delete();
+          await this.client.util.exec('systemctl reload nginx');
           edit.edit(`***${this.client.stores.emojis.success} Successfully binded ${domain.domain} to port ${domain.port} for ${account.userID}.***`);
           // @ts-ignore
           this.client.createMessage('580950455581147146', { embed });
@@ -102,11 +103,10 @@ export default class CWG extends Command {
         // @ts-ignore
         message.channel.createMessage({ embed });
       } else if (args[0] === 'delete') {
+        const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Deleting domain...`);
         if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
         const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: Number(args[1]) || '' }] });
         if (!domain) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
-        await fs.unlink(`/etc/nginx/sites-available/${domain.domain}`);
-        await fs.unlink(`/etc/nginx/sites-enabled/${domain}`);
         const embed = new RichEmbed();
         embed.setTitle('Domain Deletion');
         embed.addField('Account Username', domain.account.username, true);
@@ -128,9 +128,13 @@ export default class CWG extends Command {
             headers: { Authorization: `Bearer ${this.client.config.cloudflare}` },
           });
         }
+        await fs.unlink(`/etc/nginx/sites-available/${domain.domain}`);
+        await fs.unlink(`/etc/nginx/sites-enabled/${domain}`);
+        await this.client.db.Domain.deleteOne({ domain: domain.domain });
+        await this.client.util.exec('systemctl reload nginx');
+        edit.edit(`***${this.client.stores.emojis.success} Domain ${domain.domain} with port ${domain.port} has been successfully deleted.***`);
         // @ts-ignore
         message.channel.createMessage({ embed });
-        await this.client.db.Domain.deleteOne({ domain: domain.domain });
       } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
       return true;
     } catch (error) {
