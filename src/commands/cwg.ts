@@ -13,7 +13,7 @@ export default class CWG extends Command {
     this.name = 'cwg';
     this.description = 'Manages aspects for the CWG.';
     this.usage = `${this.client.config.prefix}cwg create [User ID/Username] [Domain] [Port] <Path to x509 cert> <Path to x509 key>\n${this.client.config.prefix}cwg data [Domain/Port]`;
-    this.permissions = { roles: ['525441307037007902'] };
+    this.permissions = { roles: ['446104438969466890'] };
     this.enabled = true;
   }
 
@@ -30,6 +30,7 @@ export default class CWG extends Command {
       if (args[0] === 'create') {
         if (!args[3]) return this.client.commands.get('help').run(message, [this.name]);
         try {
+          if (!message.member.roles.includes('525441307037007902')) return; // eslint-disable-line
           const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Binding domain...`);
           const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
           if (!account) return edit.edit(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
