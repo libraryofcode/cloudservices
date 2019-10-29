@@ -2,8 +2,10 @@
 import { promisify, isArray } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
-import { Message, PrivateChannel } from 'eris';
+import { Message, PrivateChannel, Member } from 'eris';
 import { outputFile } from 'fs-extra';
+import uuid from 'uuid/v4';
+import moment from 'moment';
 import { Client } from '..';
 import { Command, RichEmbed } from '.';
 
@@ -64,7 +66,6 @@ export default class Util {
         info.embed = embed;
       }
       await this.client.createMessage('595788220764127272', info);
-      if (message) this.client.createMessage('595788220764127272', 'Message content for above error');
       if (command) this.client.commands.get(command.name).enabled = false;
       if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
     } catch (err) {
@@ -144,5 +145,58 @@ export default class Util {
         if (verif) { if (shouldDelete) msg.delete(); res(Msg); }
       });
     });
+  }
+
+  /**
+   * @param type `0` - Create
+   * `1` - Warn
+   * `2` - Lock
+   * `3` - Unlock
+   * `4` - Delete
+   */
+  public async createModerationLog(user: string, moderator: Member, type: number, reason?: string, duration?: number) {
+    const moderatorID = moderator.id;
+    const account = await this.client.db.Account.findOne({ $or: [{ username: user }, { userID: user }] });
+    if (!account) Promise.reject(new Error('Account not found'));
+    const { username, userID } = account;
+    const logInput: { username: string, userID: string, logID: string, moderatorID: string, reason?: string, type: number, date: Date, expiration?: { date: Date, processed: boolean }} = {
+      username, userID, logID: uuid(), moderatorID, type, date: new Date(),
+    };
+
+    const now: number = Date.now();
+    let date: Date;
+    let processed = true;
+    if (reason) logInput.reason = reason;
+    if (duration) {
+      date = new Date(now + duration);
+      processed = false;
+    } else date = null;
+    const expiration = { date, processed };
+
+    logInput.expiration = expiration;
+    const log = await new this.client.db.Moderation(logInput);
+    await log.save();
+
+    let embedTitle: string;
+    let color: string;
+    switch (type) {
+      default: embedTitle = 'Cloud Account | Generic'; color = '0892e1'; break;
+      case 0: embedTitle = 'Cloud Account | Create'; color = '00ff00'; break;
+      case 1: embedTitle = 'Account Warning | Warn'; color = 'ffff00'; break;
+      case 2: embedTitle = 'Account Infraction | Lock'; color = 'ff6600'; break;
+      case 3: embedTitle = 'Account Reclaim | Unlock'; color = '0099ff'; break;
+      case 4: embedTitle = 'Cloud Account | Delete'; color = 'ff0000'; break;
+    }
+    const embed = new RichEmbed()
+      .setTitle(embedTitle)
+      .setColor(color)
+      .addField('User', `${username} | <@${userID}>`, true)
+      .addField('Supervisor', `<@${moderatorID}>`, true)
+      .setFooter(this.client.user.username, this.client.user.avatarURL)
+      .setTimestamp();
+    if (reason) embed.addField('Reason', reason || 'Not specified');
+    if (type === 2) embed.addField('Lock Expiration', `${moment(date).format('dddd, MMMM Do YYYY, h:mm:ss A')}`);
+    // @ts-ignore
+    this.client.createMessage('580950455581147146', { embed }); this.client.getDMChannel(userID).then((channel) => channel.createMessage({ embed })).catch();
   }
 }
