@@ -1,10 +1,11 @@
 {
   "name": "cloudservices-rewrite",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The official LOC Cloud Services system, this is a rewrite of the original version. ",
   "main": "dist/Client.js",
   "scripts": {
-    "lint": "eslint ./ --ext ts --fix"
+    "lint": "eslint ./ --ext ts --fix",
+    "build": "tsc -p ./tsconfig.json"
   },
   "author": "Library of Code sp-us Engineering Team",
   "license": "MIT",
