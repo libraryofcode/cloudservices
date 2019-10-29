@@ -115,6 +115,19 @@ export default class CWG extends Command {
         embed.addField('Port', String(domain.port), true);
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
         embed.setTimestamp();
+        if (domain.domain.includes('cloud.libraryofcode.org')) {
+          const resultID = await axios({
+            method: 'get',
+            url: `https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records?name=${domain.domain}`,
+            headers: { Authorization: `Bearer ${this.client.config.cloudflare}` },
+          });
+          const recordID = resultID.data.result[0].id;
+          await axios({
+            method: 'delete',
+            url: `https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records/${recordID}`,
+            headers: { Authorization: `Bearer ${this.client.config.cloudflare}` },
+          });
+        }
         // @ts-ignore
         message.channel.createMessage({ embed });
         await this.client.db.Domain.deleteOne({ domain: domain.domain });
