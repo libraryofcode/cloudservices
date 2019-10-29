@@ -101,6 +101,23 @@ export default class CWG extends Command {
         embed.setTimestamp();
         // @ts-ignore
         message.channel.createMessage({ embed });
+      } else if (args[0] === 'delete') {
+        if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
+        const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: Number(args[1]) || '' }] });
+        if (!domain) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
+        await fs.unlink(`/etc/nginx/sites-available/${domain.domain}`);
+        await fs.unlink(`/etc/nginx/sites-enabled/${domain}`);
+        const embed = new RichEmbed();
+        embed.setTitle('Domain Deletion');
+        embed.addField('Account Username', domain.account.username, true);
+        embed.addField('Account ID', domain.account.userID, true);
+        embed.addField('Domain', domain.domain, true);
+        embed.addField('Port', String(domain.port), true);
+        embed.setFooter(this.client.user.username, this.client.user.avatarURL);
+        embed.setTimestamp();
+        // @ts-ignore
+        message.channel.createMessage({ embed });
+        await this.client.db.Domain.deleteOne({ domain: domain.domain });
       } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
       return true;
     } catch (error) {
