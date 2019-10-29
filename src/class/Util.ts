@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { promisify, isArray } from 'util';
+import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import { Message, PrivateChannel, Member } from 'eris';
@@ -8,6 +8,7 @@ import uuid from 'uuid/v4';
 import moment from 'moment';
 import { Client } from '..';
 import { Command, RichEmbed } from '.';
+import { ModerationInterface } from '../models';
 
 export default class Util {
   public client: Client;
@@ -154,10 +155,10 @@ export default class Util {
    * `3` - Unlock
    * `4` - Delete
    */
-  public async createModerationLog(user: string, moderator: Member, type: number, reason?: string, duration?: number) {
+  public async createModerationLog(user: string, moderator: Member, type: number, reason?: string, duration?: number): Promise<ModerationInterface> {
     const moderatorID = moderator.id;
     const account = await this.client.db.Account.findOne({ $or: [{ username: user }, { userID: user }] });
-    if (!account) Promise.reject(new Error('Account not found'));
+    if (!account) return Promise.reject(new Error('Account not found'));
     const { username, userID } = account;
     const logInput: { username: string, userID: string, logID: string, moderatorID: string, reason?: string, type: number, date: Date, expiration?: { date: Date, processed: boolean }} = {
       username, userID, logID: uuid(), moderatorID, type, date: new Date(),
@@ -198,5 +199,7 @@ export default class Util {
     if (type === 2) embed.addField('Lock Expiration', `${moment(date).format('dddd, MMMM Do YYYY, h:mm:ss A')}`);
     // @ts-ignore
     this.client.createMessage('580950455581147146', { embed }); this.client.getDMChannel(userID).then((channel) => channel.createMessage({ embed })).catch();
+
+    return Promise.resolve(log);
   }
 }
