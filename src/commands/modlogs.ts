@@ -54,7 +54,7 @@ export default class Modlogs extends Command {
 
       if (embeds.length === 1) {
         // @ts-ignore
-        message.channel.createMessage({ embed: embeds[0] });
+        msg.edit({ content: '', embed: embeds[0] });
       } else {
         createPaginationEmbed(message, this.client, embeds, {}, msg);
       }
