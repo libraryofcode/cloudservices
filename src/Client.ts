@@ -58,6 +58,7 @@ export default class Client extends Eris.Client {
       try {
         (require(`./functions/${func}`).default)(this);
       } catch (error) {
+        this.signale.error(`Error occured loading ${func}`);
         await this.util.handleError(error);
       }
     });
