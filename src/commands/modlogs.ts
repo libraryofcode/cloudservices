@@ -24,16 +24,13 @@ export default class Modlogs extends Command {
       const formatted = query.map((log) => {
         const { username, moderatorID, reason, type, date } = log;
         let name: string;
-        if (type === 0) {
-          name = 'Create';
-        } else if (type === 1) {
-          name = 'Warn';
-        } else if (type === 2) {
-          name = 'Lock';
-        } else if (type === 3) {
-          name = 'Unlock';
-        } else if (type === 4) {
-          name = 'Delete';
+        switch (type) {
+          default: name = 'Generic'; break;
+          case 0: name = 'Create'; break;
+          case 1: name = 'Warn'; break;
+          case 2: name = 'Lock'; break;
+          case 3: name = 'Unlock'; break;
+          case 4: name = 'Delete'; break;
         }
         const value = `**Account name:** ${username}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason}\n**Date:** ${date.toLocaleString('en-us')} EST`;
         const inline = true;
@@ -49,7 +46,7 @@ export default class Modlogs extends Command {
         embed.setAuthor('Library of Code | Cloud Services', this.client.user.avatarURL, 'https://libraryofcode.org/');
         embed.setTitle('Cloud Modlogs/Infractions');
         embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
-        l.forEach((f) => { this.client.signale.note(f); embed.addField(f.name, f.value, f.inline); });
+        l.forEach((f) => embed.addField(f.name, f.value, f.inline));
         embed.setTimestamp();
         embed.setColor(3447003);
         return embed;
