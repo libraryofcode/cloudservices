@@ -57,7 +57,9 @@ export default class Lock extends Command {
         },
       });
       await moderation.save();
+      */
       edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been locked by Supervisor ${message.author.username}#${message.author.discriminator}.***`);
+      /*
       const embed = new RichEmbed();
       embed.setTitle('Account Infraction | Lock');
       embed.setColor(15158332);
