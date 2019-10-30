@@ -32,7 +32,7 @@ export default class Eval extends Command {
         evaled = error.stack;
       }
 
-      evaled = evaled.replace(new RegExp(this.client.config.prefix, 'gi'), 'juul');
+      evaled = evaled.replace(new RegExp(this.client.config.token, 'gi'), 'juul');
       evaled = evaled.replace(new RegExp(this.client.config.emailPass, 'gi'), 'juul');
       evaled = evaled.replace(new RegExp(this.client.config.cloudflare, 'gi'), 'juul');
 
