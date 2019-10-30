@@ -18,9 +18,9 @@ export default class DeleteAccount extends Command {
     try {
       if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }, { emailAddress: args[0] }] });
-      if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
+      if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found.***`);
       const { root, username, userID, emailAddress } = account;
-      if (root) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied***`);
+      if (root) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied.***`);
 
       const pad = (number: number, amount: number): string => '0'.repeat(amount - number.toString().length) + number;
       const randomNumber = Math.floor(Math.random() * 9999);
