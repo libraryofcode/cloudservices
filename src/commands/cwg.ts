@@ -106,10 +106,10 @@ export default class CWG extends Command {
         // @ts-ignore
         message.channel.createMessage({ embed });
       } else if (args[0] === 'delete') {
-        const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Deleting domain...`);
         if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
         const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: Number(args[1]) || '' }] });
         if (!domain) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
+        const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Deleting domain...`);
         const embed = new RichEmbed();
         embed.setTitle('Domain Deletion');
         embed.addField('Account Username', domain.account.username, true);
