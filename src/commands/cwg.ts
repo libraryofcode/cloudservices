@@ -135,8 +135,8 @@ export default class CWG extends Command {
           }
         }
         try {
-          await fs.unlink(`/etc/nginx/sites-available/${domain.domain}`);
           await fs.unlink(`/etc/nginx/sites-enabled/${domain.domain}`);
+          await fs.unlink(`/etc/nginx/sites-available/${domain.domain}`);
         } catch (e) { this.client.signale.error(e); }
         await this.client.db.Domain.deleteOne({ domain: domain.domain });
         await this.client.util.exec('systemctl reload nginx');
@@ -191,8 +191,8 @@ export default class CWG extends Command {
       }
       return entry.save();
     } catch (error) {
-      await fs.unlink(`/etc/nginx/sites-available/${domain}`);
       await fs.unlink(`/etc/nginx/sites-enabled/${domain}`);
+      await fs.unlink(`/etc/nginx/sites-available/${domain}`);
       await this.client.db.Domain.deleteMany({ domain });
       throw error;
     }
