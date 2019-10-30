@@ -132,7 +132,7 @@ export default class CWG extends Command {
           });
         }
         await fs.unlink(`/etc/nginx/sites-available/${domain.domain}`);
-        await fs.unlink(`/etc/nginx/sites-enabled/${domain}`);
+        await fs.unlink(`/etc/nginx/sites-enabled/${domain.domain}`);
         await this.client.db.Domain.deleteOne({ domain: domain.domain });
         await this.client.util.exec('systemctl reload nginx');
         edit.edit(`***${this.client.stores.emojis.success} Domain ${domain.domain} with port ${domain.port} has been successfully deleted.***`);
