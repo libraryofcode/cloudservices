@@ -128,10 +128,10 @@ export default class CWG extends Command {
           if (resultID.data.result[0]) {
             const recordID = resultID.data.result[0].id;
             await axios({
-            method: 'delete',
-            url: `https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records/${recordID}`,
-            headers: { Authorization: `Bearer ${this.client.config.cloudflare}` },
-          });
+              method: 'delete',
+              url: `https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records/${recordID}`,
+              headers: { Authorization: `Bearer ${this.client.config.cloudflare}` },
+            });
           }
         }
         try {
