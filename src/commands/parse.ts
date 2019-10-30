@@ -34,7 +34,6 @@ export default class Parse extends Command {
       const embed = new RichEmbed();
       embed.setTitle('Parse x509 Certificate');
       embed.setDescription(`/home/${account.username}/Validation/${dir[0]} | ${account.username} <@${user.id}>`);
-      embed.setThumbnail(user.avatarURL);
       embed.setColor(3447003);
       embed.addField('Subject', `**Common Name:** ${subjectCommonName}\n**Email Address:** ${subjectEmailAddress}\n**Organization:** ${subjectOrganization}\n**Organizational Unit:** ${subjectOrganizationalUnit}\n**Country:** ${subjectCountry}`, true);
       embed.addField('Issuer', `**Common Name:** ${issuerCommonName}\n**Email Address:** ${issuerEmailAddress}\n**Organization:** ${issuerOrganization}\n**Organizational Unit:** ${issuerOrganizationalUnit}\n**Country:** ${issuerCountry}`, true);
