@@ -32,7 +32,7 @@ export default class CWG extends Command {
         try {
           if (!message.member.roles.includes('525441307037007902')) return; // eslint-disable-line
           const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Binding domain...***`);
-          const account = await this.client.db.Account.findOne({ $or: [{ account: args[1] }, { userID: args[1] }] });
+          const account = await this.client.db.Account.findOne({ $or: [{ username: args[1] }, { userID: args[1] }] });
           if (!account) return edit.edit(`${this.client.stores.emojis.error} Cannot locate account, please try again.`);
           if (args[4] && !args[5]) return edit.edit(`${this.client.stores.emojis.error} x509 Certificate key required`);
           let certs: { cert?: string, key?: string }; if (args[5]) certs = { cert: args[4], key: args[5] };
