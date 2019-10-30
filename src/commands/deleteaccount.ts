@@ -35,11 +35,11 @@ export default class DeleteAccount extends Command {
       }
 
       const deleting = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Deleteing account, please wait...***`);
-      await this.client.util.deleteAccount(username);
       const reason = args.slice(1).join(' ');
       const logInput = { username, userID, logID: uuid(), moderatorID: message.author.id, type: 4, date: new Date(), reason: null };
       if (reason) logInput.reason = reason;
       await this.client.util.createModerationLog(args[0], message.member, 4, reason);
+      await this.client.util.deleteAccount(username);
       /*
       const log = await new this.client.db.Moderation(logInput);
       await log.save();
