@@ -31,7 +31,7 @@ export default class Util {
       const res = await ex(command);
       result = res.stderr || res.stdout;
     } catch (err) {
-      throw err;
+      return `Error: Command failed: ${err.cmd}\n${err.stderr || err.stdout}`;
     }
     return result;
   }
