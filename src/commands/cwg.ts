@@ -124,6 +124,7 @@ export default class CWG extends Command {
             url: `https://api.cloudflare.com/client/v4/zones/5e82fc3111ed4fbf9f58caa34f7553a7/dns_records?name=${domain.domain}`,
             headers: { Authorization: `Bearer ${this.client.config.cloudflare}` },
           });
+          this.client.signale.debug(resultID.data);
           const recordID = resultID.data.result[0].id;
           await axios({
             method: 'delete',
