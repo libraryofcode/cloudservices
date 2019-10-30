@@ -119,7 +119,7 @@ export default class CreateAccount extends Command {
       + 'You may now return to Modmail, and continue setting up your account from there.\n\n'
       + 'An email containing some useful information has also been sent').catch();
 
-      return confirmation.edit(`${this.client.stores.emojis.success} ***Account successfully created***\n**Username:** \`${args[3]}\`\n**Temporary Password:** \`${tempPass}\``);
+      return confirmation.edit(`${this.client.stores.emojis.success} ***Account successfully created***\n**Username:** \`${args[2]}\`\n**Temporary Password:** \`${tempPass}\``);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
