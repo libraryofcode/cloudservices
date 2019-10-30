@@ -16,13 +16,27 @@ export default class Pull extends Command {
     try {
       const updateMessage = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`);
       let pull: string;
+
       try {
-        pull = await this.client.util.exec('cd ../ && git pull');
+        pull = await this.client.util.exec('git pull');
       } catch (error) {
         return updateMessage.edit(`${this.client.stores.emojis.error} ***Could not fetch latest commit***\n\`\`\`sh\n${error.message}\n\`\`\``);
       }
       if (pull.includes('Already up to date')) return updateMessage.edit(`${this.client.stores.emojis.success} ***No updates available***`);
-      return message;
+      if (!pull.includes('origin/master')) return updateMessage.edit(`${this.client.stores.emojis.error} ***Unexpected output:***\n\`\`\`bs\n${pull}\n\`\`\``);
+
+      const passedPull = await updateMessage.edit(`${this.client.stores.emojis.success} ***Pulled latest commit***\n${this.client.stores.emojis.loading} ***Rebuilding files...***`);
+      try {
+        await this.client.util.exec('cd ../ && tsc -p ./tsconfig.json');
+      } catch (error) {
+        const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.error} ***Failed to rebuild files***`)
+          .replace(/```$/, `${error.message}\n\`\`\``);
+        return updateMessage.edit(updatedMessage);
+      }
+
+      const finalMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.success} ***Files rebuilt***`);
+
+      return message.edit(finalMessage);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
