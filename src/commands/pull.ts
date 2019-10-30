@@ -23,7 +23,7 @@ export default class Pull extends Command {
         return updateMessage.edit(`${this.client.stores.emojis.error} ***Could not fetch latest commit***\n\`\`\`sh\n${error.message}\n\`\`\``);
       }
       if (pull.includes('Already up to date')) return updateMessage.edit(`${this.client.stores.emojis.success} ***No updates available***`);
-      if (!pull.includes('origin/master')) return updateMessage.edit(`${this.client.stores.emojis.error} ***Unexpected output:***\n\`\`\`bs\n${pull}\n\`\`\``);
+      if (!pull.includes('origin/master')) return updateMessage.edit(`${this.client.stores.emojis.error} ***Unexpected output:***\n\`\`\`sh\n${pull}\n\`\`\``);
 
       const passedPull = await updateMessage.edit(`${this.client.stores.emojis.success} ***Pulled latest commit***\n${this.client.stores.emojis.loading} ***Rebuilding files...***`);
       try {
@@ -36,7 +36,7 @@ export default class Pull extends Command {
 
       const finalMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.success} ***Files rebuilt***`);
 
-      return message.edit(finalMessage);
+      return updateMessage.edit(finalMessage);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
