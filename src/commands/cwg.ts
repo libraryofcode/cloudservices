@@ -84,6 +84,9 @@ export default class CWG extends Command {
           }
         } catch (err) {
           this.client.util.handleError(err, message, this);
+          await fs.unlink(`/etc/nginx/sites-available/${args[2]}`);
+          await fs.unlink(`/etc/nginx/sites-enabled/${args[2]}`);
+          await this.client.db.Domain.deleteMany({ domain: args[2] });
         }
       } else if (args[0] === 'data') {
         if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
