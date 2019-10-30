@@ -36,47 +36,15 @@ export default class Util {
     return result;
   }
 
-  public resolveCommand(command: string, args: string[]): { command: Command, args: string[]} {
-    let Cmd: Command;
-    if (this.client.commands.has(command)) Cmd = this.client.commands.get(command);
-    else {
-      for (const cmd of this.client.commands.values()) {
-        if (!cmd.aliases) continue;// eslint-disable-line no-continue
-        for (const alias of cmd.aliases) {
-          if (command.toLowerCase() === alias.toLowerCase()) {
-            Cmd = cmd;
-          } else {
-            return undefined;
-          }
-        }
+  public resolveCommand(command: string): Command {
+    if (this.client.commands.has(command)) return this.client.commands.get(command);
+    for (const cmd of this.client.commands.values()) {
+      if (!cmd.aliases) continue;// eslint-disable-line no-continue
+      for (const alias of cmd.aliases) {
+        if (command === alias.toLowerCase()) return cmd;
       }
     }
-    if (!Cmd) return undefined;
-    let hasSubcmd = true;
-    while (hasSubcmd) {
-      if (!Cmd.subcommands.size) {
-        hasSubcmd = false; break;
-      }
-      if (Cmd.subcommands.has(args[0])) {
-        Cmd = Cmd.subcommands.get(args[0]);
-        args.shift();
-      } else {
-        for (const cmd of Cmd.subcommands.values()) {
-          if (!cmd.aliases) continue; // eslint-disable-line
-          for (const alias of cmd.aliases) {
-            if (args[0].toLowerCase() === alias.toLowerCase()) {
-              Cmd = cmd; args.shift(); break;
-            }
-          }
-          break;
-        }
-      }
-    }
-    return { command: Cmd, args };
-  }
-
-  public resolveSubcommand(parentCmd: Command, args?: string[]) {
-
+    return undefined;
   }
 
   public async handleError(error: Error, message?: Message, command?: Command): Promise<void> {
