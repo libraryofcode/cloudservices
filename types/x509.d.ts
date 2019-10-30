@@ -5,7 +5,9 @@ declare module '@ghaiklor/x509' {
       stateOrProvinceName: string,
       localityName: string,
       organizationName: string,
-      commonName: string
+      organizationalUnitName: string,
+      commonName: string,
+      emailAddress: string
     }
     interface Subject {
       countryName: string,
@@ -15,7 +17,8 @@ declare module '@ghaiklor/x509' {
       streetAddress: string,
       organizationName: string,
       organizationalUnitName: string,
-      commonName: string
+      commonName: string,
+      emailAddress: string
     }
     interface Extensions {
       keyUsage: string,
@@ -34,7 +37,8 @@ declare module '@ghaiklor/x509' {
     version: number,
     subject: Certificate.Subject,
     issuer: Certificate.Issuer,
-    serial: number,
+    fingerPrint: string,
+    serial: string,
     notBefore: Date,
     notAfter: Date,
     subjectHash: string,
