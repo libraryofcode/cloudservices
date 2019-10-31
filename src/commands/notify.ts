@@ -19,7 +19,6 @@ export default class Notify extends Command {
       const edit = await message.channel.createMessage(`***${this.client.stores.emojis.loading} Sending notification...***`);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return edit.edit(`***${this.client.stores.emojis.error} Cannot find user.***`);
-      await this.client.util.createModerationLog(account.userID, message.member, 1, args.slice(1).join(' '));
       const embed = new RichEmbed()
         .setTitle('Cloud Account | Notification')
         .setDescription(args.slice(1).join(' '))
