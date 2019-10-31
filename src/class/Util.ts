@@ -68,8 +68,11 @@ export default class Util {
           for (const subCmd of resolvedCommand.subcommands.toArray()) {
             if (subCmd.aliases.includes(args[0])) {
               resolvedCommand = subCmd; args.shift(); break;
+            } else {
+              hasSubCommands = false; break;
             }
           }
+          break;
         }
       }
 
