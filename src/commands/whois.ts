@@ -17,7 +17,7 @@ export default class Whois extends Command {
 
   public async run(message: Message, args: string[]) {
     try {
-      if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
+      if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }, { emailAddress: args[0] }] });
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found.***`);
       const embed = new RichEmbed();
