@@ -7,6 +7,7 @@ import config from './config.json';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
 import { Command, Util, Collection } from './class';
+import * as commands from './commands';
 
 
 export default class Client extends Eris.Client {
@@ -61,11 +62,11 @@ export default class Client extends Eris.Client {
     });
   }
 
-  public loadCommand(commandPath: string) {
+  public loadCommand(CommandFile: any) {
     // eslint-disable-next-line no-useless-catch
     try {
       // eslint-disable-next-line
-      const command: Command = new (require(commandPath).default)(this);
+      const command: Command = new CommandFile(this);
       if (command.subcmds.length) {
         command.subcmds.forEach((C) => {
           const cmd: Command = new C(this);
@@ -80,11 +81,14 @@ export default class Client extends Eris.Client {
 
   public async init() {
     const evtFiles = await fs.readdir('./events/');
+    Object.values(commands).forEach((c: Function) => this.loadCommand(c));
+    /*
     const commands = await fs.readdir(path.join(__dirname, './commands/'));
     commands.forEach((command) => {
       if (command === 'index.js') return;
       this.loadCommand(`./commands/${command}`);
     });
+    */
 
     evtFiles.forEach((file) => {
       const eventName = file.split('.')[0];
