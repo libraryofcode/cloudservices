@@ -10,6 +10,7 @@ export default class Warn extends Command {
     this.description = 'Sends an official warning to user.';
     this.usage = `${this.client.config.prefix}warn [username || user ID]`;
     this.permissions = { roles: ['446104438969466890'] };
+    this.enabled = true;
   }
 
   public async run(message: Message, args: string[]) {
