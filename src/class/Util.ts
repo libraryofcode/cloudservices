@@ -183,19 +183,20 @@ export default class Util {
 
     let embedTitle: string;
     let color: string;
+    let archType: string;
     switch (type) {
-      default: embedTitle = 'Cloud Account | Generic'; color = '0892e1'; break;
-      case 0: embedTitle = 'Cloud Account | Create'; color = '00ff00'; break;
-      case 1: embedTitle = 'Account Warning | Warn'; color = 'ffff00'; break;
-      case 2: embedTitle = 'Account Infraction | Lock'; color = 'ff6600'; break;
-      case 3: embedTitle = 'Account Reclaim | Unlock'; color = '0099ff'; break;
-      case 4: embedTitle = 'Cloud Account | Delete'; color = 'ff0000'; break;
+      default: archType = 'Moderator'; embedTitle = 'Cloud Account | Generic'; color = '0892e1'; break;
+      case 0: archType = 'Administrator'; embedTitle = 'Cloud Account | Create'; color = '00ff00'; break;
+      case 1: archType = 'Moderator'; embedTitle = 'Account Warning | Warn'; color = 'ffff00'; break;
+      case 2: archType = 'Supervisor'; embedTitle = 'Account Infraction | Lock'; color = 'ff6600'; break;
+      case 3: archType = 'Supervisor'; embedTitle = 'Account Reclaim | Unlock'; color = '0099ff'; break;
+      case 4: archType = 'Administrator'; embedTitle = 'Cloud Account | Delete'; color = 'ff0000'; break;
     }
     const embed = new RichEmbed()
       .setTitle(embedTitle)
       .setColor(color)
       .addField('User', `${username} | <@${userID}>`, true)
-      .addField('Supervisor', moderatorID === this.client.user.id ? 'SYSTEM' : `<@${moderatorID}>`, true)
+      .addField(archType, moderatorID === this.client.user.id ? 'SYSTEM' : `<@${moderatorID}>`, true)
       .setFooter(this.client.user.username, this.client.user.avatarURL)
       .setTimestamp();
     if (reason) embed.addField('Reason', reason || 'Not specified');
