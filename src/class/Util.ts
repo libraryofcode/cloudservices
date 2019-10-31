@@ -3,7 +3,6 @@ import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
 import { Message, PrivateChannel, Member, User } from 'eris';
-import { outputFile } from 'fs-extra';
 import uuid from 'uuid/v4';
 import moment from 'moment';
 import { Client } from '..';
