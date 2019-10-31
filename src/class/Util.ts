@@ -43,6 +43,8 @@ export default class Util {
    */
   public resolveCommand(command: string, args?: string[], message?: Message): Promise<{cmd: Command, args: string[] }> {
     try {
+      this.client.signale.info(command);
+      this.client.signale.info(args);
       let resolvedCommand: Command;
 
       if (this.client.commands.has(command)) resolvedCommand = this.client.commands.get(command);
