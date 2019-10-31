@@ -8,7 +8,7 @@ import uuid from 'uuid/v4';
 import moment from 'moment';
 import { Client } from '..';
 import { Command, RichEmbed } from '.';
-import { ModerationInterface } from '../models';
+import { ModerationInterface, AccountInterface } from '../models';
 
 export default class Util {
   public client: Client;
@@ -121,14 +121,14 @@ export default class Util {
     return tempPass;
   }
 
-  public async createAccount(hash: string, etcPasswd: string, username: string, userID: string, emailAddress: string, moderatorID: string): Promise<void> {
+  public async createAccount(hash: string, etcPasswd: string, username: string, userID: string, emailAddress: string, moderatorID: string): Promise<AccountInterface> {
     await this.exec(`useradd -m -p ${hash} -c ${etcPasswd} -s /bin/bash ${username}`);
     await this.exec(`chage -d0 ${username}`);
 
     const account = await new this.client.db.Account({
       username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false,
     });
-    await account.save();
+    return account.save();
   }
 
   public async deleteAccount(username: string): Promise<void> {
