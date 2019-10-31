@@ -1,5 +1,3 @@
-import fs from 'fs-extra';
-import uuid from 'uuid/v4';
 import moment from 'moment';
 import { Message } from 'eris';
 import { Client } from '..';
