@@ -17,7 +17,7 @@ export default class CWG_Data extends Command {
 
   public async run(message: Message, args: string[]) {
     try {
-      if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
+      if (!args[0]) return this.client.commands.get('help').run(message, ['cwg', this.name]);
       const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
       if (!domain) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
       const embed = new RichEmbed();
