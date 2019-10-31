@@ -21,7 +21,7 @@ export default class Command {
 
     subcmds?: any[]
 
-    subcommands?: Collection
+    subcommands?: Collection<Command>
 
     public run(message: Message, args: string[]) {} // eslint-disable-line
 

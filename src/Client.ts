@@ -14,7 +14,7 @@ export default class Client extends Eris.Client {
 
   public util: Util;
 
-  public commands: Collection;
+  public commands: Collection<Command>;
 
   public aliases: Map<string, string>;
 
