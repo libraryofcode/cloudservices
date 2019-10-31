@@ -34,6 +34,7 @@ export default class Command {
       this.guildOnly = true;
       this.client = client;
       this.subcmds = [];
+      this.subcommands = new Collection<Command>();
       this.permissions = {};
     }
 }

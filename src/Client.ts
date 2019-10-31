@@ -16,8 +16,6 @@ export default class Client extends Eris.Client {
 
   public commands: Collection<Command>;
 
-  public aliases: Map<string, string>;
-
   public db: { Account: mongoose.Model<AccountInterface>; Domain: mongoose.Model<DomainInterface>; Moderation: mongoose.Model<ModerationInterface>; };
 
   public stores: { emojis: { success: string, loading: string, error: string }; };
@@ -73,8 +71,8 @@ export default class Client extends Eris.Client {
           const cmd: Command = new C(this);
           command.subcommands.add(cmd.name, cmd);
         });
-        delete command.subcmds;
       }
+      delete command.subcmds;
       this.commands.add(command.name, command);
       this.signale.complete(`Loaded command ${command.name}`);
     } catch (err) { throw err; }

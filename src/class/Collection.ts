@@ -4,12 +4,10 @@
 export default class Collection<V> extends Map<string, V> {
   baseObject: any
 
-  iterable: any[]|object
-
   /**
    * Creates an instance of Collection
    */
-  constructor({ base: baseObject = null, iterable = null }) {
+  constructor(iterable: any[]|object = null) {
     if (iterable && iterable instanceof Array) {
       // @ts-ignore
       super(iterable);
@@ -19,7 +17,6 @@ export default class Collection<V> extends Map<string, V> {
     } else {
       super();
     }
-    this.baseObject = baseObject;
   }
 
   /**
