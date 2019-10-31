@@ -57,6 +57,8 @@ export default class Util {
       while (hasSubCommands) {
         if (!resolvedCommand.subcommands.size) {
           hasSubCommands = false; break;
+        } else if (!args[0]) {
+          hasSubCommands = false; break;
         } else if (resolvedCommand.subcommands.has(args[0])) {
           resolvedCommand = resolvedCommand.subcommands.get(args[0]);
           args.shift();
