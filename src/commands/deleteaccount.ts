@@ -8,7 +8,7 @@ export default class DeleteAccount extends Command {
     super(client);
     this.name = 'deleteaccount';
     this.description = 'Delete an account on the Cloud VM';
-    this.usage = `${this.client.config.prefix}deleteaccount [User ID] [Reason] | ${this.client.config.prefix}deleteaccount [Username] [Reason] | ${this.client.config.prefix}deleteaccount [Email] [Reason]`;
+    this.usage = `${this.client.config.prefix}deleteaccount [User Name || User ID || Email Address] [Reason] | ${this.client.config.prefix}deleteaccount [Username] [Reason] | ${this.client.config.prefix}deleteaccount [Email] [Reason]`;
     this.aliases = ['deleteacc', 'dacc', 'daccount', 'delete'];
     this.permissions = { roles: ['475817826251440128', '525441307037007902'] };
     this.enabled = true;
