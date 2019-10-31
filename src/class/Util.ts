@@ -35,15 +35,45 @@ export default class Util {
     return result;
   }
 
-  public resolveCommand(command: string): Command {
-    if (this.client.commands.has(command)) return this.client.commands.get(command);
-    for (const cmd of this.client.commands.values()) {
-      if (!cmd.aliases) continue;// eslint-disable-line no-continue
-      for (const alias of cmd.aliases) {
-        if (command === alias.toLowerCase()) return cmd;
+  /**
+   * Resolves a command
+   * @param command Parent command label
+   * @param args Use to resolve subcommands
+   * @param message Only used to check for errors
+   */
+  public resolveCommand(command: string, args?: string[], message?: Message): Promise<{cmd: Command, args: string[] }> {
+    try {
+      let resolvedCommand: Command;
+
+      if (this.client.commands.has(command)) resolvedCommand = this.client.commands.get(command);
+      else {
+        for (const cmd of this.client.commands.toArray()) {
+          if (cmd.aliases.includes(command)) { resolvedCommand = cmd; break; }
+        }
       }
+      if (!resolvedCommand) return Promise.resolve({ cmd: null, args });
+
+      let hasSubCommands = true;
+      while (hasSubCommands) {
+        if (!resolvedCommand.subcommands.size) {
+          hasSubCommands = false; break;
+        } else if (resolvedCommand.subcommands.has(args[0])) {
+          resolvedCommand = resolvedCommand.subcommands.get(args[0]);
+          args.shift();
+        } else {
+          for (const subCmd of resolvedCommand.subcommands.toArray()) {
+            if (subCmd.aliases.includes(args[0])) {
+              resolvedCommand = subCmd; args.shift(); break;
+            }
+          }
+        }
+      }
+
+      return Promise.resolve({ cmd: resolvedCommand, args });
+    } catch (error) {
+      this.handleError(error, message);
+      return Promise.reject(error);
     }
-    return undefined;
   }
 
   public async handleError(error: Error, message?: Message, command?: Command): Promise<void> {

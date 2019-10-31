@@ -16,11 +16,10 @@ export default class Help extends Command {
   // eslint-disable-next-line consistent-return
   public async run(message: Message, args?: string[]) {
     try {
-      const cmd = args.filter((c) => c)[0];
-      if (!cmd) {
+      if (!args[0]) {
         const cmdList: Command[] = [];
         this.client.commands.forEach((c) => cmdList.push(c));
-        const commands = cmdList.map((c) => {
+        const commands = this.client.commands.map((c: Command) => {
           const aliases = c.aliases.map((alias) => `${this.client.config.prefix}${alias}`).join(', ');
           const perms: string[] = [];
           let allowedRoles = c.permissions && c.permissions.roles && c.permissions.roles.map((r) => `<@&${r}>`).join(', ');
@@ -45,19 +44,19 @@ export default class Help extends Command {
         if (cmdPages.length === 1) return message.channel.createMessage({ embed: cmdPages[0] });
         return createPaginationEmbed(message, this.client, cmdPages);
       }
-      const foundCommand = this.client.util.resolveCommand(cmd);
-      if (!foundCommand) return message.channel.createMessage(`${this.client.stores.emojis.error} **Command not found!**`);
+      const { cmd } = await this.client.util.resolveCommand(args[0], args, message);
+      if (!cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} **Command not found!**`);
       const perms: string[] = [];
-      let allowedRoles = foundCommand.permissions && foundCommand.permissions.roles && foundCommand.permissions.roles.map((r) => `<@&${r}>`).join(', ');
+      let allowedRoles = cmd.permissions && cmd.permissions.roles && cmd.permissions.roles.map((r) => `<@&${r}>`).join(', ');
       if (allowedRoles) { allowedRoles = `**Roles:** ${allowedRoles}`; perms.push(allowedRoles); }
-      let allowedUsers = foundCommand.permissions && foundCommand.permissions.users && foundCommand.permissions.users.map((u) => `<@${u}>`).join(', ');
+      let allowedUsers = cmd.permissions && cmd.permissions.users && cmd.permissions.users.map((u) => `<@${u}>`).join(', ');
       if (allowedUsers) { allowedUsers = `**Users:** ${allowedUsers}`; perms.push(allowedUsers); }
       const displayedPerms = perms.length ? `**Permissions:**\n${perms.join('\n')}` : '';
-      const aliases = foundCommand.aliases.map((alias) => `${this.client.config.prefix}${alias}`).join(', ');
+      const aliases = cmd.aliases.map((alias) => `${this.client.config.prefix}${alias}`).join(', ');
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
-      embed.setTitle(`${this.client.config.prefix}${foundCommand.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
-      const description = `**Description**: ${foundCommand.description}\n**Usage:** ${foundCommand.usage}\n**Aliases:** ${aliases}\n${displayedPerms}`;
+      embed.setTitle(`${this.client.config.prefix}${cmd.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
+      const description = `**Description**: ${cmd.description}\n**Usage:** ${cmd.usage}\n**Aliases:** ${aliases}\n${displayedPerms}`;
       embed.setDescription(description);
       // @ts-ignore
       message.channel.createMessage({ embed });
