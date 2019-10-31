@@ -6,7 +6,7 @@ import path from 'path';
 import config from './config.json';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
-import { Command, Util } from './class';
+import { Command, Util, Collection } from './class';
 
 
 export default class Client extends Eris.Client {
@@ -14,7 +14,7 @@ export default class Client extends Eris.Client {
 
   public util: Util;
 
-  public commands: Map<string, Command>;
+  public commands: Collection;
 
   public aliases: Map<string, string>;
 
@@ -30,8 +30,7 @@ export default class Client extends Eris.Client {
     process.title = 'cloudservices';
     this.config = config;
     this.util = new Util(this);
-    this.commands = new Map();
-    this.aliases = new Map();
+    this.commands = new Collection({ base: Command });
     this.db = { Account, Domain, Moderation };
     this.stores = { emojis };
     this.signale = signale;
@@ -68,8 +67,15 @@ export default class Client extends Eris.Client {
     // eslint-disable-next-line no-useless-catch
     try {
       // eslint-disable-next-line
-      const command = new (require(commandPath).default)(this);
-      this.commands.set(command.name, command);
+      const command: Command = new (require(commandPath).default)(this);
+      if (command.subcmds.length) {
+        command.subcmds.forEach((C) => {
+          const cmd: Command = new C(this);
+          command.subcommands.add(cmd.name, cmd);
+        });
+        delete command.subcmds;
+      }
+      this.commands.add(command.name, command);
       this.signale.complete(`Loaded command ${command.name}`);
     } catch (err) { throw err; }
   }

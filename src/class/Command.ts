@@ -1,5 +1,6 @@
 import { Message } from 'eris';
 import { Client } from '..';
+import { Collection } from '.';
 
 export default class Command {
     name: string
@@ -18,7 +19,9 @@ export default class Command {
 
     guildOnly?: boolean
 
-    subcommands: Command[]
+    subcmds?: any[]
+
+    subcommands?: Collection
 
     public run(message: Message, args: string[]) {} // eslint-disable-line
 
@@ -30,7 +33,7 @@ export default class Command {
       this.aliases = [];
       this.guildOnly = true;
       this.client = client;
-      this.subcommands = [];
+      this.subcmds = [];
       this.permissions = {};
     }
 }
