@@ -28,7 +28,7 @@ export default class Client extends Eris.Client {
     process.title = 'cloudservices';
     this.config = config;
     this.util = new Util(this);
-    this.commands = new Collection({ base: Command });
+    this.commands = new Collection<Command>();
     this.db = { Account, Domain, Moderation };
     this.stores = { emojis };
     this.signale = signale;
