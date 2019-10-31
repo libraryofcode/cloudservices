@@ -1,11 +1,15 @@
+/*
 import fs from 'fs-extra';
 import axios from 'axios';
 import moment from 'moment';
 import x509 from '@ghaiklor/x509';
+*/
 import { Message } from 'eris';
-import { AccountInterface } from '../models';
-import { Command, RichEmbed } from '../class';
+import { Command/* , RichEmbed */ } from '../class';
 import { Client } from '..';
+import Create from './cwg_create';
+import Data from './cwg_data';
+import Delete from './cwg_delete';
 
 export default class CWG extends Command {
   constructor(client: Client) {
@@ -14,19 +18,20 @@ export default class CWG extends Command {
     this.description = 'Manages aspects for the CWG.';
     this.usage = `${this.client.config.prefix}cwg create [User ID | Username] [Domain] [Port] <Path to x509 cert> <Path to x509 key>\n${this.client.config.prefix}cwg data [Domain/Port]`;
     this.permissions = { roles: ['446104438969466890'] };
+    this.subcmds = [Create, Data, Delete];
     this.enabled = true;
   }
 
-  public async run(message: Message, args?: string[]) {
+  public async run(message: Message) {
     try {
-      if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
+      return this.client.commands.get('help').run(message, [this.name]);
       /*
     args[1] should be the user's ID OR account username; required
     args[2] should be the domain; required
     args[3] should be the port; required
     args[4] should be the path to the x509 certificate; not required
     args[5] should be the path to the x509 key; not required
-    */
+    */ /*
       if (args[0] === 'create') {
         if (!args[3]) return this.client.commands.get('help').run(message, [this.name]);
         try {
@@ -74,7 +79,7 @@ export default class CWG extends Command {
           <b>Responsible Engineer:</b> ${message.author.username}#${message.author.discriminator}
 
           If you have any questions about additional setup, you can reply to this email or send a message in #cloud-support in our Discord server.
-          
+
           <b><i>Library of Code sp-us | Support Team</i></b>
           `,
           });
@@ -105,7 +110,7 @@ export default class CWG extends Command {
         embed.setTimestamp();
         // @ts-ignore
         message.channel.createMessage({ embed });
-      } else if (args[0] === 'delete') {
+      } else  if (args[0] === 'delete') {
         if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
         const domain = await this.client.db.Domain.findOne({ $or: [{ domain: args[1] }, { port: Number(args[1]) || '' }] });
         if (!domain) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
@@ -145,6 +150,7 @@ export default class CWG extends Command {
         message.channel.createMessage({ embed });
       } else { message.channel.createMessage(`${this.client.stores.emojis.error} Not a valid subcommand.`); }
       return true;
+      */
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
@@ -157,7 +163,7 @@ export default class CWG extends Command {
    * @param port The port to use, must be between 1024 and 65535.
    * @param x509 The paths to the certificate and key files. Must be already existant.
    * @example await CWG.createDomain('mydomain.cloud.libraryofcode.org', 6781);
-   */
+   */ /*
   public async createDomain(account: AccountInterface, domain: string, port: number, x509Certificate: { cert?: string, key?: string } = { cert: '/etc/nginx/ssl/cloud-org.chain.crt', key: '/etc/nginx/ssl/cloud-org.key.pem' }) {
     try {
       if (port <= 1024 || port >= 65535) throw new RangeError(`Port range must be between 1024 and 65535, received ${port}.`);
@@ -197,4 +203,5 @@ export default class CWG extends Command {
       throw error;
     }
   }
+  */
 }
