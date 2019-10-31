@@ -12,7 +12,7 @@ export default class CWG extends Command {
     super(client);
     this.name = 'cwg';
     this.description = 'Manages aspects for the CWG.';
-    this.usage = `${this.client.config.prefix}cwg create [User ID/Username] [Domain] [Port] <Path to x509 cert> <Path to x509 key>\n${this.client.config.prefix}cwg data [Domain/Port]`;
+    this.usage = `${this.client.config.prefix}cwg create [User ID | Username] [Domain] [Port] <Path to x509 cert> <Path to x509 key>\n${this.client.config.prefix}cwg data [Domain/Port]`;
     this.permissions = { roles: ['446104438969466890'] };
     this.enabled = true;
   }

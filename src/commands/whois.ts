@@ -10,7 +10,7 @@ export default class Whois extends Command {
     this.name = 'whois';
     this.description = 'Views information for a cloud account.';
     this.aliases = ['account', 'user'];
-    this.usage = `${this.client.config.prefix}account [User Name || User ID || Email Address]`;
+    this.usage = `${this.client.config.prefix}account [User Name | User ID | Email Address]`;
     this.permissions = { roles: ['446104438969466890'] };
     this.enabled = true;
   }

@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
 import { Message } from 'eris';
 import { Client } from '..';
-import { Command, RichEmbed } from '../class';
+import { Command } from '../class';
 
 export default class Warn extends Command {
   constructor(client: Client) {
     super(client);
     this.name = 'warn';
     this.description = 'Sends an official warning to user.';
-    this.usage = `${this.client.config.prefix}warn [username || user ID]`;
+    this.usage = `${this.client.config.prefix}warn [username | user ID]`;
     this.permissions = { roles: ['446104438969466890'] };
     this.enabled = true;
   }
