@@ -34,31 +34,12 @@ export default class DeleteAccount extends Command {
         throw error;
       }
 
-      const deleting = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Deleteing account, please wait...***`);
+      const deleting = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Deleting account, please wait...***`);
       const reason = args.slice(1).join(' ');
       const logInput = { username, userID, logID: uuid(), moderatorID: message.author.id, type: 4, date: new Date(), reason: null };
       if (reason) logInput.reason = reason;
       await this.client.util.createModerationLog(args[0], message.member, 4, reason);
       await this.client.util.deleteAccount(username);
-      /*
-      const log = await new this.client.db.Moderation(logInput);
-      await log.save();
-
-      const embed = new RichEmbed();
-      embed.setTitle('Cloud Account | Delete');
-      embed.setColor('ff0000');
-      embed.addField('User', `${username} | <@${userID}>`);
-      embed.addField('Engineer', `<@${message.author.id}>`, true);
-      if (reason) embed.addField('Reason', reason);
-      embed.setFooter(this.client.user.username, this.client.user.avatarURL);
-      embed.setTimestamp();
-      // @ts-ignore
-      this.client.createMessage('580950455581147146', { embed });
-      this.client.getDMChannel(userID).then((user) => {
-        // @ts-ignore
-        user.createMessage({ embed }).catch();
-      });
-      */
 
       this.client.util.transport.sendMail({
         to: account.emailAddress,
