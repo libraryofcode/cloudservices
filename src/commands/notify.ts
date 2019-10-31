@@ -43,6 +43,7 @@ export default class Notify extends Command {
         <b><i>Library of Code sp-us | Support Team</i></b>
         `,
       });
+      message.delete();
       edit.edit(`***${this.client.stores.emojis.success} Send notification to ${account.username}.***`);
     } catch (error) {
       await this.client.util.handleError(error, message, this);

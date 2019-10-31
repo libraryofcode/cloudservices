@@ -21,6 +21,7 @@ export default class Warn extends Command {
       if (!account) return edit.edit(`***${this.client.stores.emojis.error} Cannot find user.***`);
       if (account.root) return edit.edit(`***${this.client.stores.emojis.error} Permission denied.***`);
       await this.client.util.createModerationLog(account.userID, message.member, 1, args.slice(1).join(' '));
+      message.delete();
       edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been warned by Moderator ${message.author.username}#${message.author.discriminator}.***`);
       this.client.util.transport.sendMail({
         to: account.emailAddress,
