@@ -96,7 +96,10 @@ export default class Util {
         info.embed = embed;
       }
       await this.client.createMessage('595788220764127272', info);
-      if (command) this.client.commands.get(command.name).enabled = false;
+      const msg = message.content.slice(this.client.config.prefix.length).trim().split(/ +/g);
+      const label = msg[0];
+      const args = msg.slice(1);
+      if (command) this.resolveCommand(label, args).then((c) => { c.cmd.enabled = false; });
       if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
     } catch (err) {
       this.client.signale.error(err);
