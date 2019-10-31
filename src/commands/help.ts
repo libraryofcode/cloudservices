@@ -57,7 +57,7 @@ export default class Help extends Command {
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
       embed.setTitle(`${this.client.config.prefix}${foundCommand.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
-      const description = `**Description**: ${foundCommand.description}\n**Usage:** ${foundCommand.usage}\n**Aliases:** ${aliases}\n**Permissions**: ${displayedPerms}`;
+      const description = `**Description**: ${foundCommand.description}\n**Usage:** ${foundCommand.usage}\n**Aliases:** ${aliases}\n${displayedPerms}`;
       embed.setDescription(description);
       // @ts-ignore
       message.channel.createMessage({ embed });
