@@ -78,7 +78,7 @@ export default class CreateAccount extends Command {
           <h2>Useful information</h2>
           <h3>How to log in:</h3>
           <ol>
-            <li>Open your desired terminal application - we recommend using <a target="_blank" href="https://www.gnu.org/software/bash/">Bash</a>, but you can use your computer's default</li>
+            <li>Open your desired terminal application - we recommend using <a target="_blank" href="https://git-scm.com/downloads">Bash</a>, but you can use your computer's default</li>
             <li>Type in your SSH Login as above</li>
             <li>When prompted, enter your password <em>Please note that inputs will be blank, so be careful not to type in your password incorrectly</em></li>
           </ol>

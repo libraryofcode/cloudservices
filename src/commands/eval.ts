@@ -32,19 +32,16 @@ export default class Eval extends Command {
         evaled = error.stack;
       }
 
-      /*
-      if (output) {
-        output = output.replace(RegExp(this.client.config.prefix, 'gi'), 'juul');
-        output = output.replace(RegExp(this.client.config.emailPass, 'gi'), 'juul');
-        output = output.replace(RegExp(this.client.config.cloudflare, 'gi'), 'juul');
-      }
-      */
+      evaled = evaled.replace(new RegExp(this.client.config.token, 'gi'), 'juul');
+      evaled = evaled.replace(new RegExp(this.client.config.emailPass, 'gi'), 'juul');
+      evaled = evaled.replace(new RegExp(this.client.config.cloudflare, 'gi'), 'juul');
+
 
       const display = this.client.util.splitString(evaled, 1975);
       if (display[5]) {
         try {
           const { data } = await axios.post('https://snippets.cloud.libraryofcode.org/documents', display.join(''));
-          return message.channel.createMessage(`${this.client.stores.emojis.success} Your evaluation output can be found on https://snippets.cloud.libraryofcode.org/${data.key}`);
+          return message.channel.createMessage(`${this.client.stores.emojis.success} Your evaluation evaled can be found on https://snippets.cloud.libraryofcode.org/${data.key}`);
         } catch (error) {
           return message.channel.createMessage(`${this.client.stores.emojis.error} ${error}`);
         }

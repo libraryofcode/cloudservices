@@ -25,7 +25,7 @@ export default class Pull extends Command {
       if (pull.includes('Already up to date')) return updateMessage.edit(`${this.client.stores.emojis.success} ***No updates available***`);
       if (!pull.includes('origin/master')) return updateMessage.edit(`${this.client.stores.emojis.error} ***Unexpected output:***\n\`\`\`sh\n${pull}\n\`\`\``);
 
-      const passedPull = await updateMessage.edit(`${this.client.stores.emojis.success} ***Pulled latest commit***\n${this.client.stores.emojis.loading} ***Rebuilding files...***`);
+      const passedPull = await updateMessage.edit(`${this.client.stores.emojis.success} ***Pulled latest commit***\n${this.client.stores.emojis.loading} ***Rebuilding files...***\n\`\`\`sh\n${pull}\n\`\`\``);
       try {
         await this.client.util.exec('cd ../ && tsc -p ./tsconfig.json');
       } catch (error) {
