@@ -7,7 +7,7 @@ import { Command, RichEmbed } from '../class';
 export default class Whois extends Command {
   constructor(client: Client) {
     super(client);
-    this.name = 'account';
+    this.name = 'whois';
     this.description = 'Views information for a cloud account.';
     this.aliases = ['account', 'user'];
     this.usage = `${this.client.config.prefix}account [User Name || User ID || Email Address]`;
