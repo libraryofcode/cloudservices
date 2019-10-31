@@ -149,7 +149,6 @@ export default class RichEmbed {
    */
   setThumbnail(url: string) {
     if (typeof url !== 'string') throw new TypeError('RichEmbed Thumbnail URLs must be a string.');
-    if (!url.startsWith('http://') || !url.startsWith('https://')) url = `https://${url}`;
     this.thumbnail = { url };
     return this;
   }
