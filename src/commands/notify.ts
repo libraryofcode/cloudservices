@@ -29,6 +29,7 @@ export default class Notify extends Command {
         // @ts-ignore
         channel.createMessage({ embed });
       });
+      embed.addField('User', `${account.username} | <@${account.userID}>`, true);
       // @ts-ignore
       this.client.createMessage('580950455581147146', { embed });
       this.client.util.transport.sendMail({
