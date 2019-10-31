@@ -36,6 +36,7 @@ export default class Whois extends Command {
       else if (account.permissions.communityManager) details += 'This account belongs to a Community Manager.\n';
       else if (account.permissions.supervisor) details += 'This account belongs to a Supervisor.\n';
       else if (account.permissions.staff) details += 'This account belongs to a Staff member.\n';
+      else if (account.permissions.support) details += 'This account belongs to a Support member.\n';
       if (account.root) details += 'This account has root/administrative privileges.\n';
       if (details) embed.addField('Additional Details', details, true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
