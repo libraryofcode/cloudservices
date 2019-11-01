@@ -63,13 +63,13 @@ export default class CWG_Create extends Command {
           <h1>Library of Code sp-us | Cloud Services</h1>
           <p>Hello, this is an email informing you that a new domain under your account has been binded.
           Information is below.</p>
-          <b>Domain:</b> ${domain.domain}
-          <b>Port:</b> ${domain.port}
-          <b>Certificate Issuer:</b> ${cert.issuer.organizationName}
-          <b>Certificate Subject:</b> ${cert.subject.commonName}
-          <b>Responsible Engineer:</b> ${message.author.username}#${message.author.discriminator}
+          <b>Domain:</b> ${domain.domain}<br>
+          <b>Port:</b> ${domain.port}<br>
+          <b>Certificate Issuer:</b> ${cert.issuer.organizationName}<br>
+          <b>Certificate Subject:</b> ${cert.subject.commonName}<br>
+          <b>Responsible Engineer:</b> ${message.author.username}#${message.author.discriminator}<br>
 
-          If you have any questions about additional setup, you can reply to this email or send a message in #cloud-support in our Discord server.
+          If you have any questions about additional setup, you can reply to this email or send a message in #cloud-support in our Discord server.<br>
           
           <b><i>Library of Code sp-us | Support Team</i></b>
           `,
