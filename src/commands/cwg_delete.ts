@@ -4,7 +4,7 @@ import { Message } from 'eris';
 import { Command, RichEmbed } from '../class';
 import { Client } from '..';
 
-export default class CWG_Data extends Command {
+export default class CWG_Delete extends Command {
   constructor(client: Client) {
     super(client);
     this.name = 'delete';

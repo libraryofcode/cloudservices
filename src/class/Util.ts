@@ -69,8 +69,6 @@ export default class Util {
           for (const subCmd of resolvedCommand.subcommands.toArray()) {
             if (subCmd.aliases.includes(args[0])) {
               resolvedCommand = subCmd; parentLabel += ` ${args[0]}`; args.shift(); break;
-            } else {
-              hasSubCommands = false; break;
             }
           }
         }
