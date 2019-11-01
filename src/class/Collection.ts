@@ -110,7 +110,7 @@ export default class Collection<V> extends Map<string, V> {
    */
   reduce(func: Function, initialValue = 0) {
     const iter = this.values();
-    let val;
+    let val: any;
     let result = initialValue === undefined ? iter.next().value : initialValue;
     while ((val = iter.next().value) !== undefined) { // eslint-disable-line
       result = func(result, val);
@@ -159,7 +159,7 @@ export default class Collection<V> extends Map<string, V> {
    * @param key The key of the object
    * @returns The removed object, or `null` if nothing was removed
    */
-  remove(key): V {
+  remove(key: string): V {
     const item = this.get(key);
     if (!item) {
       return null;
