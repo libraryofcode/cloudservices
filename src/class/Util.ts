@@ -173,8 +173,12 @@ export default class Util {
   }
 
   public async deleteAccount(username: string): Promise<void> {
+    const account = await this.client.db.Account.findOne({ username });
+    if (!account) return Promise.reject(new Error('Account not found'));
     await this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`);
+    await this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted');
     await this.client.db.Account.deleteOne({ username });
+    return Promise.resolve();
   }
 
   public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {
