@@ -5,6 +5,8 @@ import { Collection } from '.';
 export default class Command {
     name: string
 
+    parentName: string
+
     description?: string
 
     usage?: string

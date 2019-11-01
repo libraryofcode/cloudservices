@@ -55,7 +55,7 @@ export default class Util {
       }
       if (!resolvedCommand) return Promise.resolve({ cmd: null, args });
 
-      let label = `${command}`;
+      let parentLabel = `${command}`;
       let hasSubCommands = true;
       while (hasSubCommands) {
         if (!resolvedCommand.subcommands.size) {
@@ -64,11 +64,11 @@ export default class Util {
           hasSubCommands = false; break;
         } else if (resolvedCommand.subcommands.has(args[0])) {
           resolvedCommand = resolvedCommand.subcommands.get(args[0]);
-          args.shift(); label += ` ${args[0]}`;
+          args.shift(); parentLabel += ` ${args[0]}`;
         } else {
           for (const subCmd of resolvedCommand.subcommands.toArray()) {
             if (subCmd.aliases.includes(args[0])) {
-              resolvedCommand = subCmd; args.shift(); label += ` ${args[0]}`; break;
+              resolvedCommand = subCmd; args.shift(); parentLabel += ` ${args[0]}`; break;
             } else {
               hasSubCommands = false; break;
             }
@@ -76,7 +76,7 @@ export default class Util {
         }
       }
       const finalCommand = resolvedCommand;
-      finalCommand.name = label;
+      finalCommand.parentName = parentLabel;
 
       return Promise.resolve({ cmd: finalCommand, args });
     } catch (error) {
