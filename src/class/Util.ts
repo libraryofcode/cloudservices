@@ -64,11 +64,11 @@ export default class Util {
           hasSubCommands = false; break;
         } else if (resolvedCommand.subcommands.has(args[0])) {
           resolvedCommand = resolvedCommand.subcommands.get(args[0]);
-          args.shift(); parentLabel += ` ${args[0]}`;
+          parentLabel += ` ${args[0]}`; args.shift();
         } else {
           for (const subCmd of resolvedCommand.subcommands.toArray()) {
             if (subCmd.aliases.includes(args[0])) {
-              resolvedCommand = subCmd; args.shift(); parentLabel += ` ${args[0]}`; break;
+              resolvedCommand = subCmd; parentLabel += ` ${args[0]}`; args.shift(); break;
             } else {
               hasSubCommands = false; break;
             }
