@@ -33,7 +33,7 @@ export default class CWG_Create extends Command {
       if (args[3] && !args[4]) return edit.edit(`${this.client.stores.emojis.error} x509 Certificate key required`);
       let certs: { cert?: string, key?: string }; if (args[4]) certs = { cert: args[3], key: args[4] };
       if (await this.client.db.Domain.exists({ domain: args[1] })) return edit.edit(`***${this.client.stores.emojis.error} This domain already exists.***`);
-      if (await this.client.db.Domain.exists({ port: Number(args[2]) })) return edit.edit(`***${this.client.stores.emojis.error} This port is already binded to a domain.***`);
+      if (await this.client.db.Domain.exists({ port: Number(args[2]) })) return message.channel.createMessage('***WARNING: This port is already binded to another domain.***');
       const domain = await this.createDomain(account, args[1], Number(args[2]), certs);
       const embed = new RichEmbed();
       embed.setTitle('Domain Creation');
@@ -98,7 +98,7 @@ export default class CWG_Create extends Command {
   public async createDomain(account: AccountInterface, domain: string, port: number, x509Certificate: { cert?: string, key?: string } = { cert: '/etc/nginx/ssl/cloud-org.chain.crt', key: '/etc/nginx/ssl/cloud-org.key.pem' }) {
     try {
       if (port <= 1024 || port >= 65535) throw new RangeError(`Port range must be between 1024 and 65535, received ${port}.`);
-      if (await this.client.db.Domain.exists({ port })) throw new Error(`Port ${port} already exists in the database.`);
+      // if (await this.client.db.Domain.exists({ port })) throw new Error(`Port ${port} already exists in the database.`);
       if (await this.client.db.Domain.exists({ domain })) throw new Error(`Domain ${domain} already exists in the database.`);
       if (!await this.client.db.Account.exists({ userID: account.userID })) throw new Error(`Cannot find account ${account.userID}.`);
       await fs.access(x509Certificate.cert, fs.constants.R_OK);
