@@ -55,7 +55,7 @@ export default class Help extends Command {
       const aliases = cmd.aliases.map((alias) => `${this.client.config.prefix}${alias}`).join(', ');
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
-      embed.setTitle(`${this.client.config.prefix}${cmd.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
+      embed.setTitle(`${this.client.config.prefix}${cmd.parentName}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
       const description = `**Description**: ${cmd.description}\n**Usage:** ${cmd.usage}\n**Aliases:** ${aliases}\n${displayedPerms}`;
       embed.setDescription(description);
       // @ts-ignore
