@@ -16,7 +16,7 @@ export default class CWG extends Command {
     super(client);
     this.name = 'cwg';
     this.description = 'Manages aspects for the CWG.';
-    this.usage = `Run ${this.client.config.prefix}${this.name} ${this.client.commands.get(this.name).subcommands.map((s) => s.name).join(' / ')} for usage information`;
+    this.usage = `Run ${this.client.config.prefix}${this.name} [subcommand] for usage information`;
     this.permissions = { roles: ['446104438969466890'] };
     this.subcmds = [Create, Data, Delete];
     this.enabled = true;
