@@ -11,6 +11,7 @@ export default class DeleteAccount extends Command {
     this.usage = `${this.client.config.prefix}deleteaccount [User Name | User ID | Email Address] [Reason] | ${this.client.config.prefix}deleteaccount [Username] [Reason] | ${this.client.config.prefix}deleteaccount [Email] [Reason]`;
     this.aliases = ['deleteacc', 'dacc', 'daccount', 'delete'];
     this.permissions = { roles: ['475817826251440128', '525441307037007902'] };
+    this.guildOnly = true;
     this.enabled = true;
   }
 
@@ -55,6 +56,7 @@ export default class DeleteAccount extends Command {
         `,
       });
 
+      this.client.guilds.get('446067825673633794').members.get(account.userID).removeRole('546457886440685578', `Account was deleted by ${message.author.username}.`);
       return deleting.edit(`${this.client.stores.emojis.success} ***Account ${username} has been deleted by Engineer ${message.author.username}#${message.author.discriminator}***`);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
