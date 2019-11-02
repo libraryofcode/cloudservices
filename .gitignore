@@ -3,3 +3,4 @@ yarn.lock
 src/config.json
 package-lock.json
 htmlEmail_templates
+yarn-error.log
