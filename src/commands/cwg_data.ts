@@ -22,19 +22,20 @@ export default class CWG_Data extends Command {
       const dom = await this.client.db.Domain.find({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
       if (!dom.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
       const embeds: RichEmbed[] = [];
-      dom.forEach(async (domain) => {
+      await dom.map(async (domain) => {
+        const cert = await fs.readFile(domain.x509.cert, { encoding: 'utf8' });
         const embed = new RichEmbed();
         embed.setTitle('Domain Information');
         embed.addField('Account Username', domain.account.username, true);
         embed.addField('Account ID', domain.account.userID, true);
         embed.addField('Domain', domain.domain, true);
         embed.addField('Port', String(domain.port), true);
-        embed.addField('Certificate Issuer', x509.getIssuer(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).organizationName, true);
-        embed.addField('Certificate Subject', x509.getSubject(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).commonName, true);
-        embed.addField('Certificate Expiration Date', moment(x509.parseCert(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).notAfter).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
+        embed.addField('Certificate Issuer', x509.getIssuer(cert).organizationName, true);
+        embed.addField('Certificate Subject', x509.getSubject(cert).commonName, true);
+        embed.addField('Certificate Expiration Date', moment(x509.parseCert(cert).notAfter).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
         embed.setTimestamp();
-        return embeds.push(embed);
+        return embed; // s.push(embed);
       });
       this.client.signale.log(embeds);
       // @ts-ignore
