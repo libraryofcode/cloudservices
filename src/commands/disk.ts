@@ -17,6 +17,7 @@ export default class Disk extends Command {
 
   async run(message: Message, args: string[]) {
     try {
+      if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }, { emailAddress: args[0] }] });
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
       if (account.root || args[0].includes('./')) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied***`);
