@@ -21,8 +21,8 @@ export default class CWG_Data extends Command {
       if (!args[0]) return this.client.commands.get('help').run(message, ['cwg', this.name]);
       const dom = await this.client.db.Domain.find({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
       if (!dom.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
-      const embeds: RichEmbed[] = [];
-      await dom.map(async (domain) => {
+      // const embeds: RichEmbed[] = [];
+      const embeds = await dom.map(async (domain) => {
         const cert = await fs.readFile(domain.x509.cert, { encoding: 'utf8' });
         const embed = new RichEmbed();
         embed.setTitle('Domain Information');
