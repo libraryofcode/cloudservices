@@ -21,9 +21,9 @@ export default class CWG_Data extends Command {
       if (!args[0]) return this.client.commands.get('help').run(message, ['cwg', this.name]);
       const dom = await this.client.db.Domain.find({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
       if (!dom.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
-      // const embeds: RichEmbed[] = [];
-      const embeds = await dom.map(async (domain) => {
-        const cert = await fs.readFile(domain.x509.cert, { encoding: 'utf8' });
+      const embeds: RichEmbed[] = [];
+      dom.map(async (domain) => {
+        const cert = await fs.readFile(domain.x509.cert, { encoding: 'utf8' }).then((a) => a);
         const embed = new RichEmbed();
         embed.setTitle('Domain Information');
         embed.addField('Account Username', domain.account.username, true);
@@ -36,7 +36,7 @@ export default class CWG_Data extends Command {
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
         embed.setTimestamp();
         return embed; // s.push(embed);
-      });
+      }).forEach(async (e) => embeds.push(await e));
       this.client.signale.log(embeds);
       // @ts-ignore
       if (embeds.length === 1) return message.channel.createMessage({ embed: embeds[0] });
