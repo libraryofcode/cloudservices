@@ -1,8 +1,9 @@
-import fs from 'fs-extra';
+import fs from 'fs';
 import moment from 'moment';
 import x509 from '@ghaiklor/x509';
 import { createPaginationEmbed } from 'eris-pagination';
 import { Message } from 'eris';
+import { promisify } from 'util';
 import { Command, RichEmbed } from '../class';
 import { Client } from '..';
 
@@ -21,9 +22,9 @@ export default class CWG_Data extends Command {
       if (!args[0]) return this.client.commands.get('help').run(message, ['cwg', this.name]);
       const dom = await this.client.db.Domain.find({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
       if (!dom.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
-      const embeds: RichEmbed[] = [];
-      dom.map(async (domain) => {
-        const cert = await fs.readFile(domain.x509.cert, { encoding: 'utf8' }).then((a) => a);
+      // const embeds: RichEmbed[] = [];
+      const embeds = dom.map(async (domain) => {
+        const cert = fs.readFileSync(domain.x509.cert, { encoding: 'utf8' });
         const embed = new RichEmbed();
         embed.setTitle('Domain Information');
         embed.addField('Account Username', domain.account.username, true);
@@ -35,8 +36,8 @@ export default class CWG_Data extends Command {
         embed.addField('Certificate Expiration Date', moment(x509.parseCert(cert).notAfter).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
         embed.setTimestamp();
-        return embed; // s.push(embed);
-      }).forEach(async (e) => embeds.push(await e));
+        return embed;
+      });
       this.client.signale.log(embeds);
       // @ts-ignore
       if (embeds.length === 1) return message.channel.createMessage({ embed: embeds[0] });
