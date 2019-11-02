@@ -21,7 +21,8 @@ export default class CWG_Data extends Command {
       if (!args[0]) return this.client.commands.get('help').run(message, ['cwg', this.name]);
       const dom = await this.client.db.Domain.find({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
       if (!dom.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
-      const embeds = dom.map(async (domain) => {
+      const embeds: RichEmbed[] = [];
+      dom.forEach(async (domain) => {
         const embed = new RichEmbed();
         embed.setTitle('Domain Information');
         embed.addField('Account Username', domain.account.username, true);
@@ -33,7 +34,7 @@ export default class CWG_Data extends Command {
         embed.addField('Certificate Expiration Date', moment(x509.parseCert(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).notAfter).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
         embed.setTimestamp();
-        return embed;
+        return embeds.push(embed);
       });
       // @ts-ignore
       if (embeds.length === 1) return message.channel.createMessage({ embed: embeds[0] });
