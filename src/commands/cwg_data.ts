@@ -34,7 +34,6 @@ export default class CWG_Data extends Command {
         embed.addField('Certificate Expiration Date', moment(x509.parseCert(await fs.readFile(domain.x509.cert, { encoding: 'utf8' })).notAfter).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
         embed.setFooter(this.client.user.username, this.client.user.avatarURL);
         embed.setTimestamp();
-        this.client.signale.log(embed);
         return embeds.push(embed);
       });
       this.client.signale.log(embeds);
