@@ -30,7 +30,7 @@ export default class Disk extends Command {
       const embed = new RichEmbed();
       embed.setTitle('Disk Usage');
       embed.setColor('ff0000');
-      embed.setDescription(`/home/${account.username}`);
+      embed.setDescription(result.split(/ +/g)[1]);
       embed.addField('Result', dataConversion(Number(result.split(/ +/g)[0])), true);
       embed.addField('Time taken', totalTime, true);
       embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
