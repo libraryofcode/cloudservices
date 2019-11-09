@@ -78,12 +78,12 @@ export default class Collection<V> extends Map<string, V> {
 
   /**
    * Return an array with the results of applying the given function to each element
-   * @param func A function that takes an object and returns something
+   * @param callbackfn A function that takes an object and returns something
    */
-  map(func: Function) {
+  map<U>(callbackfn: (value?: V, index?: number, array?: V[]) => U): U[] {
     const arr = [];
     for (const item of this.values()) {
-      arr.push(func(item));
+      arr.push(callbackfn(item));
     }
     return arr;
   }
@@ -103,22 +103,6 @@ export default class Collection<V> extends Map<string, V> {
   }
 
   /**
-   * Reduce values by function
-   * @param callbackFn Function to execute on each element in the array
-   * @param initialValue Value to use as the first argument to the first call of the callback
-   * @returns Accumulator
-   */
-  reduce(func: Function, initialValue = 0) {
-    const iter = this.values();
-    let val: any;
-    let result = initialValue === undefined ? iter.next().value : initialValue;
-    while ((val = iter.next().value) !== undefined) { // eslint-disable-line
-      result = func(result, val);
-    }
-    return result;
-  }
-
-  /**
    * Test if at least one element passes the test implemented by the provided function. Returns true if yes, or false if not.
    * @param func A function that takes an object and returns true if it matches
    */
@@ -129,20 +113,6 @@ export default class Collection<V> extends Map<string, V> {
       }
     }
     return false;
-  }
-
-  /**
-   * Test if all elements passe the test implemented by the provided function. Returns true if yes, or false if not.
-   * @param func A function that takes an object and returns true if it matches
-   * @returns An array containing booleans that matched
-   */
-  every(func: Function): boolean[] {
-    const array = [];
-    for (const item of this.values()) {
-      if (func(item)) array.push(true);
-      else array.push(false);
-    }
-    return array;
   }
 
   /**

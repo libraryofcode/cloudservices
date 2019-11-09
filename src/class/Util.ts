@@ -55,7 +55,7 @@ export default class Util {
       }
       if (!resolvedCommand) return Promise.resolve({ cmd: null, args });
 
-      let parentLabel = `${command}`;
+      let parentLabel = '';
       let hasSubCommands = true;
       while (hasSubCommands) {
         if (!resolvedCommand.subcommands.size) {
@@ -63,13 +63,15 @@ export default class Util {
         } else if (!args[0]) {
           hasSubCommands = false; break;
         } else if (resolvedCommand.subcommands.has(args[0])) {
-          resolvedCommand = resolvedCommand.subcommands.get(args[0]);
-          parentLabel += ` ${args[0]}`; args.shift();
+          parentLabel += `${resolvedCommand.name} `;
+          resolvedCommand = resolvedCommand.subcommands.get(args[0]); args.shift();
         } else {
-          for (const subCmd of resolvedCommand.subcommands.toArray()) {
+          const subcommandArray = resolvedCommand.subcommands.toArray();
+          for (const subCmd of subcommandArray) {
             if (subCmd.aliases.includes(args[0])) {
-              resolvedCommand = subCmd; parentLabel += ` ${args[0]}`; args.shift(); break;
-            } else {
+              parentLabel += `${resolvedCommand.name} `; resolvedCommand = subCmd; args.shift(); break;
+            }
+            if (subcommandArray.findIndex((v) => v === subCmd) === subcommandArray.length - 1) {
               hasSubCommands = false; break;
             }
           }
@@ -173,8 +175,12 @@ export default class Util {
   }
 
   public async deleteAccount(username: string): Promise<void> {
+    const account = await this.client.db.Account.findOne({ username });
+    if (!account) return Promise.reject(new Error('Account not found'));
     await this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`);
+    await this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted');
     await this.client.db.Account.deleteOne({ username });
+    return Promise.resolve();
   }
 
   public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {

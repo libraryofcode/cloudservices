@@ -2,6 +2,7 @@ export { default as Announce } from './announce';
 export { default as CreateAccount } from './createaccount';
 export { default as CWG } from './cwg';
 export { default as DeleteAccount } from './deleteaccount';
+export { default as Disk } from './disk';
 export { default as Eval } from './eval';
 export { default as Exec } from './exec';
 export { default as Help } from './help';
