@@ -1,8 +1,8 @@
 import Eris from 'eris';
+import Redis from 'ioredis';
 import mongoose from 'mongoose';
 import signale from 'signale';
 import fs from 'fs-extra';
-import path from 'path';
 import config from './config.json';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
@@ -19,6 +19,8 @@ export default class Client extends Eris.Client {
 
   public db: { Account: mongoose.Model<AccountInterface>; Domain: mongoose.Model<DomainInterface>; Moderation: mongoose.Model<ModerationInterface>; };
 
+  public redis: Redis.Redis;
+
   public stores: { emojis: { success: string, loading: string, error: string }; };
 
   public signale: signale.Signale;
@@ -31,6 +33,7 @@ export default class Client extends Eris.Client {
     this.util = new Util(this);
     this.commands = new Collection<Command>();
     this.db = { Account, Domain, Moderation };
+    this.redis = new Redis();
     this.stores = { emojis };
     this.signale = signale;
     this.signale.config({
@@ -80,15 +83,15 @@ export default class Client extends Eris.Client {
   }
 
   public async init() {
+    const intervals = await fs.readdir('./intervals');
+    intervals.forEach((interval) => {
+      // eslint-disable-next-line
+      if (interval === 'index.js') return;
+      require(`./intervals/${interval}`).default(this);
+      this.signale.complete(`Loaded interval ${interval.split('.')[0]}`);
+    });
     const evtFiles = await fs.readdir('./events/');
     Object.values(commands).forEach((c: Function) => this.loadCommand(c));
-    /*
-    const commands = await fs.readdir(path.join(__dirname, './commands/'));
-    commands.forEach((command) => {
-      if (command === 'index.js') return;
-      this.loadCommand(`./commands/${command}`);
-    });
-    */
 
     evtFiles.forEach((file) => {
       const eventName = file.split('.')[0];
