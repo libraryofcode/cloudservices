@@ -19,5 +19,5 @@ export default function storage(client: Client) {
   };
   setInterval(async () => {
     await main();
-  }, 300000);
+  }, 900000);
 }
