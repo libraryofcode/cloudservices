@@ -33,7 +33,7 @@ export default class Whois extends Command {
       embed.addField('Created At', moment(account.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
       const cpuUsage = await this.client.util.exec(`top -b -n 1 -u ${account.username} | awk 'NR>7 { sum += $9; } END { print sum; }'`);
       embed.addField('CPU Usage', cpuUsage.split('\n')[0] ? `${cpuUsage.split('\n')[0]}%` : '0%', true);
-      embed.addField('Memory', dataConversion(Number(await this.client.util.exec(`memory ${account.username}`))), true);
+      embed.addField('Memory', dataConversion(Number(await this.client.util.exec(`memory ${account.username}`)) * 1000), true);
       const data = await this.client.redis.get(`storage-${account.username}`) ? dataConversion(Number(await this.client.redis.get(`storage-${account.username}`))) : 'N/A';
       embed.addField('Storage', data, true);
       let details = '';
