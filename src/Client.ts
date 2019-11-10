@@ -83,13 +83,6 @@ export default class Client extends Eris.Client {
   }
 
   public async init() {
-    const intervals = await fs.readdir('./intervals');
-    intervals.forEach((interval) => {
-      // eslint-disable-next-line
-      if (interval === 'index.js') return;
-      require(`./intervals/${interval}`).default(this);
-      this.signale.complete(`Loaded interval ${interval.split('.')[0]}`);
-    });
     const evtFiles = await fs.readdir('./events/');
     Object.values(commands).forEach((c: Function) => this.loadCommand(c));
 
@@ -107,6 +100,13 @@ export default class Client extends Eris.Client {
     await this.connect();
     this.on('ready', () => {
       this.signale.info(`Connected to Discord as ${this.user.username}#${this.user.discriminator}`);
+    });
+    const intervals = await fs.readdir('./intervals');
+    intervals.forEach((interval) => {
+      // eslint-disable-next-line
+      if (interval === 'index.js') return;
+      require(`./intervals/${interval}`).default(this);
+      this.signale.complete(`Loaded interval ${interval.split('.')[0]}`);
     });
   }
 }
