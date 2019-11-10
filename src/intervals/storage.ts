@@ -6,10 +6,11 @@ export default function storage(client: Client) {
   const main = async () => {
     const accounts = await client.db.Account.find();
     for (const account of accounts) {
-      let bytes = Number(await client.util.exec(`du -bs /home/${account.username}`));
+      const res = await client.util.exec(`du -bs /home/${account.username}`);
+      let bytes = Number(res.split('/')[0].replace('\t', ''));
       try {
         await fs.access(`/var/mail/${account.username}`, fs.constants.F_OK);
-        bytes += Number(await client.util.exec(`du -bs /var/mail/${account.username}`));
+        bytes += Number(res.split('/')[0].replace('\t', ''));
       } catch {
         bytes += 0;
       }
