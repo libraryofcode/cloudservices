@@ -2,7 +2,7 @@
 import fs from 'fs-extra';
 import { Client } from '..';
 
-export default function storage(client: Client) {
+export default async function storage(client: Client) {
   const main = async () => {
     const accounts = await client.db.Account.find();
     for (const account of accounts) {
@@ -18,6 +18,7 @@ export default function storage(client: Client) {
       await client.redis.set(`storage-${account.username}`, bytes);
     }
   };
+  await main();
   setInterval(async () => {
     await main();
   }, 900000);
