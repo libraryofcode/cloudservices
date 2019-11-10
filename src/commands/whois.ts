@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Message } from 'eris';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
+import { dataConversion } from '../functions';
 
 export default class Whois extends Command {
   constructor(client: Client) {
@@ -30,6 +31,10 @@ export default class Whois extends Command {
       embed.addField('Email Address', account.emailAddress, true);
       embed.addField('Created By', `<@${this.client.users.get(account.createdBy).id}>`, true);
       embed.addField('Created At', moment(account.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss A'), true);
+      embed.addField('CPU Usage', `${await this.client.util.exec(`top -b -n 1 -u ${account.username} | awk 'NR>7 { sum += $9; } END { print sum; }'`)}%`, true);
+      embed.addField('Memory', dataConversion(Number(this.client.util.exec(`memory ${account.username}`))), true);
+      const data = await this.client.redis.get(`storage-${account.username}`) ? dataConversion(Number(this.client.redis.get(`storage-${account.username}`))) : 'N/A';
+      embed.addField('Storage', data, true);
       let details = '';
       if (account.locked) details += 'This account is currently locked.\n';
       if (account.permissions.engineer) details += 'This account belongs to an Engineer.\n';
