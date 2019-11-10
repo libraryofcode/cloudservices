@@ -10,7 +10,8 @@ export default function storage(client: Client) {
       let bytes = Number(res.split('/')[0].replace('\t', ''));
       try {
         await fs.access(`/var/mail/${account.username}`, fs.constants.F_OK);
-        bytes += Number(res.split('/')[0].replace('\t', ''));
+        const res2 = await client.util.exec(`du -bs /var/mail/${account.username}`);
+        bytes += Number(res2.split('/')[0].replace('\t', ''));
       } catch {
         bytes += 0;
       }
