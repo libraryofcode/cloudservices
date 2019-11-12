@@ -13,7 +13,7 @@ export default class Disk extends Command {
     this.description = 'Checks the used disk space by a user';
     this.usage = `${this.client.config.prefix}disk [Username/User ID/Email]`;
     this.permissions = { roles: ['446104438969466890'] };
-    this.enabled = true;
+    this.enabled = false;
   }
 
   async run(message: Message, args: string[]) {
