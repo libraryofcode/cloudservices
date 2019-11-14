@@ -53,7 +53,9 @@ export default class CWG_Delete extends Command {
       await this.client.util.exec('systemctl reload nginx');
       edit.edit(`***${this.client.stores.emojis.success} Domain ${domain.domain} with port ${domain.port} has been successfully deleted.***`);
       // @ts-ignore
-      return message.channel.createMessage({ embed });
+      this.client.createMessage('580950455581147146', { embed });
+      // @ts-ignore
+      return this.client.getDMChannel(domain.account.userID).then((channel) => channel.createMessage({ embed })).catch(() => {});
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }

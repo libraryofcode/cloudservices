@@ -232,11 +232,11 @@ export default class Util {
     let color: string;
     let archType: string;
     switch (type) {
-      default: archType = 'Moderator'; embedTitle = 'Cloud Account | Generic'; color = '0892e1'; break;
+      default: archType = 'Staff'; embedTitle = 'Cloud Account | Generic'; color = '0892e1'; break;
       case 0: archType = 'Administrator'; embedTitle = 'Cloud Account | Create'; color = '00ff00'; break;
-      case 1: archType = 'Moderator'; embedTitle = 'Account Warning | Warn'; color = 'ffff00'; break;
-      case 2: archType = 'Supervisor'; embedTitle = 'Account Infraction | Lock'; color = 'ff6600'; break;
-      case 3: archType = 'Supervisor'; embedTitle = 'Account Reclaim | Unlock'; color = '0099ff'; break;
+      case 1: archType = 'Staff'; embedTitle = 'Account Warning | Warn'; color = 'ffff00'; break;
+      case 2: archType = 'Moderator'; embedTitle = 'Account Infraction | Lock'; color = 'ff6600'; break;
+      case 3: archType = 'Moderator'; embedTitle = 'Account Reclaim | Unlock'; color = '0099ff'; break;
       case 4: archType = 'Administrator'; embedTitle = 'Cloud Account | Delete'; color = 'ff0000'; break;
     }
     const embed = new RichEmbed()

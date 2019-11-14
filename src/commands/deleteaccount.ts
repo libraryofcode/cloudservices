@@ -1,6 +1,6 @@
 import { Message, PrivateChannel } from 'eris';
 import uuid from 'uuid/v4';
-import { Command, RichEmbed } from '../class';
+import { Command } from '../class';
 import { Client } from '..';
 
 export default class DeleteAccount extends Command {

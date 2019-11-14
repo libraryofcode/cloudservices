@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Client } from '..';
 import { RichEmbed, Command } from '../class';
 import { dataConversion } from '../functions';
+// eslint-disable-next-line import/no-unresolved
 import 'moment-precise-range-plugin';
 
 export default class Disk extends Command {
@@ -12,7 +13,7 @@ export default class Disk extends Command {
     this.description = 'Checks the used disk space by a user';
     this.usage = `${this.client.config.prefix}disk [Username/User ID/Email]`;
     this.permissions = { roles: ['446104438969466890'] };
-    this.enabled = true;
+    this.enabled = false;
   }
 
   async run(message: Message, args: string[]) {

@@ -18,7 +18,13 @@ export default class Parse extends Command {
       if (!args.length) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0].replace(/[<@!>]/gi, '') }] });
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
-      const dir = await fs.readdir(`/home/${account.username}/Validation`);
+      let dir: string[];
+      try {
+        dir = await fs.readdir(`/home/${account.username}/Validation`);
+      } catch (err) {
+        return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate Validation directory.***`);
+      }
+      if (!dir.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate certificate.***`);
       const cert = parseCert(`/home/${account.username}/Validation/${dir[0]}`);
       const subjectCommonName = cert.subject.commonName ? cert.subject.commonName : 'Not Specified';
       const subjectEmailAddress = cert.subject.emailAddress ? cert.subject.emailAddress : 'Not Specified';

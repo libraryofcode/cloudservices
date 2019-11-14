@@ -8,7 +8,7 @@ export default class Unlock extends Command {
     super(client);
     this.name = 'unlock';
     this.description = 'Unlocks an account.';
-    this.permissions = { roles: ['608095934399643649', '521312697896271873'] };
+    this.permissions = { roles: ['455972169449734144', '643619219988152321'] };
     this.enabled = true;
   }
 
