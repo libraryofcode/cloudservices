@@ -22,12 +22,10 @@ export default class Parseall extends Command {
       embed.setTitle('Certificate Validation');
       embed.setAuthor(this.client.user.username, this.client.user.avatarURL);
       embed.setFooter(`Requested by ${message.member.username}#${message.member.discriminator}`, message.member.avatarURL);
+      embed.setTimestamp();
       const search = await this.client.db.Account.find();
       const accounts = search.map((acc) => acc.username);
-      const initial = accounts.map((acc) => `${this.client.stores.emojis.loading} **${acc}** Loading...`);
-      embed.setDescription(initial.join('\n'));
-      // @ts-ignore
-      const msg = await message.channel.createMessage({ embed });
+      const final: string[] = [];
 
       accounts.forEach(async (a) => {
         try {
@@ -36,21 +34,24 @@ export default class Parseall extends Command {
           // @ts-ignore
           const time = moment.preciseDiff(new Date(), notAfter);
 
-          if (notAfter < new Date()) initial[accounts.findIndex((acc) => acc === a)] = `${this.client.stores.emojis.error} **${a}** Certificate expired ${time} ago`;
-          else initial[accounts.findIndex((acc) => acc === a)] = `${this.client.stores.emojis.success} **${a}** Certificate expires in ${time}`;
-
-          embed.setDescription(initial.join('\n'));
-          await msg.edit({ embed });
+          if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a}** Certificate expired ${time} ago`);
+          else final.push(`${this.client.stores.emojis.success} **${a}** Certificate expires in ${time}`);
         } catch (error) {
-          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) {
-            initial[accounts.findIndex((acc) => acc === a)] = `${this.client.stores.emojis.error} **${a}** Unable to locate certificate`;
-            embed.setDescription(initial.join('\n'));
-            await msg.edit({ embed });
-          } else throw error;
+          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) final.push(`${this.client.stores.emojis.error} **${a}** Unable to locate certificate`);
+          else throw error;
         }
       });
+
+      if (final.join('\n').length < 2048) embed.setDescription(final.join('\n'));
+      else {
+        const split = this.client.util.splitString(final.join('\n'), 1024);
+        split.forEach((s) => embed.addField('\u200B', s));
+      }
+
+      // @ts-ignore
+      return await message.channel.createMessage({ embed });
     } catch (error) {
-      this.client.util.handleError(error, message, this);
+      return this.client.util.handleError(error, message, this);
     }
   }
 }
