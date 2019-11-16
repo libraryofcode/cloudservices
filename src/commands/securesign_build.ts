@@ -15,11 +15,11 @@ export default class SecureSign_Build extends Command {
     try {
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Loading build information...***`);
 
-      const build = await this.client.util.exec("sudo -H -u root bash -c 'securesign build'");
-      const info = build.replace(/\n/g, '\n**').replace(/:/g, ':**').split('\n');
+      const build = await this.client.util.exec("sudo -H -u root bash -c 'securesign-canary build'");
+      const info = build.replace(/^\s+|\s+$/g, '').replace(/\n/g, '\n**').replace(/: /g, ':** ').split('\n');
       const title = info.shift();
       const description = info.join('\n');
-      const content = null;
+      const content = '';
 
       const embed = new RichEmbed();
       embed.setTitle(title);
