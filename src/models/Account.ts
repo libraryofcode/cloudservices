@@ -15,6 +15,7 @@ export interface AccountInterface extends Document {
     engineer: boolean
   },
   root: boolean
+  ssInit: boolean
 }
 
 const Account: Schema = new Schema({
@@ -32,6 +33,7 @@ const Account: Schema = new Schema({
     engineer: Boolean,
   },
   root: Boolean,
+  ssInit: Boolean,
 });
 
 export default model<AccountInterface>('Account', Account);
