@@ -1,8 +1,6 @@
-import uuid from 'uuid/v4';
 import { Client } from '..';
-import { RichEmbed } from '../class';
 
-export default function checkLock(client: Client) {
+export default function checkLock(client: Client): void {
   setInterval(async () => {
     try {
       const moderations = await client.db.Moderation.find();
