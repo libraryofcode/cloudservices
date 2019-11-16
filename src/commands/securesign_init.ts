@@ -20,7 +20,7 @@ export default class SecureSign_Init extends Command {
         message.delete();
         return message.channel.createMessage(`${this.client.stores.emojis.error} ***Run this command in your DMs!***`);
       }
-      const account = await this.client.db.Account.findOne({ id: message.author.id });
+      const account = await this.client.db.Account.findOne({ userID: message.author.id });
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not registered***`);
       if (account.locked) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Your account is locked***`);
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Initializing account...***`);
