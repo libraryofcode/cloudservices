@@ -21,7 +21,8 @@ export default class Modlogs extends Command {
       const query = await this.client.db.Moderation.find({ $or: [{ username: args.join(' ') }, { userID: args.filter((a) => a)[0].replace(/[<@!>]/g, '') }] });
       if (!query.length) return msg.edit(`***${this.client.stores.emojis.error} Cannot locate modlogs for ${args.join(' ')}***`);
 
-      const formatted = query.map((log) => {
+      // @ts-ignore
+      const formatted = query.sort((a, b) => a.date - b.date).map((log) => {
         const { username, moderatorID, reason, type, date } = log;
         let name: string;
         switch (type) {

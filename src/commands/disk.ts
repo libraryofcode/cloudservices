@@ -18,6 +18,7 @@ export default class Disk extends Command {
 
   async run(message: Message, args: string[]) {
     try {
+      if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }, { emailAddress: args[0] }] });
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
       if (account.root || args[0].includes('./')) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied***`);
@@ -30,8 +31,8 @@ export default class Disk extends Command {
       const embed = new RichEmbed();
       embed.setTitle('Disk Usage');
       embed.setColor('ff0000');
-      embed.setDescription(`/home/${account.username}`);
-      embed.addField('Result', dataConversion(Number(result)), true);
+      embed.setDescription(result.split(/ +/g)[1]);
+      embed.addField('Result', dataConversion(Number(result.split(/ +/g)[0])), true);
       embed.addField('Time taken', totalTime, true);
       embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
       embed.setTimestamp();

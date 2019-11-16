@@ -10,6 +10,7 @@ export { default as Lock } from './lock';
 export { default as Modlogs } from './modlogs';
 export { default as Notify } from './notify';
 export { default as Parse } from './parse';
+export { default as Parseall } from './parseall';
 export { default as Ping } from './ping';
 export { default as Pull } from './pull';
 export { default as Sysinfo } from './sysinfo';
