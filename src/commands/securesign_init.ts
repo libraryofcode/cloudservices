@@ -40,7 +40,7 @@ export default class SecureSign_Init extends Command {
       if (id !== message.author.id && !account.root) {
         // @ts-ignore
         const channel: TextChannel = this.client.guilds.get('446067825673633794').channels.get('501089664040697858');
-        channel.createMessage(`**__UNAUTHORIZED ACCESS ALERT__**\n${message.author.mention} tried to initialize their account using <@${id}>'s credentials.\nTheir account has been locked under Section 5.2 of the EULA.`);
+        channel.createMessage(`**__UNAUTHORIZED ACCESS ALERT__**\n${message.author.mention} tried to initialize their account using <@${id}>'s SecureSign credentials.\nTheir account has been locked under Section 5.2 of the EULA.`);
         const tasks = [this.client.util.exec(`lock ${account.username}`), account.updateOne({ locked: true }), this.client.util.createModerationLog(account.userID, this.client.user, 2, 'Violation of Section 5.2 of the EULA')];
         await Promise.all(tasks);
         return msg.edit(`${this.client.stores.emojis.error} ***Credentials incorrect***`);
