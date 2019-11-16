@@ -11,6 +11,7 @@ export default class Exec extends Command {
     this.aliases = ['ex'];
     this.enabled = true;
     this.permissions = { users: ['253600545972027394', '278620217221971968'] };
+    this.guildOnly = false;
   }
 
   public async run(message: Message, args: string[]) {
