@@ -31,9 +31,14 @@ export default class Server {
     const routes = await fs.readdir('./routes');
     routes.forEach(async (routeFile) => {
       if (routeFile === 'index.js') return;
-      const route: Route = new (require(`./${routeFile}`))(this);
-      this.routes.set(route.conf.path, route);
-      this.app.use(route.conf.path, route.router);
+      try {
+        const route: Route = new (require(`./${routeFile}`))(this);
+        this.routes.set(route.conf.path, route);
+        this.app.use(route.conf.path, route.router);
+        this.client.signale.success(`Successfully loaded route ${route.conf.path}`);
+      } catch (error) {
+        this.client.signale.error(error);
+      }
     });
   }
 
