@@ -56,7 +56,7 @@ export default class Server {
       hidePoweredBy: false,
       contentSecurityPolicy: {
         directives: {
-          defaultSrc: ['self'],
+          defaultSrc: ["'self'"],
         },
       },
     }));
