@@ -17,7 +17,7 @@ export default function checkSS(client: Client) {
         } catch (error) {
           const { status } = error.response;
           if (status === 400 || status === 401 || status === 403 || status === 404) {
-            client.db.Account.updateOne({ hash }, { $set: { hash: null } });
+            await client.db.Account.updateOne({ hash }, { $set: { hash: null } });
             client.getDMChannel(userID).then((channel) => channel.createMessage('Your SecureSign password has been reset - please reinitialize your SecureSign account')).catch();
           }
         }
