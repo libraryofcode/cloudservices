@@ -14,8 +14,9 @@ export interface AccountInterface extends Document {
     communityManager: boolean,
     engineer: boolean
   },
-  root: boolean
-  hash: string
+  root: boolean,
+  hash: string,
+  salt: string
 }
 
 const Account: Schema = new Schema({
@@ -34,6 +35,7 @@ const Account: Schema = new Schema({
   },
   root: Boolean,
   hash: String,
+  salt: String,
 });
 
 export default model<AccountInterface>('Account', Account);
