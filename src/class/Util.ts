@@ -169,7 +169,7 @@ export default class Util {
     await this.exec(`chage -d0 ${username}`);
 
     const account = await new this.client.db.Account({
-      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false,
+      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false, ssInit: false,
     });
     return account.save();
   }
