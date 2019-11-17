@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import signale from 'signale';
 import fs from 'fs-extra';
 import config from './config.json';
+import { Server } from './api';
 import { Account, AccountInterface, Moderation, ModerationInterface, Domain, DomainInterface } from './models';
 import { emojis } from './stores';
 import { Command, Util, Collection } from './class';
@@ -11,7 +12,7 @@ import * as commands from './commands';
 
 
 export default class Client extends Eris.Client {
-  public config: { 'token': string; 'cloudflare': string; 'prefix': string; 'emailPass': string; };
+  public config: { 'token': string; 'cloudflare': string; 'prefix': string; 'emailPass': string; 'port': number, 'keyPair': { 'publicKey': string, 'privateKey': string }; };
 
   public util: Util;
 
@@ -24,6 +25,8 @@ export default class Client extends Eris.Client {
   public stores: { emojis: { success: string, loading: string, error: string }; };
 
   public signale: signale.Signale;
+
+  public server: Server;
 
   constructor() {
     super(config.token, { getAllUsers: true, restMode: true, defaultImageFormat: 'png' });
@@ -108,6 +111,7 @@ export default class Client extends Eris.Client {
       require(`./intervals/${interval}`).default(this);
       this.signale.complete(`Loaded interval ${interval.split('.')[0]}`);
     });
+    this.server = new Server(this, { port: this.config.port });
   }
 }
 
