@@ -16,7 +16,8 @@ export interface AccountInterface extends Document {
   },
   root: boolean,
   hash: string,
-  salt: string
+  salt: string,
+  authTag: Buffer
 }
 
 const Account: Schema = new Schema({
@@ -36,6 +37,7 @@ const Account: Schema = new Schema({
   root: Boolean,
   hash: String,
   salt: String,
+  authTag: Buffer,
 });
 
 export default model<AccountInterface>('Account', Account);
