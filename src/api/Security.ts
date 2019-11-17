@@ -19,13 +19,13 @@ export default class Security {
   public async createBearer(_id: string): Promise<string> {
     const account = await this.client.db.Account.findOne({ _id });
     if (!account) throw new Error(`Account [${_id}] cannot be found.`);
-    const bearer = crypto.randomBytes(12);
+    const bearer = crypto.randomBytes(12).toString('base64');
     const sign = crypto.createSign('sha3-224');
     sign.update(bearer);
     sign.end();
     const signature = sign.sign(this.keyPair.privateKey, 'hex');
     await account.updateOne({ bearerSignature: signature });
-    return bearer.toString('base64');
+    return bearer;
   }
 
   public async checkBearer(_id: string, bearer: string): Promise<boolean> {
