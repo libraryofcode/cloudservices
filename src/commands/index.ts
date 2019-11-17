@@ -1,4 +1,5 @@
 export { default as Announce } from './announce';
+export { default as Bearer } from './bearer';
 export { default as CreateAccount } from './createaccount';
 export { default as CWG } from './cwg';
 export { default as DeleteAccount } from './deleteaccount';
