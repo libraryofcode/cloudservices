@@ -48,7 +48,8 @@ export default class Security {
       const account = await this.client.db.Account.findOne({ username: json.username });
       if (account._id !== saltCheck._id) return null;
       return account;
-    } catch {
+    } catch (error) {
+      this.client.signale.debug(error);
       return null;
     }
   }
