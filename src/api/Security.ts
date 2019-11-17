@@ -36,7 +36,7 @@ export default class Security {
     verify.update(bearer);
     verify.end();
     try {
-      return verify.verify(this.keyPair.publicKey, account.bearerSignature, 'base64');
+      return verify.verify(this.keyPair.publicKey, account.bearerSignature, 'hex');
     } catch {
       return false;
     }
