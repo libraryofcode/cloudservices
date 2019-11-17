@@ -13,7 +13,7 @@ export default class Root extends Route {
         const date = new Date();
         date.setSeconds(-process.uptime());
         const accounts = await this.server.client.db.Account.find();
-        const administrators = accounts.filter((account) => account.root === true);
+        const administrators = accounts.filter((account) => account.root === true).length;
         const response = {
           nodeVersion: process.version,
           uptime: process.uptime(),
