@@ -26,13 +26,14 @@ export default class Security {
    * @param _id The Mongoose Document property labeled ._id
    */
   public async createBearer(_id: string): Promise<string> {
-    const account = await this.client.db.Account.findOne({ _id });
+    let account = await this.client.db.Account.findOne({ _id });
     if (!account) throw new Error(`Account [${_id}] cannot be found.`);
     const salt = crypto.randomBytes(50).toString('base64');
     const cipher = crypto.createCipheriv('aes-256-gcm', this.keys.key, this.keys.iv);
+    await account.updateOne({ salt });
+    account = await this.client.db.Account.findOne({ _id });
     let encrypted = cipher.update(JSON.stringify(account), 'utf8', 'base64');
     encrypted += cipher.final('base64');
-    await account.updateOne({ salt });
     return `${salt}:${encrypted}`;
   }
 
@@ -47,6 +48,8 @@ export default class Security {
       const json = JSON.parse(decrypted);
       const account = await this.client.db.Account.findOne({ username: json.username });
       if (account._id !== saltCheck._id) return null;
+      this.client.signale.debug(account);
+      this.client.signale.debug(saltCheck);
       return account;
     } catch (error) {
       this.client.signale.debug(error);
