@@ -11,9 +11,7 @@ export default class Route {
   constructor(server: Server, conf: { path: string, deprecated?: boolean }) {
     this.server = server;
     this.router = router();
-    this.conf.path = conf.path;
-    if (conf.deprecated === undefined) this.conf.deprecated = false;
-    else this.conf.deprecated = conf.deprecated;
+    this.conf = conf;
   }
 
   public bind() {}

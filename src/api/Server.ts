@@ -33,8 +33,7 @@ export default class Server {
       if (routeFile === 'index.js') return;
       try {
         // eslint-disable-next-line new-cap
-        const route: Route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
-        this.client.signale.debug(route);
+        const route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
         route.bind();
         this.routes.set(route.conf.path, route);
         this.app.use(route.conf.path, route.router);
