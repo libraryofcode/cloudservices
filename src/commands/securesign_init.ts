@@ -47,6 +47,7 @@ export default class SecureSign_Init extends Command {
       }
       const init = await this.client.util.exec(`sudo -H -u ${account.username} bash -c 'securesign-canary init -a ${args[0]}'`);
       if (!init.replace(/^\s+|\s+$/g, '').endsWith('Initialization sequence completed.')) throw new Error(`Account initialization did not complete successfully:\n${init}`);
+      await this.client.db.Account.updateOne({ userID: message.author.id }, { $set: { hash: args[0] } });
       return msg.edit(`${this.client.stores.emojis.success} ***Account initialized***`);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
