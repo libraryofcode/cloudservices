@@ -49,9 +49,9 @@ export default class Security {
       decrypted += decipher.final('utf8');
       const json = JSON.parse(decrypted);
       const account = await this.client.db.Account.findOne({ username: json.username });
-      if (account._id !== saltCheck._id) return null;
       this.client.signale.debug(account);
       this.client.signale.debug(saltCheck);
+      if (account._id !== saltCheck._id) return null;
       return account;
     } catch (error) {
       this.client.signale.debug(error);
