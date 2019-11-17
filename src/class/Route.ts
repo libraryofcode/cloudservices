@@ -16,6 +16,8 @@ export default class Route {
     else this.conf.deprecated = conf.deprecated;
   }
 
+  public bind() {}
+
   get constants() {
     return {
       codes: {

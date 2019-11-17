@@ -32,7 +32,9 @@ export default class Server {
     routes.forEach(async (routeFile) => {
       if (routeFile === 'index.js') return;
       try {
-        const route: Route = new (require(`${__dirname}/routes/${routeFile}`))(this);
+        // eslint-disable-next-line new-cap
+        const route: Route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
+        route.bind();
         this.routes.set(route.conf.path, route);
         this.app.use(route.conf.path, route.router);
         this.client.signale.success(`Successfully loaded route ${route.conf.path}`);

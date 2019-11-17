@@ -7,7 +7,7 @@ export default class Account extends Route {
     super(server, { path: '/account', deprecated: false });
   }
 
-  public async bind() {
+  public bind() {
     this.router.use(async (req, res, next) => {
       const url = new URL(req.url);
       const account = await this.server.client.db.Account.findOne({ username: url.username });
