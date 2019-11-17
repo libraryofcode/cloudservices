@@ -28,6 +28,7 @@ export default class Server {
   }
 
   private async loadRoutes(): Promise<void> {
+    console.log(__dirname);
     const routes = await fs.readdir('./routes');
     routes.forEach(async (routeFile) => {
       if (routeFile === 'index.js') return;
