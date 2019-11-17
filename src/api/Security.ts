@@ -45,13 +45,10 @@ export default class Security {
       const saltCheck = await this.client.db.Account.findOne({ salt });
       const encrypted = bearer.split(':')[1];
       let decrypted = decipher.update(encrypted, 'base64', 'utf8');
-      this.client.signale.debug(decrypted);
       decipher.setAuthTag(saltCheck.authTag);
       decrypted += decipher.final('utf8');
       const json = JSON.parse(decrypted);
       const account = await this.client.db.Account.findOne({ username: json.username });
-      this.client.signale.debug(account);
-      this.client.signale.debug(saltCheck);
       if (saltCheck.salt !== account.salt) return null;
       return account;
     } catch (error) {
