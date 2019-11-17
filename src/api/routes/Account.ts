@@ -47,7 +47,7 @@ export default class Account extends Route {
 
     this.router.get('/storage', async (req: Req, res) => {
       try {
-        const data = await this.server.client.redis.get(`storage-${req.account.username}`) ? await this.server.client.redis.get(`storage-${req.account.username}`) : null;
+        const data = await this.server.client.redis.get(`storage-${req.account.username}`) ? Number(await this.server.client.redis.get(`storage-${req.account.username}`)) : null;
         res.status(200).json({ code: this.constants.codes.SUCCESS, message: data });
       } catch (error) {
         this.handleError(error, res);
