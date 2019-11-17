@@ -34,6 +34,7 @@ export default class Security {
     account = await this.client.db.Account.findOne({ _id });
     let encrypted = cipher.update(JSON.stringify(account), 'utf8', 'base64');
     encrypted += cipher.final('base64');
+    await account.updateOne({ authTag: cipher.getAuthTag() });
     return `${salt}:${encrypted}`;
   }
 
@@ -44,6 +45,7 @@ export default class Security {
       const saltCheck = await this.client.db.Account.findOne({ salt });
       const encrypted = bearer.split(':')[1];
       let decrypted = decipher.update(encrypted, 'base64', 'utf8');
+      decipher.setAuthTag(saltCheck.authTag);
       decrypted += decipher.final('utf8');
       const json = JSON.parse(decrypted);
       const account = await this.client.db.Account.findOne({ username: json.username });
