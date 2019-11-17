@@ -21,6 +21,7 @@ export default class Route {
       codes: {
         SUCCESS: 100,
         UNAUTHORIZED: 101,
+        PERMISSION_DENIED: 104,
         NOT_FOUND: 104,
         ACCOUNT_NOT_FOUND: 1041,
         CLIENT_ERROR: 1044,
