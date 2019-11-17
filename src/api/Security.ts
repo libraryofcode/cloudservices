@@ -1,15 +1,23 @@
 import crypto from 'crypto';
 import { Request } from 'express';
 import { Client } from '..';
+import { AccountInterface } from '../models';
 
 export default class Security {
   public client: Client;
 
-  public keyPair: { publicKey: string, privateKey: string };
+  private keyBase: { key: string, iv: string };
 
   constructor(client: Client) {
     this.client = client;
-    this.keyPair = require(`${process.cwd()}/keys.json`);
+    this.keyBase = require(`${process.cwd()}/keys.json`);
+  }
+
+  get keys() {
+    return {
+      key: Buffer.from(this.keyBase.key, 'base64'),
+      iv: Buffer.from(this.keyBase.iv, 'base64'),
+    };
   }
 
   /**
@@ -19,26 +27,22 @@ export default class Security {
   public async createBearer(_id: string): Promise<string> {
     const account = await this.client.db.Account.findOne({ _id });
     if (!account) throw new Error(`Account [${_id}] cannot be found.`);
-    const bearer = crypto.randomBytes(12).toString('base64');
-    const sign = crypto.createSign('sha3-224');
-    sign.update(bearer);
-    sign.end();
-    const signature = sign.sign(this.keyPair.privateKey, 'hex');
-    await account.updateOne({ bearerSignature: signature });
-    return bearer;
+    const cipher = crypto.createCipheriv('aes-256-gcm', this.keys.key, this.keys.iv);
+    let encrypted = cipher.update(JSON.stringify(account), 'utf8', 'base64');
+    encrypted += cipher.final('base64');
+    return encrypted;
   }
 
-  public async checkBearer(_id: string, bearer: string): Promise<boolean> {
-    const account = await this.client.db.Account.findOne({ _id });
-    if (!account) return false;
-    if (!account.bearerSignature) return false;
-    const verify = crypto.createVerify('sha3-224');
-    verify.update(bearer);
-    verify.end();
+  public async checkBearer(bearer: string): Promise<null | AccountInterface> {
+    const decipher = crypto.createDecipheriv('aes-256-gcm', this.keys.key, this.keys.iv);
     try {
-      return verify.verify(this.keyPair.publicKey, account.bearerSignature, 'hex');
+      let decrypted = decipher.update(bearer, 'base64', 'utf8');
+      decrypted += decipher.final('utf8');
+      const json = JSON.parse(decrypted);
+      const account = await this.client.db.Account.findOne({ username: json.username });
+      return account;
     } catch {
-      return false;
+      return null;
     }
   }
 
