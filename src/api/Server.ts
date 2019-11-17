@@ -28,12 +28,11 @@ export default class Server {
   }
 
   private async loadRoutes(): Promise<void> {
-    console.log(__dirname);
-    const routes = await fs.readdir('./routes');
+    const routes = await fs.readdir(`${__dirname}/routes`);
     routes.forEach(async (routeFile) => {
       if (routeFile === 'index.js') return;
       try {
-        const route: Route = new (require(`./${routeFile}`))(this);
+        const route: Route = new (require(`${__dirname}/routes/${routeFile}`))(this);
         this.routes.set(route.conf.path, route);
         this.app.use(route.conf.path, route.router);
         this.client.signale.success(`Successfully loaded route ${route.conf.path}`);
