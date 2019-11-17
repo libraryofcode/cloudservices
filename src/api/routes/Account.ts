@@ -9,8 +9,7 @@ export default class Account extends Route {
 
   public bind() {
     this.router.use(async (req, res, next) => {
-      const url = new URL(req.url);
-      const account = await this.server.client.db.Account.findOne({ username: url.username });
+      const account = await this.server.client.db.Account.findOne({ username: req.query.username });
       if (!account) return res.status(401).json({ code: this.constants.codes.ACCOUNT_NOT_FOUND, message: 'UNAUTHORIZED' });
       // eslint-disable-next-line no-underscore-dangle
       const authResult = await this.server.security.checkBearer(account._id, this.server.security.extractBearer(req));
@@ -19,8 +18,7 @@ export default class Account extends Route {
     });
 
     this.router.get('/', async (req, res) => {
-      const url = new URL(req.url);
-      const account = await this.server.client.db.Account.findOne({ username: url.username });
+      const account = await this.server.client.db.Account.findOne({ username: req.query.username });
       const acc: any = {};
       acc.username = account.username;
       acc.userID = account.userID;
