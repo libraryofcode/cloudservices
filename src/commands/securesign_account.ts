@@ -16,7 +16,7 @@ export default class SecureSign_Account extends Command {
   public async run(message: Message, args: string[]) {
     try {
       const user = await this.client.db.Account.findOne({ userID: message.author.id });
-      if (!user || (user.permissions.staff && !(message.channel instanceof PrivateChannel))) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Run this command in your DMs!***`);
+      if (!user || (!user.permissions.staff && !(message.channel instanceof PrivateChannel))) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Run this command in your DMs!***`);
 
       let account: AccountInterface;
       if (!args[0] || !user.permissions.staff) account = user;
