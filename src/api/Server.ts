@@ -54,7 +54,11 @@ export default class Server {
     this.app.use(helmet({
       hsts: false,
       hidePoweredBy: false,
-      contentSecurityPolicy: true,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ['self'],
+        },
+      },
     }));
     this.app.use(bodyParser.json());
     this.app.listen(this.options.port, () => {
