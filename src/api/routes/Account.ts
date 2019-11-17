@@ -17,5 +17,20 @@ export default class Account extends Route {
       if (!authResult) return res.status(401).json({ code: this.constants.codes.UNAUTHORIZED, message: 'UNAUTHORIZED' });
       next();
     });
+
+    this.router.get('/', async (req, res) => {
+      const url = new URL(req.url);
+      const account = await this.server.client.db.Account.findOne({ username: url.username });
+      const acc: any = {};
+      acc.username = account.username;
+      acc.userID = account.userID;
+      acc.email = account.emailAddress;
+      acc.locked = account.locked;
+      acc.root = account.root;
+      acc.createdAt = account.createdAt;
+      acc.createdBy = account.createdBy;
+      acc.permissions = account.permissions;
+      res.status(200).json({ code: this.constants.codes.SUCCESS, message: acc });
+    });
   }
 }
