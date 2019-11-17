@@ -1,5 +1,4 @@
 import { Document, Schema, model } from 'mongoose';
-import { ModerationInterface } from '.';
 
 export interface ModerationInterface extends Document {
   username: string,

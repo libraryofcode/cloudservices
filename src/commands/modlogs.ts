@@ -23,7 +23,7 @@ export default class Modlogs extends Command {
 
       // @ts-ignore
       const formatted = query.sort((a, b) => a.date - b.date).map((log) => {
-        const { username, moderatorID, reason, type, date } = log;
+        const { username, moderatorID, reason, type, date, logID } = log;
         let name: string;
         switch (type) {
           default: name = 'Generic'; break;
@@ -33,7 +33,7 @@ export default class Modlogs extends Command {
           case 3: name = 'Unlock'; break;
           case 4: name = 'Delete'; break;
         }
-        const value = `**Account name:** ${username}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason || 'Not supplied'}\n**Date:** ${date.toLocaleString('en-us')} EST`;
+        const value = `**ID:** ${logID}\n**Account name:** ${username}\n**Moderator:** <@${moderatorID}>\n**Reason:** ${reason || 'Not supplied'}\n**Date:** ${date.toLocaleString('en-us')} EST`;
         const inline = true;
         return { name, value, inline };
       });
