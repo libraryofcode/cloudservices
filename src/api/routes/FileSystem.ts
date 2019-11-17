@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import { Server } from '..';
 import { Route } from '../../class';
-import { Req } from '../interfaces';
 
 export default class FileSystem extends Route {
   constructor(server: Server) {

@@ -24,7 +24,7 @@ export default class Route {
   }
 
   public maintenance() {
-    this.router.all('*;', (_req, res) => {
+    this.router.all('*', (_req, res) => {
       res.status(503).json({ code: this.constants.codes.MAINTENANCE_OR_UNAVAILABLE, message: this.constants.messages.MAINTENANCE_OR_UNAVAILABLE });
     });
   }
