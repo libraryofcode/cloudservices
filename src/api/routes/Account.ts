@@ -29,7 +29,7 @@ export default class Account extends Route {
       res.status(200).json({ code: this.constants.codes.SUCCESS, message: acc });
     });
 
-    this.router.get('/moderations/:id', async (req: Req, res) => {
+    this.router.get('/moderations/:id?', async (req: Req, res) => {
       const moderations = await this.server.client.db.Moderation.find({ username: req.account.username });
       if (!moderations.length) res.sendStatus(204);
       if (req.params.id) {
