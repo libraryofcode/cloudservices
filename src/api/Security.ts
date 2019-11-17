@@ -9,7 +9,7 @@ export default class Security {
 
   constructor(client: Client) {
     this.client = client;
-    this.keyPair = client.config.keyPair;
+    this.keyPair = require(`${process.cwd()}/keys.json`);
   }
 
   /**
