@@ -1,7 +1,7 @@
 import { Message } from 'eris';
 import axios from 'axios';
 import { Client } from '..';
-import { Command, RichEmbed } from '../class';
+import { Command } from '../class';
 
 export default class SecureSign_ActivateKey extends Command {
   constructor(client: Client) {
