@@ -32,7 +32,7 @@ export default class Security {
     const cipher = crypto.createCipheriv('aes-256-gcm', this.keys.key, this.keys.iv);
     let encrypted = cipher.update(JSON.stringify(account), 'utf8', 'base64');
     encrypted += cipher.final('base64');
-    account.updateOne({ salt });
+    await account.updateOne({ salt });
     return `${salt}:${encrypted}`;
   }
 
