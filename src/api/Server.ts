@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-return */
 import express from 'express';
 import bodyParser from 'body-parser';
+import helmet from 'helmet';
 import fs from 'fs-extra';
 import { Client } from '..';
 import { Security } from '.';
@@ -34,7 +35,11 @@ export default class Server {
       try {
         // eslint-disable-next-line new-cap
         const route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
-        route.bind();
+        if (route.conf.deprecated === true) {
+          route.deprecated();
+        } else {
+          route.bind();
+        }
         this.routes.set(route.conf.path, route);
         this.app.use(route.conf.path, route.router);
         this.client.signale.success(`Successfully loaded route ${route.conf.path}`);
@@ -45,6 +50,12 @@ export default class Server {
   }
 
   private connect(): void {
+    this.app.set('trust proxy', 'loopback');
+    this.app.use(helmet({
+      hsts: false,
+      hidePoweredBy: false,
+      contentSecurityPolicy: true,
+    }));
     this.app.use(bodyParser.json());
     this.app.listen(this.options.port, () => {
       this.client.signale.success(`API Server listening on port ${this.options.port}`);

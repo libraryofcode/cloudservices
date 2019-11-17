@@ -1,4 +1,5 @@
-import { Router as router } from 'express';
+/* eslint-disable consistent-return */
+import { Request, Response, NextFunction, Router as router } from 'express';
 import { Server } from '../api';
 
 export default class Route {
@@ -16,6 +17,24 @@ export default class Route {
 
   public bind() {}
 
+  public deprecated() {
+    this.router.all('*', (_req, res) => {
+      res.status(501).json({ code: this.constants.codes.DEPRECATED, message: 'This endpoint is deprecated.' });
+    });
+  }
+
+  public async authorize(req: Request, res: Response, next: NextFunction) {
+    const account = await this.server.security.checkBearer(this.server.security.extractBearer(req));
+    if (!account) return res.status(401).json({ code: this.constants.codes.UNAUTHORIZED, message: 'BEARER_TOKEN_INVALID' });
+    Object.defineProperty(req, 'account', { value: account, writable: true, enumerable: true, configurable: true });
+    next();
+  }
+
+  public handleError(error: Error, res: Response) {
+    this.server.client.util.handleError(error);
+    res.status(500).json({ code: this.constants.codes.SERVER_ERROR, message: 'An internal error has occurred, Engineers have been notified.' });
+  }
+
   get constants() {
     return {
       codes: {
@@ -26,7 +45,7 @@ export default class Route {
         ACCOUNT_NOT_FOUND: 1041,
         CLIENT_ERROR: 1044,
         SERVER_ERROR: 105,
-        UNKNOWN_SERVER_ERROR: 1051,
+        DEPRECATED: 1051,
       },
     };
   }
