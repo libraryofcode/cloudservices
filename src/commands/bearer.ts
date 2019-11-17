@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Message } from 'eris';
 import { Command } from '../class';
 import { Client } from '..';
@@ -6,13 +7,12 @@ export default class Bearer extends Command {
   constructor(client: Client) {
     super(client);
     this.name = 'bearer';
-    this.description = 'Creates a new bearer token.';
-    this.usage = `Run ${this.client.config.prefix}bearer`;
-    this.aliases = ['token'];
+    this.description = 'Creates a bearer token.';
+    this.usage = `${this.client.config.prefix}bearer`;
+    this.guildOnly = false;
     this.enabled = true;
   }
 
-  // eslint-disable-next-line consistent-return
   public async run(message: Message) {
     try {
       const account = await this.client.db.Account.findOne({ userID: message.author.id });
