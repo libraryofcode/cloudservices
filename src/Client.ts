@@ -12,7 +12,7 @@ import * as commands from './commands';
 
 
 export default class Client extends Eris.Client {
-  public config: { 'token': string; 'cloudflare': string; 'prefix': string; 'emailPass': string; 'port': number, 'keyPair': { 'publicKey': string, 'privateKey': string }; };
+  public config: { 'token': string; 'cloudflare': string; 'prefix': string; 'emailPass': string; 'mongoURL': string; 'port': number; 'keyPair': { 'publicKey': string; 'privateKey': string; }; };
 
   public util: Util;
 
