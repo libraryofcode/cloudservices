@@ -37,6 +37,8 @@ export default class Server {
         const route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
         if (route.conf.deprecated === true) {
           route.deprecated();
+        } else if (route.conf.maintenance === true) {
+          route.maintenance();
         } else {
           route.bind();
         }
