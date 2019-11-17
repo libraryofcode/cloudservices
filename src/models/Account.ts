@@ -7,6 +7,7 @@ export interface AccountInterface extends Document {
   createdBy: string,
   createdAt: Date,
   locked: boolean,
+  bearerSignature: string,
   permissions: {
     support: boolean,
     staff: boolean,
@@ -24,6 +25,7 @@ const Account: Schema = new Schema({
   createdBy: String,
   createdAt: Date,
   locked: Boolean,
+  bearerSignature: String,
   permissions: {
     support: Boolean,
     staff: Boolean,
