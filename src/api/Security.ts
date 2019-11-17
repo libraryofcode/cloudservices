@@ -45,6 +45,7 @@ export default class Security {
       const saltCheck = await this.client.db.Account.findOne({ salt });
       const encrypted = bearer.split(':')[1];
       let decrypted = decipher.update(encrypted, 'base64', 'utf8');
+      this.client.signale.debug(decrypted);
       decipher.setAuthTag(saltCheck.authTag);
       decrypted += decipher.final('utf8');
       const json = JSON.parse(decrypted);
@@ -66,6 +67,6 @@ export default class Security {
     if (req.query && req.query.token) {
       return req.query.token;
     }
-    return 'null';
+    return '0000000000';
   }
 }
