@@ -6,4 +6,3 @@ htmlEmail_templates
 yarn-error.log
 src/keys.json
 dist
-securesign_genrsa.ts
