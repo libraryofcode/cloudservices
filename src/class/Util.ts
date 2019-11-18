@@ -43,8 +43,6 @@ export default class Util {
    */
   public resolveCommand(command: string, args?: string[], message?: Message): Promise<{cmd: Command, args: string[] }> {
     try {
-      this.client.signale.info(command);
-      this.client.signale.info(args);
       let resolvedCommand: Command;
 
       if (this.client.commands.has(command)) resolvedCommand = this.client.commands.get(command);
@@ -117,7 +115,7 @@ export default class Util {
     }
   }
 
-  public splitFields(fields: {name: string, value: string, inline?: boolean}[]): {name: string, value: string, inline?: boolean}[][] {
+  public splitFields(fields: { name: string, value: string, inline?: boolean }[]): { name: string, value: string, inline?: boolean }[][] {
     let index = 0;
     const array: {name: string, value: string, inline?: boolean}[][] = [[]];
     while (fields.length) {
@@ -145,7 +143,7 @@ export default class Util {
   }
 
 
-  public async createHash(password: string) {
+  public async createHash(password: string): Promise<string> {
     const hashed = await this.exec(`mkpasswd -m sha-512 "${password}"`);
     return hashed;
   }
@@ -225,7 +223,7 @@ export default class Util {
     const expiration = { date, processed };
 
     logInput.expiration = expiration;
-    const log = await new this.client.db.Moderation(logInput);
+    const log = new this.client.db.Moderation(logInput);
     await log.save();
 
     let embedTitle: string;
