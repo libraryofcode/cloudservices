@@ -38,6 +38,10 @@ export default class Security {
     return `${salt}:${encrypted}`;
   }
 
+  /**
+   * If the bearer token is valid, will return the Account, else will return null.
+   * @param bearer The bearer token provided.
+   */
   public async checkBearer(bearer: string): Promise<null | AccountInterface> {
     const decipher = crypto.createDecipheriv('aes-256-gcm', this.keys.key, this.keys.iv);
     try {
@@ -57,6 +61,10 @@ export default class Security {
     }
   }
 
+  /**
+   * Returns the Bearer token, searches in headers and query.
+   * @param req The Request object from Express.
+   */
   public extractBearer(req: Request): string {
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
       return req.headers.authorization.split(' ')[1];
