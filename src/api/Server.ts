@@ -5,10 +5,10 @@ import helmet from 'helmet';
 import fs from 'fs-extra';
 import { Client } from '..';
 import { Security } from '.';
-import { Route } from '../class';
+import { Collection, Route } from '../class';
 
 export default class Server {
-  public routes: Map<string, Route>;
+  public routes: Collection<Route>
 
   public client: Client;
 
@@ -20,7 +20,7 @@ export default class Server {
 
   constructor(client: Client, options?: { port: number }) {
     this.options = options;
-    this.routes = new Map();
+    this.routes = new Collection();
     this.client = client;
     this.security = new Security(this.client);
     this.app = express();
