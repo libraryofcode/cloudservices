@@ -101,7 +101,8 @@ export default class CreateAccount extends Command {
             <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/620355063088414769">#cloud-announcements</a> - Announcements regarding the cloud machine will be here. These include planned maintenance, updates to preinstalled services etc.</li>
             <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/620349128295186472">#cloud-info</a> - Important information you will need to, or should, know to a certain extent. These include our infractions system and Tier limits</li>
             <li><a target="_blank" href="https://discordapp.com/channels/446067825673633794/546457788184789013">#cloud-support</a> - A support channel specifically for the cloud machine, you can use this to ask how to renew your certificates, for example</li>
-            <li><a target="_blank" href="https://support.libraryofcode.us">Library of Code Support Desk</a> - Our Support desk, you will find some handy info there</li>
+            <li><a target="_blank" href="https://support.libraryofcode.org">Library of Code Support Desk</a> - Our Support desk, you will find some handy info there</li>
+            <li><a target="_blank" href="https://wiki.cloud.libraryofcode.org">Library of Code sp-us | Cloud Wiki</a> - A wiki channel for everything related to the Cloud Services.</li>
             <li><a target="_blank" href="https://www.securesign.org">SecureSign</a> - our certificates manager</li>
           </ul>
           <h3>Want to support us?</h3>
@@ -113,7 +114,7 @@ export default class CreateAccount extends Command {
 
       const dmChannel = await this.client.getDMChannel(args[0]).catch();
       dmChannel.createMessage('<:loc:607695848612167700> **Thank you for creating an account with us!** <:loc:607695848612167700>\n'
-      + `Please log into your account by running \`ssh ${args[2]}@cloud.libraryofcode.us\` in your terminal, then use the password \`${tempPass}\` to log in.\n`
+      + `Please log into your account by running \`ssh ${args[2]}@cloud.libraryofcode.org\` in your terminal, then use the password \`${tempPass}\` to log in.\n`
       + `You will be asked to change your password, \`(current) UNIX password\` is \`${tempPass}\`, then create a password that is at least 12 characters long, with at least one number, special character, and an uppercase letter\n`
       + 'Bear in mind that when you enter your password, it will be blank, so be careful not to type in your password incorrectly.\n'
       + 'You may now return to Modmail, and continue setting up your account from there.\n\n'
