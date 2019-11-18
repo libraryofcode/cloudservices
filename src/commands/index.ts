@@ -14,6 +14,7 @@ export { default as Parse } from './parse';
 export { default as Parseall } from './parseall';
 export { default as Ping } from './ping';
 export { default as Pull } from './pull';
+export { default as Restart } from './restart';
 export { default as SecureSign } from './securesign';
 export { default as Sysinfo } from './sysinfo';
 export { default as Unlock } from './unlock';
