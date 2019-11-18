@@ -16,6 +16,7 @@ export default class Bearer extends Command {
   public async run(message: Message) {
     try {
       const account = await this.client.db.Account.findOne({ userID: message.author.id });
+      if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
       // eslint-disable-next-line no-underscore-dangle
       const bearer = await this.client.server.security.createBearer(account._id);
       const dm = await this.client.getDMChannel(message.author.id);
