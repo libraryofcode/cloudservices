@@ -17,18 +17,29 @@ export default class Route {
 
   public bind() {}
 
-  public deprecated() {
+  public deprecated(): void {
     this.router.all('*', (_req, res) => {
       res.status(501).json({ code: this.constants.codes.DEPRECATED, message: this.constants.messages.DEPRECATED });
     });
   }
 
-  public maintenance() {
+  public maintenance(): void {
     this.router.all('*', (_req, res) => {
       res.status(503).json({ code: this.constants.codes.MAINTENANCE_OR_UNAVAILABLE, message: this.constants.messages.MAINTENANCE_OR_UNAVAILABLE });
     });
   }
 
+  /**
+   * This function checks for the presense of a Bearer token with Security.extractBearer(),
+   * then it will attempt to validate it with Security.checkBearer().
+   * If it can authenticate the request, it'll add a custom property on Request called
+   * `account`, which will hold an the bearer token's account owner. The account is of the
+   * type `AccountInterface`.
+   * @param req The Request object from Express.
+   * @param res The Response object from Express.
+   * @param next The NextFunction from Express.
+   * @example Security.authorize(req, res, next);
+   */
   public async authorize(req: Request, res: Response, next: NextFunction) {
     const account = await this.server.security.checkBearer(this.server.security.extractBearer(req));
     if (!account) return res.status(401).json({ code: this.constants.codes.UNAUTHORIZED, message: this.constants.messages.UNAUTHORIZED });
@@ -36,7 +47,13 @@ export default class Route {
     next();
   }
 
-  public handleError(error: Error, res: Response) {
+  /**
+   * This function calls Util.handleError() internally, however it also sends a generic
+   * response to the user.
+   * @param error The Error object.
+   * @param res The Response object from Express.
+   */
+  public handleError(error: Error, res: Response): void {
     this.server.client.util.handleError(error);
     res.status(500).json({ code: this.constants.codes.SERVER_ERROR, message: this.constants.messages.SERVER_ERROR });
   }
