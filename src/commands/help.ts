@@ -53,10 +53,10 @@ export default class Help extends Command {
       if (allowedUsers) { allowedUsers = `**Users:** ${allowedUsers}`; perms.push(allowedUsers); }
       const displayedPerms = perms.length ? `\n**Permissions:**\n${perms.join('\n')}` : '';
       const aliases = cmd.aliases.length ? `\n**Aliases:** ${cmd.aliases.map((alias) => `${this.client.config.prefix}${cmd.parentName}${alias}`).join(', ')}` : '';
-      const subcommands = cmd.subcommands.size ? `\n**Subcommands:** ${cmd.subcommands.map((s) => s.parentName || `${cmd.name} ${s.name}`).join(', ')}` : '';
+      const subcommands = cmd.subcommands.size ? `\n**Subcommands:** ${cmd.subcommands.map((s) => `${cmd.name} ${s.name}`).join(', ')}` : '';
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
-      embed.setTitle(`${this.client.config.prefix}${cmd.parentName}${cmd.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
+      embed.setTitle(`${this.client.config.prefix}${cmd.parentName ? `${cmd.parentName}${cmd.name}` : cmd.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
       const description = `**Description**: ${cmd.description}\n**Usage:** ${cmd.usage}${aliases}${displayedPerms}${subcommands}`;
       embed.setDescription(description);
       // @ts-ignore

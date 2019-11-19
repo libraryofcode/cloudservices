@@ -15,7 +15,7 @@ export interface AccountInterface extends Document {
     engineer: boolean
   },
   root: boolean,
-  hash: string,
+  hash: boolean,
   salt: string,
   authTag: Buffer
 }
@@ -35,7 +35,7 @@ const Account: Schema = new Schema({
     engineer: Boolean,
   },
   root: Boolean,
-  hash: String,
+  hash: Boolean,
   salt: String,
   authTag: Buffer,
 });

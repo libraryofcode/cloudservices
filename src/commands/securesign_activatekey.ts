@@ -19,17 +19,18 @@ export default class SecureSign_ActivateKey extends Command {
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
       if (!account.hash) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not initialized***`);
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Activating key...***`);
+      const hash = this.client.util.getAcctHash(account.username);
       try {
         await axios({
           method: 'POST',
           url: 'https://api.securesign.org/account/keys/activation',
-          headers: { Authorization: account.hash, 'Content-Type': 'application/json' },
+          headers: { Authorization: hash, 'Content-Type': 'application/json' },
           data: JSON.stringify({ key: args[0] }),
         });
       } catch (error) {
         const { code } = error.response.data;
         if (code === 1001) {
-          await this.client.db.Account.updateOne({ hash: account.hash }, { $set: { hash: null } });
+          await this.client.db.Account.updateOne({ userID: account.userID }, { $set: { hash: false } });
           this.client.getDMChannel(account.userID).then((channel) => channel.createMessage('Your SecureSign password has been reset - please reinitialize your SecureSign account')).catch();
           return msg.edit(`${this.client.stores.emojis.error} ***Authentication failed***`);
         }
