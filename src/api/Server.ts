@@ -34,7 +34,7 @@ export default class Server {
       if (routeFile === 'index.js') return;
       try {
         // eslint-disable-next-line new-cap
-        const route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
+        const route: Route = new (require(`${__dirname}/routes/${routeFile}`).default)(this);
         if (route.conf.deprecated === true) {
           route.deprecated();
         } else if (route.conf.maintenance === true) {
