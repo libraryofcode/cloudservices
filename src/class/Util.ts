@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 import { Message, PrivateChannel, Member, User } from 'eris';
 import uuid from 'uuid/v4';
 import moment from 'moment';
+import fs from 'fs';
 import { Client } from '..';
 import { Command, RichEmbed } from '.';
 import { ModerationInterface, AccountInterface } from '../models';
@@ -195,9 +196,13 @@ export default class Util {
 
   /**
    * @param type `0` - Create
+   *
    * `1` - Warn
+   *
    * `2` - Lock
+   *
    * `3` - Unlock
+   *
    * `4` - Delete
    */
   public async createModerationLog(user: string, moderator: Member|User, type: number, reason?: string, duration?: number): Promise<ModerationInterface> {
@@ -250,5 +255,13 @@ export default class Util {
     this.client.createMessage('580950455581147146', { embed }); this.client.getDMChannel(userID).then((channel) => channel.createMessage({ embed })).catch();
 
     return Promise.resolve(log);
+  }
+
+  public getAcctHash(username: string) {
+    try {
+      return fs.readFileSync(`/home/${username}/.securesign/auth`).toString();
+    } catch (error) {
+      return null;
+    }
   }
 }

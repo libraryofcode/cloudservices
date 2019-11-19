@@ -7,8 +7,9 @@ export default function checkSS(client: Client) {
     try {
       const accounts = await client.db.Account.find();
       const hashes = accounts.filter((h) => h.hash);
-      for (const { hash, userID } of hashes) {
+      for (const { userID, username } of hashes) {
         try {
+          const hash = client.util.getAcctHash(username);
           await axios({
             method: 'get',
             url: 'https://api.securesign.org/account/details',
@@ -17,7 +18,7 @@ export default function checkSS(client: Client) {
         } catch (error) {
           const { status } = error.response;
           if (status === 400 || status === 401 || status === 403 || status === 404) {
-            await client.db.Account.updateOne({ hash }, { $set: { hash: null } });
+            await client.db.Account.updateOne({ userID }, { $set: { hash: false } });
             client.getDMChannel(userID).then((channel) => channel.createMessage('Your SecureSign password has been reset - please reinitialize your SecureSign account')).catch();
           }
         }
