@@ -4,7 +4,7 @@ import { Message } from 'eris';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
 import { dataConversion } from '../functions';
-import Me from './whois_me';
+import User from './whois_user';
 
 export default class Whois extends Command {
   constructor(client: Client) {
@@ -14,7 +14,7 @@ export default class Whois extends Command {
     this.aliases = ['account', 'user'];
     this.usage = `${this.client.config.prefix}account [User Name | User ID | Email Address]`;
     this.permissions = { roles: ['446104438969466890'] };
-    this.subcmds = [Me];
+    this.subcmds = [User];
     this.enabled = true;
   }
 

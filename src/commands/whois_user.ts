@@ -4,18 +4,21 @@ import { Message } from 'eris';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
 import { dataConversion } from '../functions';
+import { AccountInterface } from '../models';
 
-export default class Whois_Me extends Command {
+export default class Whois_User extends Command {
   constructor(client: Client) {
     super(client);
-    this.name = 'me';
+    this.name = 'user';
     this.description = 'Gets information about your account.';
-    this.usage = `${this.client.config.prefix}whois me`;
+    this.usage = `${this.client.config.prefix}whois user <username | user ID>`;
     this.enabled = true;
   }
 
-  public async run(message: Message) {
-    const account = await this.client.db.Account.findOne({ userID: message.author.id });
+  public async run(message: Message, args: string[]) {
+    let account: AccountInterface;
+    if (!args[0]) account = await this.client.db.Account.findOne({ userID: message.author.id });
+    else account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }] });
     if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} You don't have an account.***`);
     const embed = new RichEmbed();
     embed.setTitle('Account Information');
