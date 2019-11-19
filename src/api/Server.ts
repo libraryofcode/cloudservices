@@ -46,7 +46,7 @@ export default class Server {
         this.app.use(route.conf.path, route.router);
         this.client.signale.success(`Successfully loaded route ${route.conf.path}`);
       } catch (error) {
-        this.client.signale.error(error);
+        this.client.util.handleError(error);
       }
     });
   }

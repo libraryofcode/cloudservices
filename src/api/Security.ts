@@ -56,7 +56,7 @@ export default class Security {
       if (saltCheck.salt !== account.salt) return null;
       return account;
     } catch (error) {
-      this.client.signale.debug(error);
+      this.client.util.handleError(error);
       return null;
     }
   }
