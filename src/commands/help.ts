@@ -56,7 +56,7 @@ export default class Help extends Command {
       const subcommands = cmd.subcommands.size ? `\n**Subcommands:** ${cmd.subcommands.map((s) => `${cmd.name} ${s.name}`).join(', ')}` : '';
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
-      embed.setTitle(`${this.client.config.prefix}${cmd.parentName ? `${cmd.parentName} ${cmd.name}` : cmd.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
+      embed.setTitle(`${this.client.config.prefix}${cmd.parentName ? `${cmd.parentName}${cmd.name}` : cmd.name}`); embed.setAuthor(`${this.client.user.username}#${this.client.user.discriminator}`, this.client.user.avatarURL);
       const description = `**Description**: ${cmd.description}\n**Usage:** ${cmd.usage}${aliases}${displayedPerms}${subcommands}`;
       embed.setDescription(description);
       // @ts-ignore
