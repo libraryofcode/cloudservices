@@ -7,7 +7,7 @@ export default class Route {
 
   public router: router;
 
-  public conf: { path: string, deprecated?: boolean };
+  public conf: { path: string, deprecated?: boolean, maintenance?: boolean };
 
   constructor(server: Server, conf: { path: string, deprecated?: boolean, maintenance?: boolean }) {
     this.server = server;
