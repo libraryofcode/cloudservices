@@ -14,6 +14,7 @@ export default class Pull extends Command {
 
   public async run(message: Message) {
     try {
+      this.client.updating = true;
       const updateMessage = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Fetching latest commit...***\n\`\`\`sh\ngit pull\n\`\`\``);
       let pull: string;
 
@@ -22,16 +23,19 @@ export default class Pull extends Command {
       } catch (error) {
         const updatedMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.error} ***Could not fetch latest commit***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
+        this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
       if (pull.includes('Already up to date')) {
         const updatedMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.success} ***No updates available***`)
           .replace(/```$/, `${pull}\n\`\`\``);
+        this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
       if (!pull.includes('origin/master')) {
         const updatedMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.error} ***Unexpected git output***`)
           .replace(/```$/, `${pull}\n\`\`\``);
+        this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
       const continueMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.success} ***Pulled latest commit***\n${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`)
@@ -43,6 +47,7 @@ export default class Pull extends Command {
       try {
         install = await this.client.util.exec('yarn install');
       } catch (error) {
+        this.client.updating = false;
         const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`, `${this.client.stores.emojis.error} ***Failed to reinstall dependencies***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
         return updateMessage.edit(updatedMessage);
@@ -59,6 +64,7 @@ export default class Pull extends Command {
       } else {
         const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`, `${this.client.stores.emojis.error} ***Unexpected yarn install output***`)
           .replace(/```$/, `${pull}\n\`\`\``);
+        this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
 
@@ -68,13 +74,15 @@ export default class Pull extends Command {
       } catch (error) {
         const updatedMessage = updatedPackages.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.error} ***Failed to rebuild files***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
+        this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
       const finalMessage = updatedPackages.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.success} ***Files rebuilt***`)
         .replace(/```$/, `${build}\n\`\`\``);
-
+      this.client.updating = false;
       return updateMessage.edit(finalMessage);
     } catch (error) {
+      this.client.updating = false;
       return this.client.util.handleError(error, message, this);
     }
   }
