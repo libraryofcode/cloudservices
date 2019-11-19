@@ -22,8 +22,8 @@ export default class SecureSign_Init extends Command {
       // @ts-ignore
       const options: { s?: string, c?: string, m?: string } = args.length ? Object.fromEntries(` ${args.join(' ')}`.split(' -').filter((a) => a).map((a) => a.split(' '))) : {}; // eslint-disable-line
       if (options.s && options.s.toLowerCase() !== 'ecc' && options.s.toLowerCase() !== 'rsa') return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid signing type, choose between \`ecc\` or \`rsa\``);
-      if (options.c && (!Number(options.c) || Number(options.c) < 1 || Number(options.c) > 3)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid class selected, choose between Class **1**, **2** or **3**`);
-      if (options.m && (!Number(options.m) || (options.m !== '256' && options.m !== '384' && options.m !== '512'))) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid SHA Digest selected, choose between **256**, **384** or **512**`);
+      if (options.c && (!Number(options.c) || Number(options.c) < 1 || Number(options.c) > 3)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid class selected, choose between Class \`1\`, \`2\` or \`3\``);
+      if (options.m && (!Number(options.m) || (options.m !== '256' && options.m !== '384' && options.m !== '512'))) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid SHA Digest selected, choose between \`256\`, \`384\` or \`512\``);
 
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Creating certificate...***`);
       const hash = this.client.util.getAcctHash(account.username);
