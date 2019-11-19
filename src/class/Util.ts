@@ -64,12 +64,11 @@ export default class Util {
         } else if (resolvedCommand.subcommands.has(args[0])) {
           parentLabel += `${resolvedCommand.name} `;
           resolvedCommand = resolvedCommand.subcommands.get(args[0]); args.shift();
-          parentLabel += `${resolvedCommand.name} `;
         } else {
           const subcommandArray = resolvedCommand.subcommands.toArray();
           for (const subCmd of subcommandArray) {
             if (subCmd.aliases.includes(args[0])) {
-              parentLabel += `${resolvedCommand.name} `; resolvedCommand = subCmd; parentLabel += `${resolvedCommand.name} `; args.shift(); break;
+              parentLabel += `${resolvedCommand.name} `; resolvedCommand = subCmd; args.shift(); break;
             }
             if (subcommandArray.findIndex((v) => v === subCmd) === subcommandArray.length - 1) {
               hasSubCommands = false; break;
