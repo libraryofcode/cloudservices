@@ -36,7 +36,7 @@ export default class SecureSign_Account extends Command {
       embed.setTitle(title);
       embed.setDescription(description);
       embed.setAuthor(this.client.user.username, this.client.user.avatarURL);
-      embed.setFooter(`Requested by ${message.member.username}#${message.member.discriminator}`, message.member.avatarURL);
+      embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);
 
       // @ts-ignore
       return msg.edit({ content, embed });
