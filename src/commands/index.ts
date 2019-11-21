@@ -17,6 +17,7 @@ export { default as Pull } from './pull';
 export { default as Restart } from './restart';
 export { default as SecureSign } from './securesign';
 export { default as Sysinfo } from './sysinfo';
+export { default as Unban } from './unban';
 export { default as Unlock } from './unlock';
 export { default as Warn } from './warn';
 export { default as Whois } from './whois';
