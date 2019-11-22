@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { Message } from 'eris';
 import { Client } from '..';
-import { Command, RichEmbed } from '../class';
+import { Command } from '../class';
 
 export default class Lock extends Command {
   constructor(client: Client) {
@@ -27,19 +27,11 @@ export default class Lock extends Command {
       const lockLength = args[1].match(/[a-z]+|[^a-z]+/gi);
       // @ts-ignore
       const momentMilliseconds = moment.duration(Number(lockLength[0]), lockLength[1]).asMilliseconds();
-      /*
-      expiry.setMilliseconds(momentMilliseconds);
-      let processed: boolean = false;
-      if (!momentMilliseconds) processed = true;
-      */
-
-      this.client.signale.debug(lockLength);
-      this.client.signale.debug(expiry);
-      this.client.signale.debug(momentMilliseconds);
       const reason = momentMilliseconds ? args.slice(2).join(' ') : args.slice(1).join(' ');
 
       await this.client.util.createModerationLog(account.userID, message.member, 2, reason, momentMilliseconds);
-      edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been locked by Supervisor ${message.author.username}#${message.author.discriminator}.***`);
+      edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been locked by Moderator ${message.author.username}#${message.author.discriminator}.***`);
+      message.delete();
 
       this.client.util.transport.sendMail({
         to: account.emailAddress,

@@ -1,7 +1,6 @@
-import uuid from 'uuid/v4';
 import { Message } from 'eris';
 import { Client } from '..';
-import { Command, RichEmbed } from '../class';
+import { Command } from '../class';
 
 export default class Unlock extends Command {
   constructor(client: Client) {
@@ -24,38 +23,7 @@ export default class Unlock extends Command {
       await account.updateOne({ locked: false });
 
       await this.client.util.createModerationLog(account.userID, message.member, 3, args.slice(1).join(' '));
-      /*
-      const moderation = new this.client.db.Moderation({
-        username: account.username,
-        userID: account.userID,
-        logID: uuid(),
-        moderatorID: message.author.id,
-        reason: args.slice(1).join(' '),
-        type: 3,
-        date: new Date(),
-      });
-      await moderation.save();
-      */
-
-      edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been unlocked by Supervisor ${message.author.username}#${message.author.discriminator}.***`);
-
-      /*
-      const embed = new RichEmbed();
-      embed.setTitle('Account Infraction | Unlock');
-      embed.setColor(15158332);
-      embed.addField('User', `${account.username} | <@${account.userID}>`, true);
-      embed.addField('Supervisor', `<@${message.author.id}>`, true);
-      if (args.slice(1).join(' ').length > 0) embed.addField('Reason', args.slice(1).join(' '), true);
-      embed.setFooter(this.client.user.username, this.client.user.avatarURL);
-      embed.setTimestamp();
-      message.delete();
-      this.client.getDMChannel(account.userID).then((user) => {
-        // @ts-ignore
-        user.createMessage({ embed }).catch();
-      });
-      // @ts-ignore
-      this.client.createMessage('580950455581147146', { embed });
-      */
+      edit.edit(`***${this.client.stores.emojis.success} Account ${account.username} has been unlocked by Moderator ${message.author.username}#${message.author.discriminator}.***`);
     } catch (error) {
       await this.client.util.handleError(error, message, this);
     }
