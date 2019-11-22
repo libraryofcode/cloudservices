@@ -35,6 +35,7 @@ export default class Root extends Route {
         res.status(200).json({ code: this.constants.codes.SUCCESS, message: response });
       } catch (error) {
         this.handleError(error, res);
+        this.server.client.util.handleError(error);
       }
     });
   }

@@ -27,6 +27,7 @@ export default class Account extends Route {
         res.status(200).json({ code: this.constants.codes.SUCCESS, message: acc });
       } catch (error) {
         this.handleError(error, res);
+        this.server.client.util.handleError(error);
       }
     });
 
@@ -42,6 +43,7 @@ export default class Account extends Route {
         }
       } catch (error) {
         this.handleError(error, res);
+        this.server.client.util.handleError(error);
       }
     });
 
@@ -51,6 +53,7 @@ export default class Account extends Route {
         res.status(200).json({ code: this.constants.codes.SUCCESS, message: data });
       } catch (error) {
         this.handleError(error, res);
+        this.server.client.util.handleError(error);
       }
     });
   }
