@@ -164,7 +164,7 @@ export default class Util {
   }
 
   public async createAccount(hash: string, etcPasswd: string, username: string, userID: string, emailAddress: string, moderatorID: string): Promise<AccountInterface> {
-    await this.exec(`useradd -m -p ${hash} -c ${etcPasswd} -s /bin/bash ${username}`);
+    await this.exec(`useradd -m -p ${hash} -c ${etcPasswd} -s /bin/zsh ${username}`);
     await this.exec(`chage -d0 ${username}`);
 
     const account = new this.client.db.Account({
@@ -175,11 +175,11 @@ export default class Util {
 
   public async deleteAccount(username: string): Promise<void> {
     const account = await this.client.db.Account.findOne({ username });
-    if (!account) return Promise.reject(new Error('Account not found'));
+    if (!account) throw new Error('Account not found');
+    this.exec(`lock ${username}`);
     await this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`);
     await this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted');
     await this.client.db.Account.deleteOne({ username });
-    return Promise.resolve();
   }
 
   public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {
