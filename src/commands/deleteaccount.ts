@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Message, PrivateChannel } from 'eris';
 import uuid from 'uuid/v4';
 import { Command } from '../class';
@@ -56,8 +57,7 @@ export default class DeleteAccount extends Command {
         `,
       });
 
-      this.client.guilds.get('446067825673633794').members.get(account.userID).removeRole('546457886440685578', `Account was deleted by ${message.author.username}.`);
-      return deleting.edit(`${this.client.stores.emojis.success} ***Account ${username} has been deleted by Engineer ${message.author.username}#${message.author.discriminator}***`);
+      deleting.edit(`${this.client.stores.emojis.success} ***Account ${username} has been deleted by Engineer ${message.author.username}#${message.author.discriminator}***`);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
