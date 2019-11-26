@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import { Message, PrivateChannel } from 'eris';
 import uuid from 'uuid/v4';
 import { Command } from '../class';
@@ -57,7 +56,7 @@ export default class DeleteAccount extends Command {
         `,
       });
 
-      deleting.edit(`${this.client.stores.emojis.success} ***Account ${username} has been deleted by Engineer ${message.author.username}#${message.author.discriminator}***`);
+      return deleting.edit(`${this.client.stores.emojis.success} ***Account ${username} has been deleted by Engineer ${message.author.username}#${message.author.discriminator}***`);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
