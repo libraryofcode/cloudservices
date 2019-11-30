@@ -38,50 +38,30 @@ export default class Util {
 
   /**
    * Resolves a command
-   * @param command Parent command label
-   * @param args Use to resolve subcommands
+   * @param query Command input
    * @param message Only used to check for errors
    */
-  public resolveCommand(command: string, args?: string[], message?: Message): Promise<{cmd: Command, args: string[] }> {
+  public resolveCommand(query: string | string[], message?: Message): Promise<{cmd: Command, args: string[] }> {
     try {
       let resolvedCommand: Command;
+      if (typeof query === 'string') query = query.split(' ');
+      query = query.map((q) => q.toLowerCase());
+      const commands = this.client.commands.toArray();
+      resolvedCommand = commands.find((c) => c.name === query[0] || c.aliases.includes(query[0]));
 
-      if (this.client.commands.has(command)) resolvedCommand = this.client.commands.get(command);
-      else {
-        for (const cmd of this.client.commands.toArray()) {
-          if (cmd.aliases.includes(command)) { resolvedCommand = cmd; break; }
-        }
+      if (!resolvedCommand) return Promise.resolve(null);
+      query.shift();
+      while (resolvedCommand.subcommands.size) {
+        const subCommands = resolvedCommand.subcommands.toArray();
+        const found = subCommands.find((c) => c.name === query[0] || c.aliases.includes(query[0]));
+        if (!found) break;
+        resolvedCommand = found;
+        query.shift();
       }
-      if (!resolvedCommand) return Promise.resolve({ cmd: null, args });
-
-      let parentLabel = '';
-      let hasSubCommands = true;
-      while (hasSubCommands) {
-        if (!resolvedCommand.subcommands.size) {
-          hasSubCommands = false; break;
-        } else if (!args[0]) {
-          hasSubCommands = false; break;
-        } else if (resolvedCommand.subcommands.has(args[0])) {
-          parentLabel += `${resolvedCommand.name} `;
-          resolvedCommand = resolvedCommand.subcommands.get(args[0]); args.shift();
-        } else {
-          const subcommandArray = resolvedCommand.subcommands.toArray();
-          for (const subCmd of subcommandArray) {
-            if (subCmd.aliases.includes(args[0])) {
-              parentLabel += `${resolvedCommand.name} `; resolvedCommand = subCmd; args.shift(); break;
-            }
-            if (subcommandArray.findIndex((v) => v === subCmd) === subcommandArray.length - 1) {
-              hasSubCommands = false; break;
-            }
-          }
-        }
-      }
-      const finalCommand = resolvedCommand;
-      finalCommand.parentName = parentLabel;
-
-      return Promise.resolve({ cmd: finalCommand, args });
+      return Promise.resolve({ cmd: resolvedCommand, args: query });
     } catch (error) {
-      this.handleError(error, message);
+      if (message) this.handleError(error, message);
+      else this.handleError(error);
       return Promise.reject(error);
     }
   }
@@ -107,9 +87,7 @@ export default class Util {
       }
       await this.client.createMessage('595788220764127272', info);
       const msg = message.content.slice(this.client.config.prefix.length).trim().split(/ +/g);
-      const label = msg[0];
-      const args = msg.slice(1);
-      if (command) this.resolveCommand(label, args).then((c) => { c.cmd.enabled = false; });
+      if (command) this.resolveCommand(msg).then((c) => { c.cmd.enabled = false; });
       if (message) message.channel.createMessage(`***${this.client.stores.emojis.error} An unexpected error has occured - please contact a member of the Engineering Team.${command ? ' This command has been disabled.' : ''}***`);
     } catch (err) {
       this.client.signale.error(err);

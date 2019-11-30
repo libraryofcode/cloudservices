@@ -14,9 +14,7 @@ export default class {
         if (message.author.bot) return;
         if (message.content.indexOf(this.client.config.prefix) !== 0) return;
         const noPrefix: string[] = message.content.slice(this.client.config.prefix.length).trim().split(/ +/g);
-        const command: string = noPrefix[0].toLowerCase();
-        const args: string[] = noPrefix.slice(1);
-        const resolved = await this.client.util.resolveCommand(command, args, message);
+        const resolved = await this.client.util.resolveCommand(noPrefix, message);
         if (!resolved.cmd) return;
         if (resolved.cmd.guildOnly && !(message.channel instanceof TextChannel)) return;
         let hasUserPerms: boolean;
