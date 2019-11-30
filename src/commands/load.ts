@@ -8,6 +8,7 @@ export default class Ping extends Command {
     this.name = 'load';
     this.description = '(Re)loads command, config or util';
     this.aliases = ['reload'];
+    this.permissions = { users: ['253600545972027394', '278620217221971968'] };
     this.enabled = true;
   }
 
