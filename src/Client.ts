@@ -115,6 +115,9 @@ export default class Client extends Eris.Client {
       this.signale.complete(`Loaded interval ${interval.split('.')[0]}`);
     });
     this.server = new Server(this, { port: this.config.port });
+
+    const files = Object.keys(require.cache).filter((path) => path.startsWith('/var/CloudServices/dist'));
+    files.forEach((file) => delete require.cache[file]);
   }
 }
 
