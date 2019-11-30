@@ -28,7 +28,9 @@ export default class Client extends Eris.Client {
 
   public server: Server;
 
-  public updating: Boolean;
+  public updating: boolean;
+
+  public buildError: boolean
 
   constructor() {
     super(config.token, { getAllUsers: true, restMode: true, defaultImageFormat: 'png' });
@@ -47,6 +49,7 @@ export default class Client extends Eris.Client {
       displayFilename: true,
     });
     this.updating = false;
+    this.buildError = false;
     this.events();
     this.loadFunctions();
     this.init();
