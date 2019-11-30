@@ -14,6 +14,7 @@ export default class Restart extends Command {
   public async run(message: Message, args: string[]) {
     try {
       if (this.client.updating && args[0] !== '-f') return message.channel.createMessage(`${this.client.stores.emojis.error} ***Update in progress***`);
+      if (this.client.buildError) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Build error, resolve before restarting***`);
       await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Restarting...***`);
       return process.exit(1);
     } catch (error) {
