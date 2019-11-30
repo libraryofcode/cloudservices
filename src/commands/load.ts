@@ -2,7 +2,7 @@ import { Message } from 'eris';
 import { Client } from '..';
 import { Command } from '../class';
 
-export default class Ping extends Command {
+export default class Load extends Command {
   constructor(client: Client) {
     super(client);
     this.name = 'load';
@@ -27,6 +27,7 @@ export default class Ping extends Command {
       } else {
         try {
           const Cmd = require(`${corepath}/commands`)[args[1]];
+          if (!Cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Could not find file***`);
           this.client.commands.remove(args[1]);
           this.client.loadCommand(Cmd);
         } catch (error) {
