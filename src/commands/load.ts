@@ -20,13 +20,13 @@ export default class Load extends Command {
       if (!allowed.includes(type)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid type to (re)load***`);
 
       const corepath = '/var/CloudServices/dist';
-      if (type === 'config') this.client.config = require(`${corepath}/config.json`).default;
+      if (type === 'config') this.client.config = require(`${corepath}/config.json`);
       else if (type === 'util') {
-        const Util = require(`${corepath}/class/Util`);
+        const Util = require(`${corepath}/class/Util`).default;
         this.client.util = new Util(this.client);
       } else {
         try {
-          const cmdIndex = require(`${corepath}/commands`);
+          const cmdIndex = require('../commands');
           let Cmd = cmdIndex[args[1]];
           if (!Cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Could not find file***`);
           Cmd = require(`${corepath}/commands/${args[1]}`).default;
