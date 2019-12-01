@@ -22,7 +22,7 @@ export default class Load extends Command {
       const corepath = '/var/CloudServices/dist';
       if (type === 'config') this.client.config = require(`${corepath}/config.json`);
       else if (type === 'util') {
-        const Util = require(`${corepath}/class/Util`);
+        const Util = require(`${corepath}/class/Util`).default;
         this.client.util = new Util(this.client);
       } else {
         try {
