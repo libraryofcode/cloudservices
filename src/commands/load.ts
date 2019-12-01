@@ -20,7 +20,7 @@ export default class Load extends Command {
       if (!allowed.includes(type)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid type to (re)load***`);
 
       const corepath = '/var/CloudServices/dist';
-      if (type === 'config') this.client.config = require(`${corepath}/config.json`);
+      if (type === 'config') this.client.config = require(`${corepath}/config.json`).default;
       else if (type === 'util') {
         const Util = require(`${corepath}/class/Util`);
         this.client.util = new Util(this.client);
