@@ -119,7 +119,7 @@ export default class Client extends Eris.Client {
     });
     this.server = new Server(this, { port: this.config.port });
 
-    require.cache = {};
+    require.cache = Object.create(null);
   }
 }
 
