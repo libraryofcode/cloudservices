@@ -45,15 +45,14 @@ export default class Util {
     try {
       let resolvedCommand: Command;
       if (typeof query === 'string') query = query.split(' ');
-      query = query.map((q) => q.toLowerCase());
       const commands = this.client.commands.toArray();
-      resolvedCommand = commands.find((c) => c.name === query[0] || c.aliases.includes(query[0]));
+      resolvedCommand = commands.find((c) => c.name === query[0].toLowerCase() || c.aliases.includes(query[0].toLowerCase()));
 
       if (!resolvedCommand) return Promise.resolve(null);
       query.shift();
       while (resolvedCommand.subcommands.size) {
         const subCommands = resolvedCommand.subcommands.toArray();
-        const found = subCommands.find((c) => c.name === query[0] || c.aliases.includes(query[0]));
+        const found = subCommands.find((c) => c.name === query[0].toLowerCase() || c.aliases.includes(query[0].toLowerCase()));
         if (!found) break;
         resolvedCommand = found;
         query.shift();
