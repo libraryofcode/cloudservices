@@ -22,14 +22,14 @@ export default class Load extends Command {
       const corepath = '/var/CloudServices/dist';
       if (type === 'config') this.client.config = require(`${corepath}/config.json`);
       else if (type === 'util') {
-        const Util = require(`${corepath}/class/Util`).default;
+        const Util = require(`${corepath}/class/Util`);
         this.client.util = new Util(this.client);
       } else {
         try {
           const cmdIndex = require(`${corepath}/commands`);
           let Cmd = cmdIndex[args[1]];
           if (!Cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Could not find file***`);
-          Cmd = require(`${corepath}/commands/${args[1]}`);
+          Cmd = require(`${corepath}/commands/${args[1]}`).default;
           this.client.commands.remove(args[1]);
           this.client.loadCommand(Cmd);
         } catch (error) {
