@@ -50,7 +50,7 @@ export default class Util {
 
       if (!resolvedCommand) return Promise.resolve(null);
       query.shift();
-      while (resolvedCommand.subcommands.size) {
+      while (resolvedCommand.subcommands.size && query.length) {
         const subCommands = resolvedCommand.subcommands.toArray();
         const found = subCommands.find((c) => c.name === query[0].toLowerCase() || c.aliases.includes(query[0].toLowerCase()));
         if (!found) break;
