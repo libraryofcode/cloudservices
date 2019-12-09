@@ -2,7 +2,7 @@
 import { promisify } from 'util';
 import childProcess from 'child_process';
 import nodemailer from 'nodemailer';
-import { Message, PrivateChannel, Member, User } from 'eris';
+import { Message, PrivateChannel, GroupChannel, Member, User } from 'eris';
 import uuid from 'uuid/v4';
 import moment from 'moment';
 import fs from 'fs';
@@ -78,7 +78,7 @@ export default class Util {
         embed.addField('User', `${message.author.mention} (\`${message.author.id}\`)`, true);
         embed.addField('Channel', message.channel.mention, true);
         let guild: string;
-        if (message.channel instanceof PrivateChannel) guild = '@me';
+        if (message.channel instanceof PrivateChannel || message.channel instanceof GroupChannel) guild = '@me';
         else guild = message.channel.guild.id;
         embed.addField('Message link', `[Click here](https://discordapp.com/channels/${guild}/${message.channel.id}/${message.id})`, true);
         embed.setTimestamp(new Date(message.timestamp));
