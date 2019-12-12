@@ -1,4 +1,4 @@
-import { Message, PrivateChannel } from 'eris';
+import { Message, PrivateChannel, GroupChannel } from 'eris';
 import uuid from 'uuid/v4';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
@@ -22,7 +22,7 @@ export default class CreateAccount extends Command {
 
   public async run(message: Message, args: string[]) {
     try {
-      if (message.channel instanceof PrivateChannel) return message; // Stop TS being gay
+      if (message.channel instanceof PrivateChannel || message.channel instanceof GroupChannel) return message; // Stop TS being gay
       if (!args[2]) return this.client.commands.get('help').run(message, [this.name]);
       if (!message.channel.guild.members.has(args[0])) return message.channel.createMessage(`${this.client.stores.emojis.error} ***User not found***`);
       if (message.channel.guild.members.get(args[0]).bot) return message.channel.createMessage(`${this.client.stores.emojis.error} ***I cannot create accounts for bots***`);

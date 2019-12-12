@@ -14,6 +14,7 @@ export default class Pull extends Command {
 
   public async run(message: Message) {
     try {
+      if (this.client.updating) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Update in progress***`);
       this.client.updating = true;
       const updateMessage = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Fetching latest commit...***\n\`\`\`sh\ngit pull\n\`\`\``);
       let pull: string;
@@ -74,12 +75,14 @@ export default class Pull extends Command {
       } catch (error) {
         const updatedMessage = updatedPackages.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.error} ***Failed to rebuild files***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
+        this.client.buildError = true;
         this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
       const finalMessage = updatedPackages.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.success} ***Files rebuilt***`)
         .replace(/```$/, `${build}\n\`\`\``);
       this.client.updating = false;
+      this.client.buildError = false;
       return updateMessage.edit(finalMessage);
     } catch (error) {
       this.client.updating = false;
