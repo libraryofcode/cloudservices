@@ -40,7 +40,7 @@ export default class CreateAccount extends Command {
 
       const tempPass = this.client.util.randomPassword();
       let passHash = await this.client.util.createHash(tempPass); passHash = passHash.replace(/[$]/g, '\\$').replace('\n', '');
-      const acctName = message.author.username.replace(/[!@#$%^&*(),.?":{}|<>]/g, '-').replace(/\s/g, '-');
+      const acctName = this.client.users.get(args[0]).username.replace(/[!@#$%^&*(),.?":{}|<>]/g, '-').replace(/\s/g, '-');
       const etcPasswd = `${acctName},${args[0]},,`;
 
       await this.client.util.createAccount(passHash, etcPasswd, args[2], args[0], args[1], message.author.id);
