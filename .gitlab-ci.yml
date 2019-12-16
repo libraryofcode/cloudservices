@@ -1,0 +1,18 @@
+stages:
+  - build
+  - test
+
+typescript_build:
+  stage: build
+  script:
+    - cp /var/CloudServices/src/config.json ./src/config.json
+    - yarn install --ignore-engines
+    - tsc -p ./tsconfig.json
+
+lint:
+  stage: test
+  before_script:
+    - yarn install --ignore-engines
+  script:
+    - yarn run lint-find
+
