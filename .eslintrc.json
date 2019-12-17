@@ -38,6 +38,7 @@
         "object-curly-newline": "off",
         "import/prefer-default-export": "off",
         "no-useless-constructor": "off",
-        "@typescript-eslint/no-useless-constructor": 2
+        "@typescript-eslint/no-useless-constructor": 2,
+        "import/extensions": "off"
     }
 }
