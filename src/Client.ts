@@ -119,7 +119,11 @@ export default class Client extends Eris.Client {
     });
     this.server = new Server(this, { port: this.config.port });
 
-    require.cache = Object.create(null);
+    const corepath = '/var/CloudServices/dist';
+    const cmdFiles = await fs.readdir('/var/CloudServices/dist/commands');
+    cmdFiles.forEach((f) => delete require.cache[`${corepath}/${f}`]);
+    delete require.cache[`${corepath}/config.json`];
+    delete require.cache[`${corepath}/class/Util`];
   }
 }
 
