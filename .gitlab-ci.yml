@@ -12,6 +12,7 @@ typescript_build:
 lint:
   stage: test
   before_script:
+    - cp ../config.json ./src/config.json
     - yarn install --ignore-engines
   script:
     - yarn run lint-find
