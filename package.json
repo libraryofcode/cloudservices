@@ -5,7 +5,8 @@
   "main": "dist/Client.js",
   "scripts": {
     "lint": "eslint ./ --ext ts --fix",
-    "build": "tsc -p ./tsconfig.json"
+    "build": "tsc -p ./tsconfig.json",
+    "lint-find": "eslint ./ --ext ts"
   },
   "author": "Library of Code sp-us Engineering Team",
   "license": "AGPL-3.0-only",
