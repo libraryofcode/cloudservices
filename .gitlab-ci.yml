@@ -5,6 +5,7 @@ stages:
 typescript_build:
   stage: build
   script:
+    - cp ../../config.json ./src/config.json
     - yarn install --ignore-engines
     - tsc -p ./tsconfig.json
 
