@@ -17,7 +17,7 @@ export default class Load extends Command {
       if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
       const allowed = ['config', 'util', 'command'];
       const type = args[0].toLowerCase();
-      if (!allowed.includes(type)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid type to load***`);
+      if (!allowed.includes(type)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid type to (re)load***`);
 
       const corepath = '/var/CloudServices/dist';
       if (type === 'config') {
