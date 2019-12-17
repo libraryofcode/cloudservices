@@ -24,7 +24,7 @@ export default class Load extends Command {
         this.client.config = require(`${corepath}/config.json`);
         delete require.cache[`${corepath}/config.json`];
       } else if (type === 'util') {
-        const Util = require(`${corepath}/class/Util`);
+        const Util = require(`${corepath}/class/Util`).default;
         this.client.util = new Util(this.client);
         delete require.cache[`${corepath}/class/Util.js`];
       } else {
