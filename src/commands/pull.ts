@@ -33,7 +33,7 @@ export default class Pull extends Command {
         this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
-      if (!pull.includes('origin/master')) {
+      if (!pull.includes('origin/master') && !pull.includes(' changed, ')) {
         const updatedMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.error} ***Unexpected git output***`)
           .replace(/```$/, `${pull}\n\`\`\``);
         this.client.updating = false;
