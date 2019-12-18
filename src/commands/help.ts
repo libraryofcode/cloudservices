@@ -44,8 +44,9 @@ export default class Help extends Command {
         if (cmdPages.length === 1) return message.channel.createMessage({ embed: cmdPages[0] });
         return createPaginationEmbed(message, this.client, cmdPages);
       }
-      const { cmd } = await this.client.util.resolveCommand(args, message);
-      if (!cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} **Command not found!**`);
+      const resolved = await this.client.util.resolveCommand(args, message);
+      if (!resolved) return message.channel.createMessage(`${this.client.stores.emojis.error} **Command not found!**`);
+      const { cmd } = resolved;
       const perms: string[] = [];
       let allowedRoles = cmd.permissions && cmd.permissions.roles && cmd.permissions.roles.map((r) => `<@&${r}>`).join(', ');
       if (allowedRoles) { allowedRoles = `**Roles:** ${allowedRoles}`; perms.push(allowedRoles); }
