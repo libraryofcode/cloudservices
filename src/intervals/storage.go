@@ -51,7 +51,8 @@ func main() {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
 	HandleError(err, 1)
-	err = client.Ping(context.TODO(), nil)
+  err = client.Ping(context.TODO(), nil)
+  fmt.Printf("Connected to MongoDB [GO]\n")
 	HandleError(err, 1)
 
 	RedisClient = redis.NewClient(&redis.Options{
@@ -60,11 +61,13 @@ func main() {
 		DB:       0,
 	})
 
-	_, err = RedisClient.Ping().Result()
+  _, err = RedisClient.Ping().Result()
+  fmt.Printf("Connected to Redis [GO]\n")
 	HandleError(err, 1)
 
 	for {
     handler()
+    fmt.Printf("Calling handler func [GO]\n")
     time.Sleep(1000000 * time.Second)
   }
 }
@@ -74,7 +77,8 @@ func handler() {
 	HandleError(err, 0)
 
 	for cur.Next(context.TODO()) {
-		go checkAccountSizeAndUpdate(cur.Current.Lookup("username").String(), cur.Current.Lookup("id").String())
+    go checkAccountSizeAndUpdate(cur.Current.Lookup("username").String(), cur.Current.Lookup("id").String())
+    fmt.Printf("Checking account information for %s\n", cur.Current.Lookup("username").String())
 		time.Sleep(600000 * time.Second)
 	}
 }
@@ -85,5 +89,6 @@ func checkAccountSizeAndUpdate(username string, id string) {
   bytes += sizeHome
   sizeMail := DirSize("/var/mail/" + username)
   bytes += sizeMail
-	RedisClient.Set("storage"+"-"+id, bytes, 0)
+  RedisClient.Set("storage"+"-"+id, bytes, 0)
+  fmt.Printf("Set Call | Username: %v, ID: %v | Bytes: %f\n", username, id, bytes)
 }
