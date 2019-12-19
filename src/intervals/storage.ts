@@ -1,9 +1,9 @@
 /* eslint-disable no-await-in-loop */
-import fs from 'fs-extra';
+// import fs from 'fs-extra';
 import { Client } from '..';
 
 export default async function storage(client: Client) {
-  const main = async () => {
+  /* const main = async () => {
     const accounts = await client.db.Account.find();
     for (const account of accounts) {
       setTimeout(async () => {
@@ -23,5 +23,6 @@ export default async function storage(client: Client) {
   await main();
   setInterval(async () => {
     await main();
-  }, 900000);
+  }, 900000); */
+  (await import('child_process')).execFile('./storage');
 }
