@@ -44,15 +44,16 @@ export default class Help extends Command {
         if (cmdPages.length === 1) return message.channel.createMessage({ embed: cmdPages[0] });
         return createPaginationEmbed(message, this.client, cmdPages);
       }
-      const { cmd } = await this.client.util.resolveCommand(args, message);
-      if (!cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} **Command not found!**`);
+      const resolved = await this.client.util.resolveCommand(args, message);
+      if (!resolved) return message.channel.createMessage(`${this.client.stores.emojis.error} **Command not found!**`);
+      const { cmd } = resolved;
       const perms: string[] = [];
       let allowedRoles = cmd.permissions && cmd.permissions.roles && cmd.permissions.roles.map((r) => `<@&${r}>`).join(', ');
       if (allowedRoles) { allowedRoles = `**Roles:** ${allowedRoles}`; perms.push(allowedRoles); }
       let allowedUsers = cmd.permissions && cmd.permissions.users && cmd.permissions.users.map((u) => `<@${u}>`).join(', ');
       if (allowedUsers) { allowedUsers = `**Users:** ${allowedUsers}`; perms.push(allowedUsers); }
       const displayedPerms = perms.length ? `\n**Permissions:**\n${perms.join('\n')}` : '';
-      const aliases = cmd.aliases.length ? `\n**Aliases:** ${cmd.aliases.map((alias) => `${this.client.config.prefix}${cmd.parentName}${alias}`).join(', ')}` : '';
+      const aliases = cmd.aliases.length ? `\n**Aliases:** ${cmd.aliases.map((alias) => `${this.client.config.prefix}${cmd.parentName ? `${cmd.parentName} ` : ''}${alias}`).join(', ')}` : '';
       const subcommands = cmd.subcommands.size ? `\n**Subcommands:** ${cmd.subcommands.map((s) => `${cmd.name} ${s.name}`).join(', ')}` : '';
       const embed = new RichEmbed();
       embed.setTimestamp(); embed.setFooter(`Requested by ${message.author.username}#${message.author.discriminator}`, message.author.avatarURL);

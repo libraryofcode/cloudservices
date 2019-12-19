@@ -16,7 +16,7 @@ export default class Pull extends Command {
     try {
       if (this.client.updating) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Update in progress***`);
       this.client.updating = true;
-      const updateMessage = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Fetching latest commit...***\n\`\`\`sh\ngit pull\n\`\`\``);
+      const updateMessage = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Fetching latest commit...***\n\`\`\`sh\n$ git pull\n\`\`\``);
       let pull: string;
 
       try {
@@ -33,14 +33,14 @@ export default class Pull extends Command {
         this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
-      if (!pull.includes('origin/master')) {
+      if (!pull.includes('origin/master') && !pull.includes(' changed, ')) {
         const updatedMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.error} ***Unexpected git output***`)
           .replace(/```$/, `${pull}\n\`\`\``);
         this.client.updating = false;
         return updateMessage.edit(updatedMessage);
       }
       const continueMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.success} ***Pulled latest commit***\n${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`)
-        .replace(/```$/, `${pull}\nyarn install\n\`\`\``);
+        .replace(/```$/, `${pull}\n$ yarn install\n\`\`\``);
       const passedPull = await updateMessage.edit(continueMessage);
 
 
@@ -56,11 +56,11 @@ export default class Pull extends Command {
       let updatedPackages: Message;
       if (install.includes('Already up-to-date')) {
         const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`, `${this.client.stores.emojis.success} ***No dependency updates available***\n${this.client.stores.emojis.loading} ***Rebuilding files...***`)
-          .replace(/```$/, `${install}\nyarn run build\n\`\`\``);
+          .replace(/```$/, `${install}\n$ yarn run build\n\`\`\``);
         updatedPackages = await updateMessage.edit(updatedMessage);
       } else if (install.includes('success Saved lockfile.')) {
         const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`, `${this.client.stores.emojis.success} ***Updated dependencies***\n${this.client.stores.emojis.loading} ***Rebuilding files...***`)
-          .replace(/```$/, `${install}\nyarn run build\n\`\`\``);
+          .replace(/```$/, `${install}\n$ yarn run build\n\`\`\``);
         updatedPackages = await updateMessage.edit(updatedMessage);
       } else {
         const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`, `${this.client.stores.emojis.error} ***Unexpected yarn install output***`)

@@ -9,21 +9,24 @@ export default class Load extends Command {
     this.description = '(Re)loads command, config or util';
     this.aliases = ['reload'];
     this.permissions = { users: ['253600545972027394', '278620217221971968'] };
-    this.enabled = false;
+    this.enabled = true;
   }
 
   public async run(message: Message, args: string[]) {
     try {
       if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
-      const allowed = ['config', 'util', 'command', 'function'];
+      const allowed = ['config', 'util', 'command'];
       const type = args[0].toLowerCase();
       if (!allowed.includes(type)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid type to (re)load***`);
 
       const corepath = '/var/CloudServices/dist';
-      if (type === 'config') this.client.config = require(`${corepath}/config.json`);
-      else if (type === 'util') {
-        const Util = require(`${corepath}/class/Util`);
+      if (type === 'config') {
+        this.client.config = require(`${corepath}/config.json`);
+        delete require.cache[`${corepath}/config.json`];
+      } else if (type === 'util') {
+        const Util = require(`${corepath}/class/Util`).default;
         this.client.util = new Util(this.client);
+        delete require.cache[`${corepath}/class/Util.js`];
       } else {
         try {
           const cmdIndex = require('../commands');
@@ -32,6 +35,8 @@ export default class Load extends Command {
           Cmd = require(`${corepath}/commands/${args[1]}`).default;
           this.client.commands.remove(args[1]);
           this.client.loadCommand(Cmd);
+          delete require.cache[`${corepath}/commands/index.js`];
+          delete require.cache[`${corepath}/commands/${args[1]}.js`];
         } catch (error) {
           if (error.message.includes('Cannot find module')) return message.channel.createMessage(`${this.client.stores.emojis} ***Cannot find file***`);
           throw error;
