@@ -6,7 +6,7 @@ import (
 )
 
 // DirSize This function returns the total size of a directory in bytes.
-func DirSize(path string) float64 {
+func DirSize(path* string) float64 {
 	var dirSize int64 = 0
 
 	readSize := func(path string, file os.FileInfo, err error) error {
@@ -17,7 +17,8 @@ func DirSize(path string) float64 {
 		return nil
 	}
 
-	filepath.Walk(path, readSize)
+	err := filepath.Walk(*path, readSize)
+	HandleError(err, 0)
 
 	size := float64(dirSize)
 

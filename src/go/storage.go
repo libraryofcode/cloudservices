@@ -9,7 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"io/ioutil"
-	"time"
+  "time"
+  "strings"
 )
 
 // Collection the MongoDB Account collection
@@ -55,6 +56,8 @@ func main() {
   fmt.Printf("Connected to MongoDB [GO]\n")
 	HandleError(err, 1)
 
+  Collection = client.Database("cloudservices").Collection("accounts")
+
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
@@ -73,7 +76,7 @@ func main() {
 }
 
 func handler() {
-	cur, err := Collection.Find(context.TODO(), bson.M{})
+	cur, err := Collection.Find(context.TODO(), bson.D{})
 	HandleError(err, 0)
 
 	for cur.Next(context.TODO()) {
@@ -84,11 +87,13 @@ func handler() {
 }
 
 func checkAccountSizeAndUpdate(username string, id string) {
-  var bytes float64 = 0
-  sizeHome := DirSize("/home/" + username)
-  bytes += sizeHome
-  sizeMail := DirSize("/var/mail/" + username)
-  bytes += sizeMail
-  RedisClient.Set("storage"+"-"+id, bytes, 0)
-  fmt.Printf("Set Call | Username: %v, ID: %v | Bytes: %f\n", username, id, bytes)
+  var size float64 = 0
+  var userHomeDirectory string = strings.Replace(strings.Join([]string{"/home/", string(username)}, ""), "\"", "", -1)
+  fmt.Println(userHomeDirectory)
+  sizeHome := DirSize(&userHomeDirectory)
+  size += sizeHome
+  sizeMail := DirSize(&userHomeDirectory)
+  size += sizeMail
+  RedisClient.Set("storage"+"-"+string(id), size, 0)
+  fmt.Printf("Set Call | Username: %v, ID: %v | Bytes: %f\n", string(username), string(id), size)
 }
