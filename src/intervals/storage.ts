@@ -25,7 +25,7 @@ export default async function storage(client: Client) {
   setInterval(async () => {
     await main();
   }, 900000); */
-  let storageGo = spawn('./storage', []);
+  let storageGo = spawn('../bin/storage', []);
   storageGo.stdout.on('data', (data) => client.signale.log(data));
   storageGo.stderr.on('data', (data) => client.signale.log(data));
   storageGo.on('exit', (code) => {
