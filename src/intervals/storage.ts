@@ -30,6 +30,6 @@ export default async function storage(client: Client) {
   storageGo.stderr.on('data', (data) => client.signale.log(data));
   storageGo.on('exit', (code) => {
     client.signale.log(`Go storage func exited with code ${code}, restarting`);
-    storageGo = spawn('./storage', []);
+    storageGo = spawn('../bin/storage', []);
   });
 }
