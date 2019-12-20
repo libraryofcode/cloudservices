@@ -69,9 +69,9 @@ func main() {
 	HandleError(err, 1)
 
 	for {
+		fmt.Printf("Calling handler func [GO]\n")
     handler()
-    fmt.Printf("Calling handler func [GO]\n")
-    time.Sleep(1000000 * time.Second)
+    time.Sleep(1000000 * time.Millisecond)
   }
 }
 
@@ -82,7 +82,7 @@ func handler() {
 	for cur.Next(context.TODO()) {
     go checkAccountSizeAndUpdate(cur.Current.Lookup("username").String(), cur.Current.Lookup("id").String())
     fmt.Printf("Checking account information for %s\n", cur.Current.Lookup("username").String())
-		time.Sleep(600000 * time.Second)
+		time.Sleep(600000 * time.Millisecond)
 	}
 }
 
