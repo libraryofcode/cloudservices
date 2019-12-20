@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 // import fs from 'fs-extra';
+import { spawn } from 'child_process';
 import { Client } from '..';
 
 export default async function storage(client: Client) {
@@ -24,5 +25,11 @@ export default async function storage(client: Client) {
   setInterval(async () => {
     await main();
   }, 900000); */
-  (await import('child_process')).execFile('./storage');
+  let storageGo = spawn('./storage', []);
+  storageGo.stdout.on('data', (data) => client.signale.log(data));
+  storageGo.stderr.on('data', (data) => client.signale.log(data));
+  storageGo.on('exit', (code) => {
+    client.signale.log(`Go storage func exited with code ${code}, restarting`);
+    storageGo = spawn('./storage', []);
+  });
 }
