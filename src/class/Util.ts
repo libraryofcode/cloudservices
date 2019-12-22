@@ -154,9 +154,14 @@ export default class Util {
     const account = await this.client.db.Account.findOne({ username });
     if (!account) throw new Error('Account not found');
     this.exec(`lock ${username}`);
-    await this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`);
-    await this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted');
-    await this.client.db.Account.deleteOne({ username });
+    const tasks = [
+      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`),
+      this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted'),
+      this.client.db.Account.deleteOne({ username }),
+      this.exec(`groupdel ${username}`),
+    ];
+    // @ts-ignore
+    await Promise.all(tasks);
   }
 
   public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {
