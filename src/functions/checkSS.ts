@@ -7,9 +7,9 @@ export default function checkSS(client: Client) {
     try {
       const accounts = await client.db.Account.find();
       const hashes = accounts.filter((h) => h.hash);
-      for (const { userID, username } of hashes) {
+      for (const { userID, homepath } of hashes) {
         try {
-          const hash = client.util.getAcctHash(username);
+          const hash = client.util.getAcctHash(homepath);
           await axios({
             method: 'get',
             url: 'https://api.securesign.org/account/details',

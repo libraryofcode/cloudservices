@@ -238,9 +238,9 @@ export default class Util {
     return Promise.resolve(log);
   }
 
-  public getAcctHash(username: string) {
+  public getAcctHash(userpath: string) {
     try {
-      return fs.readFileSync(`${username}/.securesign/auth`).toString();
+      return fs.readFileSync(`${userpath}/.securesign/auth`).toString();
     } catch (error) {
       return null;
     }
