@@ -167,11 +167,11 @@ export default class Util {
   public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {
     const msg = await message.channel.createMessage(question);
     return new Promise((res, rej) => {
-      setTimeout(() => { if (shouldDelete) msg.delete(); rej(new Error('Did not supply a valid input in time')); }, timeout);
+      setTimeout(() => { if (shouldDelete) msg.delete().catch(); rej(new Error('Did not supply a valid input in time')); }, timeout);
       this.client.on('messageCreate', (Msg) => {
         if (filter(Msg) === false) return;
         const verif = choices ? choices.includes(Msg.content) : Msg.content;
-        if (verif) { if (shouldDelete) msg.delete(); res(Msg); }
+        if (verif) { if (shouldDelete) msg.delete().catch(); res(Msg); }
       });
     });
   }
