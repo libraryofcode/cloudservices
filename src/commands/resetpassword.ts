@@ -19,10 +19,11 @@ export default class ResetPassword extends Command {
       if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }, { emailAddress: args[0] }] });
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
+      if (account.root) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied***`);
 
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Resetting password for ${account.username}...***`);
       const tempPass = this.client.util.randomPassword();
-      await this.client.util.exec(`echo '${account.username}:${tempPass}' | sudo chpasswd`);
+      await this.client.util.exec(`echo '${account.username}:${tempPass}' | chpasswd`);
 
       let completeMessage = `${this.client.stores.emojis.success} ***Password for ${account.userID} reset to \`${tempPass}\`***`;
       const dmChannel = await this.client.getDMChannel(account.userID);
