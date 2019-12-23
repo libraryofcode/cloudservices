@@ -15,7 +15,7 @@ export default class Load extends Command {
   public async run(message: Message, args: string[]) {
     try {
       if (!args[0]) return this.client.commands.get('help').run(message, [this.name]);
-      const allowed = ['config', 'util', 'command', 'db'];
+      const allowed = ['config', 'util', 'command'];
       const type = args[0].toLowerCase();
       if (!allowed.includes(type)) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid type to (re)load***`);
 
@@ -27,19 +27,6 @@ export default class Load extends Command {
         const Util = require(`${corepath}/class/Util`).default;
         this.client.util = new Util(this.client);
         delete require.cache[`${corepath}/class/Util.js`];
-      } else if (type === 'db') {
-        try {
-          const dbIndex = require('../models');
-          let Db = dbIndex[args[1]];
-          if (!Db) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Could not find file***`);
-          delete require.cache[`${corepath}/models/index.js`];
-          delete require.cache[`${corepath}/models/${args[1]}.js`];
-          Db = require(`${corepath}/commands/${args[1]}`).default;
-          this.client.db = require('../models');
-        } catch (error) {
-          if (error.message.includes('Cannot find module')) return message.channel.createMessage(`${this.client.stores.emojis} ***Cannot find file***`);
-          throw error;
-        }
       } else {
         try {
           const cmdIndex = require('../commands');
