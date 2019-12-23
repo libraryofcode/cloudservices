@@ -155,9 +155,8 @@ export default class Util {
     if (!account) throw new Error('Account not found');
     this.exec(`lock ${username}`);
     const tasks = [
-      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`),
+      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username} && groupdel ${username}`),
       this.client.db.Account.deleteOne({ username }),
-      this.exec(`groupdel ${username}`),
     ];
     this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted').catch();
     // @ts-ignore
