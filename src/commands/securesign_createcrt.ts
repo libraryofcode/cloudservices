@@ -26,7 +26,7 @@ export default class SecureSign_Init extends Command {
       if (options.m && (!Number(options.m) || (options.m !== '256' && options.m !== '384' && options.m !== '512'))) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Invalid SHA Digest selected, choose between \`256\`, \`384\` or \`512\``);
 
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Creating certificate...***`);
-      const hash = this.client.util.getAcctHash(account.username);
+      const hash = this.client.util.getAcctHash(account.homepath);
 
       // Check if they can generate certificate
       try {

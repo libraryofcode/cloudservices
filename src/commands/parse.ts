@@ -20,12 +20,12 @@ export default class Parse extends Command {
       if (!account) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot find user.***`);
       let dir: string[];
       try {
-        dir = await fs.readdir(`/home/${account.username}/Validation`);
+        dir = await fs.readdir(`${account.homepath}/Validation`);
       } catch (err) {
         return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate Validation directory.***`);
       }
       if (!dir.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate certificate.***`);
-      const cert = parseCert(`/home/${account.username}/Validation/${dir[0]}`);
+      const cert = parseCert(`${account.homepath}/Validation/${dir[0]}`);
       const subjectCommonName = cert.subject.commonName ? cert.subject.commonName : 'Not Specified';
       const subjectEmailAddress = cert.subject.emailAddress ? cert.subject.emailAddress : 'Not Specified';
       const subjectOrganization = cert.subject.organizationName ? cert.subject.organizationName : 'Not Specified';
@@ -39,7 +39,7 @@ export default class Parse extends Command {
       const user = this.client.users.get(account.userID) ? this.client.users.get(account.userID) : await this.client.getRESTUser(account.userID);
       const embed = new RichEmbed();
       embed.setTitle('Parse x509 Certificate');
-      embed.setDescription(`/home/${account.username}/Validation/${dir[0]} | ${account.username} <@${user.id}>`);
+      embed.setDescription(`${account.homepath}/Validation/${dir[0]} | ${account.username} <@${user.id}>`);
       embed.setColor(3447003);
       embed.addField('Subject', `**Common Name:** ${subjectCommonName}\n**Email Address:** ${subjectEmailAddress}\n**Organization:** ${subjectOrganization}\n**Organizational Unit:** ${subjectOrganizationalUnit}\n**Country:** ${subjectCountry}`, true);
       embed.addField('Issuer', `**Common Name:** ${issuerCommonName}\n**Email Address:** ${issuerEmailAddress}\n**Organization:** ${issuerOrganization}\n**Organizational Unit:** ${issuerOrganizationalUnit}\n**Country:** ${issuerCountry}`, true);

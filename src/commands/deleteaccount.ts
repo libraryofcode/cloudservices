@@ -20,7 +20,7 @@ export default class DeleteAccount extends Command {
       if (!args[1]) return this.client.commands.get('help').run(message, [this.name]);
       const account = await this.client.db.Account.findOne({ $or: [{ username: args[0] }, { userID: args[0] }, { emailAddress: args[0] }] });
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found.***`);
-      const { root, username, userID, emailAddress } = account;
+      const { root, username, userID, emailAddress, homepath } = account;
       if (root) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied.***`);
 
       const pad = (number: number, amount: number): string => '0'.repeat(amount - number.toString().length) + number;

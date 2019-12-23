@@ -24,7 +24,7 @@ export default class Disk extends Command {
       if (account.root || args[0].includes('./')) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Permission denied***`);
       const diskReply = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Fetching total disk size may up to 10 minutes. This message will edit when the disk size has been located.***`);
       const start = Date.now();
-      const result = await this.client.util.exec(`du -s /home/${account.username}`);
+      const result = await this.client.util.exec(`du -s ${account.homepath}`);
       const end = Date.now();
       // @ts-ignore
       const totalTime: string = moment.preciseDiff(start, end);

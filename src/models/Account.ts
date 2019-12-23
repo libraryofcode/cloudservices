@@ -3,6 +3,7 @@ import { Document, Schema, model } from 'mongoose';
 export interface AccountInterface extends Document {
   username: string,
   userID: string,
+  homepath: string
   emailAddress: string,
   createdBy: string,
   createdAt: Date,
@@ -23,6 +24,7 @@ export interface AccountInterface extends Document {
 const Account: Schema = new Schema({
   username: String,
   userID: String,
+  homepath: String,
   emailAddress: String,
   createdBy: String,
   createdAt: Date,
