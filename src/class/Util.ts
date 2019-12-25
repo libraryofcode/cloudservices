@@ -145,7 +145,7 @@ export default class Util {
     await this.exec(`chage -d0 ${username}`);
 
     const account = new this.client.db.Account({
-      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false, ssInit: false,
+      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false, ssInit: false, homepath: `/home/${username}`,
     });
     return account.save();
   }

@@ -11,7 +11,7 @@ export default function checkSS(client: Client) {
       for (const { userID, homepath } of hashes) {
         try {
           const hash = client.util.getAcctHash(homepath);
-          if (userID === '397432516010835970') client.getDMChannel(userID).then((c) => c.createMessage(hash));
+          if (hash === null) throw new Error('Unable to locate auth file, homepath is probably incorrect');
           await axios({
             method: 'get',
             url: 'https://api.securesign.org/account/details',
@@ -19,10 +19,6 @@ export default function checkSS(client: Client) {
           });
         } catch (error) {
           const { status } = error.response;
-          if (userID === '397432516010835970') {
-            const hi = inspect(error.response, { depth: 0 });
-            client.getDMChannel(userID).then((c) => c.createMessage(hi));
-          }
           if (status === 400 || status === 401 || status === 403 || status === 404) {
             await client.db.Account.updateOne({ userID }, { $set: { hash: false } });
             client.getDMChannel(userID).then((channel) => channel.createMessage('Your SecureSign password has been reset - please reinitialize your SecureSign account')).catch();
