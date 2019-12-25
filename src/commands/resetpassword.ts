@@ -25,7 +25,7 @@ export default class ResetPassword extends Command {
       const tempPass = this.client.util.randomPassword();
       await this.client.util.exec(`echo '${account.username}:${tempPass}' | chpasswd`);
 
-      let completeMessage = `${this.client.stores.emojis.success} ***Password for ${account.userID} reset to \`${tempPass}\`***`;
+      let completeMessage = `${this.client.stores.emojis.success} ***Password for ${account.username} reset to \`${tempPass}\`***`;
       const dmChannel = await this.client.getDMChannel(account.userID);
       try {
         await dmChannel.createMessage(`We received a password reset request from you, your new password is \`${tempPass}\`.\n`
