@@ -29,6 +29,8 @@ export default class Load extends Command {
         delete require.cache[`${corepath}/class/Util.js`];
       } else {
         try {
+          delete require.cache[`${corepath}/commands/index.js`];
+          delete require.cache[`${corepath}/commands/${args[1]}.js`];
           const cmdIndex = require('../commands');
           let Cmd = cmdIndex[args[1]];
           if (!Cmd) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Could not find file***`);

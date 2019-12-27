@@ -19,7 +19,7 @@ export default class SecureSign_ActivateKey extends Command {
       if (!account) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not found***`);
       if (!account.hash) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Account not initialized***`);
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Activating key...***`);
-      const hash = this.client.util.getAcctHash(account.username);
+      const hash = this.client.util.getAcctHash(account.homepath);
       try {
         await axios({
           method: 'POST',

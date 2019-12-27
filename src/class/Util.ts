@@ -145,7 +145,7 @@ export default class Util {
     await this.exec(`chage -d0 ${username}`);
 
     const account = new this.client.db.Account({
-      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false, ssInit: false,
+      username, userID, emailAddress, createdBy: moderatorID, createdAt: new Date(), locked: false, ssInit: false, homepath: `/home/${username}`,
     });
     return account.save();
   }
@@ -155,10 +155,10 @@ export default class Util {
     if (!account) throw new Error('Account not found');
     this.exec(`lock ${username}`);
     const tasks = [
-      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`),
-      this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted'),
+      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R ${account.homepath} && groupdel ${account.homepath.replace('/home/', '')}`),
       this.client.db.Account.deleteOne({ username }),
     ];
+    this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted').catch();
     // @ts-ignore
     await Promise.all(tasks);
   }
@@ -166,11 +166,11 @@ export default class Util {
   public async messageCollector(message: Message, question: string, timeout: number, shouldDelete = false, choices: string[] = null, filter = (msg: Message): boolean|void => {}): Promise<Message> {
     const msg = await message.channel.createMessage(question);
     return new Promise((res, rej) => {
-      setTimeout(() => { if (shouldDelete) msg.delete(); rej(new Error('Did not supply a valid input in time')); }, timeout);
+      setTimeout(() => { if (shouldDelete) msg.delete().catch(); rej(new Error('Did not supply a valid input in time')); }, timeout);
       this.client.on('messageCreate', (Msg) => {
         if (filter(Msg) === false) return;
         const verif = choices ? choices.includes(Msg.content) : Msg.content;
-        if (verif) { if (shouldDelete) msg.delete(); res(Msg); }
+        if (verif) { if (shouldDelete) msg.delete().catch(); res(Msg); }
       });
     });
   }
@@ -238,9 +238,9 @@ export default class Util {
     return Promise.resolve(log);
   }
 
-  public getAcctHash(username: string) {
+  public getAcctHash(userpath: string) {
     try {
-      return fs.readFileSync(`/home/${username}/.securesign/auth`).toString();
+      return fs.readFileSync(`${userpath}/.securesign/auth`).toString();
     } catch (error) {
       return null;
     }

@@ -24,13 +24,13 @@ export default class Parseall extends Command {
       embed.setFooter(`Requested by ${message.member.username}#${message.member.discriminator}`, message.member.avatarURL);
       embed.setTimestamp();
       const search = await this.client.db.Account.find();
-      const accounts = search.map((acc) => acc.username);
+      const accounts = search.map((acc) => acc.homepath);
       const final: string[] = [];
 
       accounts.forEach(async (a) => {
         try {
-          const certFile = readdirSync(`/home/${a}/Validation`)[0];
-          const { notAfter } = parseCert(`/home/${a}/Validation/${certFile}`);
+          const certFile = readdirSync(`${a}/Validation`)[0];
+          const { notAfter } = parseCert(`${a}/Validation/${certFile}`);
           // @ts-ignore
           const time = moment.preciseDiff(new Date(), notAfter);
 
