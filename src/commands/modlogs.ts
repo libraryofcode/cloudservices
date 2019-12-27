@@ -57,6 +57,7 @@ export default class Modlogs extends Command {
         // @ts-ignore
         msg.edit({ content: '', embed: embeds[0] });
       } else {
+        // @ts-ignore
         createPaginationEmbed(message, this.client, embeds, {}, msg);
       }
       return msg;
