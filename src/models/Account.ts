@@ -3,7 +3,7 @@ import { Document, Schema, model } from 'mongoose';
 export interface AccountInterface extends Document {
   username: string,
   userID: string,
-  homepath: string
+  homepath: string,
   emailAddress: string,
   createdBy: string,
   createdAt: Date,
