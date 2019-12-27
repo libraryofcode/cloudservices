@@ -42,6 +42,7 @@ export default class Help extends Command {
         });
         // @ts-ignore
         if (cmdPages.length === 1) return message.channel.createMessage({ embed: cmdPages[0] });
+        // @ts-ignore
         return createPaginationEmbed(message, this.client, cmdPages);
       }
       const resolved = await this.client.util.resolveCommand(args, message);
