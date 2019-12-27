@@ -6,6 +6,7 @@ import { Message, PrivateChannel, GroupChannel, Member, User } from 'eris';
 import uuid from 'uuid/v4';
 import moment from 'moment';
 import fs from 'fs';
+import os from 'os';
 import { Client } from '..';
 import { Command, RichEmbed } from '.';
 import { ModerationInterface, AccountInterface } from '../models';
@@ -155,7 +156,7 @@ export default class Util {
     if (!account) throw new Error('Account not found');
     this.exec(`lock ${username}`);
     const tasks = [
-      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R ${account.homepath} && groupdel ${account.homepath.replace('/home/', '')}`),
+      this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R ${account.homepath}`),
       this.client.db.Account.deleteOne({ username }),
     ];
     this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted').catch();
