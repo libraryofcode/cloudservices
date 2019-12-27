@@ -158,7 +158,6 @@ export default class Util {
       this.exec(`deluser ${username} --remove-home --backup-to /management/Archives && rm -rf -R /home/${username}`),
       this.client.removeGuildMemberRole('446067825673633794', account.userID, '546457886440685578', 'Cloud Account Deleted'),
       this.client.db.Account.deleteOne({ username }),
-      this.exec(`groupdel ${username}`),
     ];
     // @ts-ignore
     await Promise.all(tasks);
