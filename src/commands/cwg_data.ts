@@ -40,6 +40,7 @@ export default class CWG_Data extends Command {
       this.client.signale.log(embeds);
       // @ts-ignore
       if (embeds.length === 1) return message.channel.createMessage({ embed: embeds[0] });
+      // @ts-ignore
       return createPaginationEmbed(message, this.client, embeds, {});
     } catch (error) {
       return this.client.util.handleError(error, message, this);
