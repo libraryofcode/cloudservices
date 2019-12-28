@@ -14,32 +14,6 @@ export default function checkLock(client: Client): void {
           await moderation.updateOne({ 'expiration.processed': true });
           await account.updateOne({ locked: false });
           await client.util.createModerationLog(account.userID, client.user, 3, 'Auto');
-          /*
-          const mod = new client.db.Moderation({
-            username: account.username,
-            userID: account.userID,
-            logID: uuid(),
-            moderatorID: client.user.id,
-            reason: 'Auto',
-            type: 3,
-            date: new Date(),
-          });
-          await mod.save();
-          const embed = new RichEmbed();
-          embed.setTitle('Account Infraction | Unlock');
-          embed.setColor(3066993);
-          embed.addField('User', `${account.username} | <@${account.userID}>`, true);
-          embed.addField('Supervisor', 'SYSTEM', true);
-          embed.addField('Reason', 'Auto', true);
-          embed.setFooter(client.user.username, client.user.avatarURL);
-          embed.setTimestamp();
-          client.getDMChannel(account.userID).then((user) => {
-            // @ts-ignore
-            user.createMessage({ embed });
-          });
-          // @ts-ignore
-          client.createMessage('580950455581147146', { embed });
-          */
           client.signale.complete(`Unlocked account ${account.username} | Queue date at ${moderation.expiration.date.toLocaleString('en-us')}`);
         }
       });

@@ -45,23 +45,6 @@ export default class CreateAccount extends Command {
 
       await this.client.util.createAccount(passHash, etcPasswd, args[2], args[0], args[1], message.author.id);
       await this.client.util.createModerationLog(args[0], message.member, 0);
-      /*
-      const log = await new this.client.db.Moderation({
-        username: args[2], userID: args[0], logID: uuid(), moderatorID: message.author.id, reason: 'User requested account creation', type: 0, date: new Date(),
-      });
-      await log.save();
-
-      const embed = new RichEmbed();
-      embed.setTitle('Cloud Account | Create');
-      embed.setColor('00ff00');
-      embed.addField('User', `${args[2]} | <@${args[0]}>`);
-      embed.addField('Engineer', `<@${message.author.id}>`, true);
-      embed.addField('Reason', 'User requested account creation');
-      embed.setFooter(this.client.user.username, this.client.user.avatarURL);
-      embed.setTimestamp();
-      // @ts-ignore
-      this.client.createMessage('580950455581147146', { embed });
-      */
 
       this.client.util.transport.sendMail({
         to: args[1],
