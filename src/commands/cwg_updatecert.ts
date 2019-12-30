@@ -46,18 +46,18 @@ export default class CWG_UpdateCert extends Command {
   }
 
   public isValidCertificateChain(cert: string) {
-    if (!cert.startsWith('-----BEGIN CERTIFICATE-----')) return false;
-    if (!cert.endsWith('-----END CERTIFICATE-----')) return false;
-    if (this.checkOccurance(cert, '-----BEGIN CERTIFICATE-----') !== 2) return false;
-    if (this.checkOccurance(cert, '-----END CERTIFICATE-----') !== 2) return false;
+    if (!cert.replace(/^\s+|\s+$/g, '').startsWith('-----BEGIN CERTIFICATE-----')) return false;
+    if (!cert.replace(/^\s+|\s+$/g, '').endsWith('-----END CERTIFICATE-----')) return false;
+    if (this.checkOccurance(cert.replace(/^\s+|\s+$/g, ''), '-----BEGIN CERTIFICATE-----') !== 2) return false;
+    if (this.checkOccurance(cert.replace(/^\s+|\s+$/g, ''), '-----END CERTIFICATE-----') !== 2) return false;
     return true;
   }
 
   public isValidPrivateKey(key: string) {
-    if (!key.startsWith('-----BEGIN PRIVATE KEY-----')) return false;
-    if (!key.endsWith('-----END PRIVATE KEY-----')) return false;
-    if (this.checkOccurance(key, '-----BEGIN PRIVATE KEY-----') !== 1) return false;
-    if (this.checkOccurance(key, '-----END PRIVATE KEY-----') !== 1) return false;
+    if (!key.replace(/^\s+|\s+$/g, '').startsWith('-----BEGIN PRIVATE KEY-----')) return false;
+    if (!key.replace(/^\s+|\s+$/g, '').endsWith('-----END PRIVATE KEY-----')) return false;
+    if (this.checkOccurance(key.replace(/^\s+|\s+$/g, ''), '-----BEGIN PRIVATE KEY-----') !== 1) return false;
+    if (this.checkOccurance(key.replace(/^\s+|\s+$/g, ''), '-----END PRIVATE KEY-----') !== 1) return false;
     return true;
   }
 }
