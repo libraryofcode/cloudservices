@@ -5,7 +5,7 @@
   "main": "dist/Client.js",
   "scripts": {
     "lint": "eslint ./ --ext ts --fix",
-    "build": "sh ./build.sh",
+    "build": "tsc -p ./tsconfig.json && sh ./build.sh",
     "lint-find": "eslint ./ --ext ts"
   },
   "author": "Library of Code sp-us Engineering Team",
