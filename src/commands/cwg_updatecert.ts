@@ -35,7 +35,7 @@ export default class CWG_UpdateCert extends Command {
       const writeTasks = [writeFile(cert, certAndPrivateKey[0], { encoding: 'utf8' }), writeFile(key, certAndPrivateKey[1], { encoding: 'utf8' })];
       await Promise.all(writeTasks);
 
-      return message.channel.createMessage(`${this.client.stores.emojis.success} ***Updated certificate certificate for ${domain} on port ${port}***`);
+      return message.channel.createMessage(`${this.client.stores.emojis.success} ***Updated certificate for ${domain} on port ${port}***`);
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
