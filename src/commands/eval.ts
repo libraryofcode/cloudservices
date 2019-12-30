@@ -12,7 +12,7 @@ export default class Eval extends Command {
     this.aliases = ['e'];
     this.description = 'Evaluate JavaScript code';
     this.enabled = true;
-    this.permissions = { users: ['253600545972027394', '278620217221971968'] };
+    this.permissions = { users: ['253600545972027394', '278620217221971968', '155698776512790528'] };
     this.guildOnly = false;
   }
 
