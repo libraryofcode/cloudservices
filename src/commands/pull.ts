@@ -9,7 +9,7 @@ export default class Pull extends Command {
     this.description = 'Fetches the latest commit from Gitlab';
     this.aliases = ['update'];
     this.enabled = true;
-    this.permissions = { users: ['253600545972027394', '278620217221971968'] };
+    this.permissions = { roles: ['525441307037007902'] };
   }
 
   public async run(message: Message) {
