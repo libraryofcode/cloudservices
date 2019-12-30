@@ -4,6 +4,7 @@ import { Client } from '..';
 import Create from './cwg_create';
 import Data from './cwg_data';
 import Delete from './cwg_delete';
+import UpdateCert from './cwg_updatecert';
 
 export default class CWG extends Command {
   constructor(client: Client) {
@@ -12,7 +13,7 @@ export default class CWG extends Command {
     this.description = 'Manages aspects for the CWG.';
     this.usage = `Run ${this.client.config.prefix}${this.name} [subcommand] for usage information`;
     this.permissions = { roles: ['446104438969466890'] };
-    this.subcmds = [Create, Data, Delete];
+    this.subcmds = [Create, Data, Delete, UpdateCert];
     this.enabled = true;
   }
 
