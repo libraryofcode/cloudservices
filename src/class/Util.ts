@@ -29,7 +29,7 @@ export default class Util {
     let result: string;
     // eslint-disable-next-line no-useless-catch
     try {
-      const res = await ex(command);
+      const res = await ex(command, { env: { HOME: '/root' } });
       result = res.stderr || res.stdout;
     } catch (err) {
       return Promise.reject(new Error(`Command failed: ${err.cmd}\n${err.stderr || err.stdout}`));
