@@ -29,11 +29,11 @@ export default class Util {
    * @param command The command to execute
    * @param options childProcess.ExecOptions, the env option is automatically set if not provided.
    */
-  public async exec(command: string, options?: childProcess.ExecOptions): Promise<string> {
+  public async exec(command: string, options: childProcess.ExecOptions = {}): Promise<string> {
     const ex = promisify(childProcess.exec);
     let result: string;
     try {
-      if (!options || (!options.env)) options.env = { HOME: '/root' };
+      if (!options.env) options.env = { HOME: '/root' };
       const res = await ex(command, options);
       result = res.stderr || res.stdout;
     } catch (err) {
