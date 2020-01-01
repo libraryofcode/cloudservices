@@ -35,7 +35,8 @@ export default class Parseall extends Command {
           const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
           const precise: [number, string][] = [];
           // @ts-ignore
-          const timeArray: number[] = Object.values(timeObject).filter((v) => !isNaN(v)).forEach((t: number) => { // eslint-disable-line
+          const timeArray: number[] = Object.values(timeObject).filter((v) => typeof v === 'number');
+          timeArray.forEach((t) => { // eslint-disable-line
             const index = timeArray.indexOf(t);
             const measurements = ['yr', 'mo', 'd', 'h', 'm', 's'];
             precise.push([t, measurements[index]]);
