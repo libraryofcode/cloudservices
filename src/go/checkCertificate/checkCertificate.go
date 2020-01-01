@@ -2,14 +2,14 @@
 package main
 
 import (
-	"./sha1"
-	"./x509"
-	"./hex"
-	"./json"
-	"./pem"
-	"./xml"
+	"crypto/sha1"
+	"crypto/x509"
+	"encoding/hex"
+	"encoding/json"
+	"encoding/pem"
+	"encoding/xml"
 	"fmt"
-	"./ioutil"
+	"io/ioutil"
 	"os"
 )
 
