@@ -35,7 +35,7 @@ export default class Util {
     try {
       if (!options.env) options.env = { HOME: '/root' };
       const res = await ex(command, options);
-      result = res.stderr || res.stdout;
+      result = `${res.stdout}${res.stderr}`;
     } catch (err) {
       return Promise.reject(new Error(`Command failed: ${err.cmd}\n${err.stderr || err.stdout}`));
     }
