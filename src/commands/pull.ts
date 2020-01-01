@@ -71,7 +71,7 @@ export default class Pull extends Command {
 
       let build: string;
       try {
-        build = await this.client.util.exec('yarn run build', { cwd: '/var/CloudServices' });
+        build = await this.client.util.exec('ls && yarn run build', { cwd: '/var/CloudServices' });
       } catch (error) {
         const updatedMessage = updatedPackages.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.error} ***Failed to rebuild files***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
