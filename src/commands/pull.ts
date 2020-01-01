@@ -20,7 +20,7 @@ export default class Pull extends Command {
       let pull: string;
 
       try {
-        pull = await this.client.util.exec('git pull');
+        pull = await this.client.util.exec('git pull', { cwd: '/var/CloudServices' });
       } catch (error) {
         const updatedMessage = updateMessage.content.replace(`${this.client.stores.emojis.loading} ***Fetching latest commit...***`, `${this.client.stores.emojis.error} ***Could not fetch latest commit***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
@@ -46,7 +46,7 @@ export default class Pull extends Command {
 
       let install: string;
       try {
-        install = await this.client.util.exec('yarn install');
+        install = await this.client.util.exec('yarn install', { cwd: '/var/CloudServices' });
       } catch (error) {
         this.client.updating = false;
         const updatedMessage = passedPull.content.replace(`${this.client.stores.emojis.loading} ***Reinstalling dependencies...***`, `${this.client.stores.emojis.error} ***Failed to reinstall dependencies***`)
@@ -71,7 +71,7 @@ export default class Pull extends Command {
 
       let build: string;
       try {
-        build = await this.client.util.exec('yarn run build');
+        build = await this.client.util.exec('yarn run build', { cwd: '/var/CloudServices' });
       } catch (error) {
         const updatedMessage = updatedPackages.content.replace(`${this.client.stores.emojis.loading} ***Rebuilding files...***`, `${this.client.stores.emojis.error} ***Failed to rebuild files***`)
           .replace(/```$/, `${error.message}\n\`\`\``);
