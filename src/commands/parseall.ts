@@ -41,7 +41,7 @@ export default class Parseall extends Command {
             const measurements = ['yr', 'mo', 'd', 'h', 'm', 's'];
             precise.push([t, measurements[index]]);
           });
-          const time = precise.map(((v) => v.join(''))).join(', ');
+          const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
 
           if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a.username}** Certificate expired ${time} ago`);
           else final.push(`${this.client.stores.emojis.success} **${a.username}** Certificate expires in ${time}`);
