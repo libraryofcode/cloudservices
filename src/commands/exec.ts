@@ -21,7 +21,7 @@ export default class Exec extends Command {
       const response = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Executing \`${args.join(' ')}\`***`);
       let result: string;
       try {
-        result = await this.client.util.exec(args.join(' '));
+        result = await this.client.util.exec(args.join(' '), { cwd: '/var/CloudServices' });
       } catch (error) {
         result = error.message;
       }
