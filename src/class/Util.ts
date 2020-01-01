@@ -27,13 +27,12 @@ export default class Util {
   /**
    * Executes a terminal command async.
    * @param command The command to execute
-   * @param options childProcess.ExecOptions, the env option is automatically set if not provided.
+   * @param options childProcess.ExecOptions
    */
   public async exec(command: string, options: childProcess.ExecOptions = {}): Promise<string> {
     const ex = promisify(childProcess.exec);
     let result: string;
     try {
-      if (!options.env) options.env = { HOME: '/root' };
       const res = await ex(command, options);
       result = `${res.stdout}${res.stderr}`;
     } catch (err) {
