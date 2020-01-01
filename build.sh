@@ -4,4 +4,4 @@ file dist/bin/storage
 go build -o dist/bin/checkCertificate src/go/checkCertificate/checkCertificate.go
 file dist/bin/checkCertificate
 go build -o dist/bin/checkCertSignatures src/go/checkCertSignatures/checkCertSignatures.go
-file /dist/bin/checkCertSignatures
+file dist/bin/checkCertSignatures
