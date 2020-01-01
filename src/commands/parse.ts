@@ -3,7 +3,7 @@ import { parseCert } from '@ghaiklor/x509';
 import { Message } from 'eris';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
-import { parseCertificate } from '../functions';
+import { parseCertificate, Certificate } from '../functions';
 
 export default class Parse extends Command {
   constructor(client: Client) {
@@ -26,7 +26,12 @@ export default class Parse extends Command {
         return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate Validation directory.***`);
       }
       if (!dir.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate certificate.***`);
-      const cert = await parseCertificate(this.client, `${account.homepath}/Validation/${dir[0]}`);
+      let cert: Certificate;
+      try {
+        cert = await parseCertificate(this.client, `${account.homepath}/Validation/${dir[0]}`);
+      } catch (error) {
+        if (error.message.includes('panic: Certificate PEM Encode == nil')) return message.channel.createMessage(`***${this.client.stores.emojis.error} Invalid certificate.***`);
+      }
       // const cert = parseCert(`${account.homepath}/Validation/${dir[0]}`);
       const subjectCommonName = cert.subject.commonName || 'Not Specified';
       const subjectEmailAddress = cert.subject.emailAddress || 'Not Specified';
