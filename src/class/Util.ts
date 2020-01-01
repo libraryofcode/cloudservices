@@ -32,18 +32,9 @@ export default class Util {
   public async exec(command: string, options?: childProcess.ExecOptions): Promise<string> {
     const ex = promisify(childProcess.exec);
     let result: string;
-    // eslint-disable-next-line no-useless-catch
-    let args: childProcess.ExecOptions;
     try {
-      if (options) {
-        args = options;
-        if (!args.env) {
-          args.env = { HOME: '/root' };
-        }
-      } else {
-        args.env = { HOME: '/root' };
-      }
-      const res = await ex(command, args);
+      if (!options || (!options.env)) options.env = { HOME: '/root' };
+      const res = await ex(command, options);
       result = res.stderr || res.stdout;
     } catch (err) {
       return Promise.reject(new Error(`Command failed: ${err.cmd}\n${err.stderr || err.stdout}`));
