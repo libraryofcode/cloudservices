@@ -24,12 +24,26 @@ export default class Util {
     });
   }
 
-  public async exec(command: string): Promise<string> {
+  /**
+   * Executes a terminal command async.
+   * @param command The command to execute
+   * @param options childProcess.ExecOptions, the env option is automatically set if not provided.
+   */
+  public async exec(command: string, options?: childProcess.ExecOptions): Promise<string> {
     const ex = promisify(childProcess.exec);
     let result: string;
     // eslint-disable-next-line no-useless-catch
+    let args: childProcess.ExecOptions;
     try {
-      const res = await ex(command, { env: { HOME: '/root' } });
+      if (options) {
+        args = options;
+        if (!args.env) {
+          args.env = { HOME: '/root' };
+        }
+      } else {
+        args.env = { HOME: '/root' };
+      }
+      const res = await ex(command, args);
       result = res.stderr || res.stdout;
     } catch (err) {
       return Promise.reject(new Error(`Command failed: ${err.cmd}\n${err.stderr || err.stdout}`));
