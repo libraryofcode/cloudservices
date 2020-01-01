@@ -26,7 +26,7 @@ export default class Parse extends Command {
         return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate Validation directory.***`);
       }
       if (!dir.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate certificate.***`);
-      const cert = await parseCertificate(this.client, `${account.homepath}/Validation/${dir[0]}`);
+      const cert = await parseCertificate(this.client, dir[0]);
       // const cert = parseCert(`${account.homepath}/Validation/${dir[0]}`);
       const subjectCommonName = cert.subject.commonName || 'Not Specified';
       const subjectEmailAddress = cert.subject.emailAddress || 'Not Specified';
