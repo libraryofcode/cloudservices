@@ -37,7 +37,7 @@ export default class Util {
       const res = await ex(command, options);
       result = `${res.stdout}${res.stderr}`;
     } catch (err) {
-      return Promise.reject(new Error(`Command failed: ${err.cmd}\n${err.stderr || err.stdout}`));
+      return Promise.reject(new Error(`Command failed: ${err.cmd}\n${err.stderr}${err.stdout}`));
     }
     return result;
   }
