@@ -35,16 +35,16 @@ export default async function parseCertificate(client: Client, pathToCertificate
     subject: {
       commonName: parsedObject.RawParse.Subject.CommonName,
       emailAddress: parsedObject.AbstractParse.EmailAddress,
-      organizationName: parsedObject.RawParse.Subject.Organization[0],
-      organizationalUnitName: parsedObject.RawParse.Subject.OrganizationalUnit[0],
-      countryName: parsedObject.RawParse.Subject.Country[0],
+      organizationName: parsedObject.RawParse.Subject.Organization ? parsedObject.RawParse.Subject.Organization[0] : null,
+      organizationalUnitName: parsedObject.RawParse.Subject.OrganizationalUnit ? parsedObject.RawParse.Subject.OrganizationalUnit[0] : null,
+      countryName: parsedObject.RawParse.Subject.Country ? parsedObject.RawParse.Subject.Country[0] : null,
     },
     issuer: {
       commonName: parsedObject.RawParse.Issuer.CommonName,
       emailAddress: null,
-      organizationName: parsedObject.RawParse.Issuer.Organization[0],
-      organizationalUnitName: parsedObject.RawParse.Issuer.OrganizationalUnit[0],
-      countryName: parsedObject.RawParse.Issuer.Country[0],
+      organizationName: parsedObject.RawParse.Issuer.Organization ? parsedObject.RawParse.Issuer.Organization[0] : null,
+      organizationalUnitName: parsedObject.RawParse.Issuer.OrganizationalUnit ? parsedObject.RawParse.Issuer.OrganizationalUnit[0] : null,
+      countryName: parsedObject.RawParse.Issuer.Country ? parsedObject.RawParse.Issuer.Country[0] : null,
     },
     extensions: {
       keyUsage: '[ Not implemented by executable ]',

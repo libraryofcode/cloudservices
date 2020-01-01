@@ -24,20 +24,29 @@ export default class Parseall extends Command {
       embed.setFooter(`Requested by ${message.member.username}#${message.member.discriminator}`, message.member.avatarURL);
       embed.setTimestamp();
       const search = await this.client.db.Account.find();
-      const accounts = search.map((acc) => acc.homepath);
+      const accounts = search;
       const final: string[] = [];
 
       accounts.forEach(async (a) => {
         try {
-          const certFile = readdirSync(`${a}/Validation`)[0];
-          const { notAfter } = parseCert(`${a}/Validation/${certFile}`);
+          const certFile = readdirSync(`${a.homepath}/Validation`)[0];
+          const { notAfter } = parseCert(`${a.homepath}/Validation/${certFile}`);
           // @ts-ignore
-          const time = moment.preciseDiff(new Date(), notAfter);
+          const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
+          const precise: [number, string][] = [];
+          // @ts-ignore
+          const timeArray: number[] = Object.values(timeObject).filter((v) => typeof v === 'number');
+          timeArray.forEach((t) => { // eslint-disable-line
+            const index = timeArray.indexOf(t);
+            const measurements = ['yr', 'mo', 'd', 'h', 'm', 's'];
+            precise.push([t, measurements[index]]);
+          });
+          const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
 
-          if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a}** Certificate expired ${time} ago`);
-          else final.push(`${this.client.stores.emojis.success} **${a}** Certificate expires in ${time}`);
+          if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a.username}** Certificate expired ${time} ago`);
+          else final.push(`${this.client.stores.emojis.success} **${a.username}** Certificate expires in ${time}`);
         } catch (error) {
-          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) final.push(`${this.client.stores.emojis.error} **${a}** Unable to locate certificate`);
+          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) final.push(`${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`);
           else throw error;
         }
       });

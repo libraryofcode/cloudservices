@@ -3,6 +3,7 @@ import { parseCert } from '@ghaiklor/x509';
 import { Message } from 'eris';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
+import { parseCertificate } from '../functions';
 
 export default class Parse extends Command {
   constructor(client: Client) {
@@ -25,18 +26,19 @@ export default class Parse extends Command {
         return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate Validation directory.***`);
       }
       if (!dir.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} Cannot locate certificate.***`);
-      const cert = parseCert(`${account.homepath}/Validation/${dir[0]}`);
-      const subjectCommonName = cert.subject.commonName ? cert.subject.commonName : 'Not Specified';
-      const subjectEmailAddress = cert.subject.emailAddress ? cert.subject.emailAddress : 'Not Specified';
-      const subjectOrganization = cert.subject.organizationName ? cert.subject.organizationName : 'Not Specified';
-      const subjectOrganizationalUnit = cert.subject.organizationalUnitName ? cert.subject.organizationalUnitName : 'Not Specified';
-      const subjectCountry = cert.subject.countryName ? cert.subject.countryName : 'Not Specified';
-      const issuerCommonName = cert.issuer.commonName ? cert.issuer.commonName : 'Not Specified';
-      const issuerEmailAddress = cert.issuer.emailAddress ? cert.issuer.emailAddress : 'Not Specified';
-      const issuerOrganization = cert.issuer.organizationName ? cert.issuer.organizationName : 'Not Specified';
-      const issuerOrganizationalUnit = cert.issuer.organizationalUnitName ? cert.issuer.organizationalUnitName : 'Not Specified';
-      const issuerCountry = cert.issuer.countryName ? cert.issuer.countryName : 'Not Specified';
-      const user = this.client.users.get(account.userID) ? this.client.users.get(account.userID) : await this.client.getRESTUser(account.userID);
+      const cert = await parseCertificate(this.client, `${account.homepath}/Validation/${dir[0]}`);
+      // const cert = parseCert(`${account.homepath}/Validation/${dir[0]}`);
+      const subjectCommonName = cert.subject.commonName || 'Not Specified';
+      const subjectEmailAddress = cert.subject.emailAddress || 'Not Specified';
+      const subjectOrganization = cert.subject.organizationName || 'Not Specified';
+      const subjectOrganizationalUnit = cert.subject.organizationalUnitName || 'Not Specified';
+      const subjectCountry = cert.subject.countryName || 'Not Specified';
+      const issuerCommonName = cert.issuer.commonName || 'Not Specified';
+      const issuerEmailAddress = cert.issuer.emailAddress || 'Not Specified';
+      const issuerOrganization = cert.issuer.organizationName || 'Not Specified';
+      const issuerOrganizationalUnit = cert.issuer.organizationalUnitName || 'Not Specified';
+      const issuerCountry = cert.issuer.countryName || 'Not Specified';
+      const user = this.client.users.get(account.userID) || await this.client.getRESTUser(account.userID);
       const embed = new RichEmbed();
       embed.setTitle('Parse x509 Certificate');
       embed.setDescription(`${account.homepath}/Validation/${dir[0]} | ${account.username} <@${user.id}>`);
@@ -46,10 +48,10 @@ export default class Parse extends Command {
       embed.addField('Serial Number', cert.serial, true);
       embed.addField('Fingerprint', cert.fingerPrint, true);
       embed.addField('Signature Algorithm', cert.signatureAlgorithm, true);
-      embed.addField('Public Key Algorithm', cert.publicKey.algorithm, true);
+      embed.addField('Public Key Algorithm', cert.publicKeyAlgorithm, true);
       embed.addField('Key Usage', cert.extensions.keyUsage, true);
-      embed.addField('Extended Key Usage', cert.extensions.extendedKeyUsage, true);
-      embed.addField('Policies', cert.extensions.certificatePolicies, true);
+      embed.addField('Extended Key Usage', cert.extensions.extendedKeyUsage.join(', '), true);
+      embed.addField('Policies', cert.extensions.certificatePolicies.join(', '), true);
       embed.addField('Issued On', new Date(cert.notBefore).toLocaleString('en-us'), true);
       embed.addField('Expires On', new Date(cert.notAfter).toLocaleString('en-us'), true);
       embed.setFooter(this.client.user.username, this.client.user.avatarURL);
