@@ -4,6 +4,7 @@ import { readdirSync } from 'fs';
 import moment from 'moment';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
+import { parseCertificate } from '../functions';
 
 export default class Parseall extends Command {
   constructor(client: Client) {
@@ -30,7 +31,7 @@ export default class Parseall extends Command {
       accounts.forEach(async (a) => {
         try {
           const certFile = readdirSync(`${a.homepath}/Validation`)[0];
-          const { notAfter } = parseCert(`${a.homepath}/Validation/${certFile}`);
+          const { notAfter } = await parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`);
           // @ts-ignore
           const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
           const precise: [number, string][] = [];
@@ -43,8 +44,8 @@ export default class Parseall extends Command {
           });
           const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
 
-          if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a.username}** Certificate expired ${time} ago`);
-          else final.push(`${this.client.stores.emojis.success} **${a.username}** Certificate expires in ${time}`);
+          if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`);
+          else final.push(`${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`);
         } catch (error) {
           if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) final.push(`${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`);
           else throw error;
