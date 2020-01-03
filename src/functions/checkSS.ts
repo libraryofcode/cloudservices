@@ -3,8 +3,9 @@ import axios from 'axios';
 import { inspect } from 'util';
 import { Client } from '..';
 
+let interval: NodeJS.Timeout;
 export default function checkSS(client: Client) {
-  setInterval(async () => {
+  interval = setInterval(async () => {
     try {
       const accounts = await client.db.Account.find();
       for (const { userID, homepath, hash } of accounts) {
@@ -33,4 +34,9 @@ export default function checkSS(client: Client) {
       client.util.handleError(error);
     }
   }, 60000);
+  return interval;
+}
+
+export function clear() {
+  clearTimeout(interval);
 }

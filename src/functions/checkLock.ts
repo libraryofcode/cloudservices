@@ -1,7 +1,9 @@
 import { Client } from '..';
 
-export default function checkLock(client: Client): void {
-  setInterval(async () => {
+let interval: NodeJS.Timeout;
+
+export default function checkLock(client: Client) {
+  interval = setInterval(async () => {
     try {
       const moderations = await client.db.Moderation.find();
       moderations.forEach(async (moderation) => {
@@ -21,4 +23,9 @@ export default function checkLock(client: Client): void {
       await client.util.handleError(error);
     }
   }, 10000);
+  return interval;
+}
+
+export function clear() {
+  clearInterval(interval);
 }
