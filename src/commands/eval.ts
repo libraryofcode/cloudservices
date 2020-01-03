@@ -19,12 +19,24 @@ export default class Eval extends Command {
   public async run(message: Message, args: string[]) {
     try {
       // const evalMessage = message.content.slice(this.client.config.prefix.length).split(' ').slice(1).join(' ');
+      let evalString = args.join(' ').trim();
       let evaled: any;
+      let depth = 0;
+
+      if (args[0] && args[0].startsWith('-d')) {
+        depth = Number(args[0].replace('-d', ''));
+        if (!depth || depth < 0) depth = 0;
+        args.shift();
+      }
+      if (args[0] === '-a' || args[0] === '-async') {
+        evalString = `(async () => { ${evalString} })()`;
+        args.shift();
+      }
 
       try {
-        evaled = await eval(args.join(' ').trim());
+        evaled = await eval(evalString);
         if (typeof evaled !== 'string') {
-          evaled = inspect(evaled, { depth: 0 });
+          evaled = inspect(evaled, { depth });
         }
         if (evaled === undefined) {
           evaled = 'undefined';
