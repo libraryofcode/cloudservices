@@ -8,7 +8,7 @@ export default class Lock extends Command {
     super(client);
     this.name = 'lock';
     this.description = 'Locks an account.';
-    this.permissions = { roles: ['455972169449734144', '643619219988152321'] };
+    this.permissions = { roles: ['455972169449734144', '662163685439045632'] };
     this.enabled = true;
   }
 

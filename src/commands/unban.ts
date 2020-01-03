@@ -10,7 +10,7 @@ export default class Unban extends Command {
     this.description = 'Unban an IP from Cloud/NGINX';
     this.aliases = ['unbanip'];
     this.usage = `${this.client.config.prefix}unban [service] [ip]`;
-    this.permissions = { roles: ['455972169449734144', '643619219988152321'] };
+    this.permissions = { roles: ['455972169449734144', '662163685439045632'] };
     this.enabled = true;
   }
 

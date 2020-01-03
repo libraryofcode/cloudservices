@@ -9,7 +9,7 @@ export default class Announce extends Command {
     this.description = 'Sends an announcement to all active terminals';
     this.usage = `${this.client.config.prefix}announce Hi there! | ${this.client.config.prefix}announce -e EMERGENCY!`;
     this.aliases = ['ann'];
-    this.permissions = { roles: ['475817826251440128', '525441307037007902'] };
+    this.permissions = { roles: ['662163685439045632'] };
     this.enabled = true;
   }
 

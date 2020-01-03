@@ -10,7 +10,7 @@ export default class ResetPassword extends Command {
     this.description = 'Reset a cloud account password';
     this.aliases = ['resetpasswd', 'resetpw'];
     this.usage = `${this.client.config.prefix}resetpassword [Username | User ID | Email]`;
-    this.permissions = { roles: ['525441307037007902', '475817826251440128'] };
+    this.permissions = { roles: ['662163685439045632'] };
     this.enabled = true;
   }
 

@@ -10,7 +10,7 @@ export default class DeleteAccount extends Command {
     this.description = 'Delete an account on the Cloud VM';
     this.usage = `${this.client.config.prefix}deleteaccount [User Name | User ID | Email Address] [Reason]`;
     this.aliases = ['deleteacc', 'dacc', 'daccount', 'delete'];
-    this.permissions = { roles: ['475817826251440128', '525441307037007902'] };
+    this.permissions = { roles: ['662163685439045632'] };
     this.guildOnly = true;
     this.enabled = true;
   }
@@ -48,7 +48,7 @@ export default class DeleteAccount extends Command {
         subject: 'Your account has been deleted',
         html: `
         <h1>Library of Code | Cloud Services</h1>
-        <p>Your Cloud Account has been deleted by our Engineers. There is no way to recover your files and this decision cannot be appealed. We're sorry to see you go.</p>
+        <p>Your Cloud Account has been deleted by our Engineers. If your account was deleted due to infractions, this will not be appealable. We're sorry to see you go.</p>
         <p><b>Reason:</b> ${reason}</p>
         <p><b>Engineer:</b> ${message.author.username}</p>
         
