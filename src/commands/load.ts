@@ -42,7 +42,7 @@ export default class Load extends Command {
           delete require.cache[`${corepath}/commands/${args[1]}.js`];
           Object.keys(require.cache).filter((path) => path.includes(`${args[1]}_`)).forEach((path) => delete require.cache[path]);
         } catch (error) {
-          if (error.message.includes('Cannot find module')) return message.channel.createMessage(`${this.client.stores.emojis} ***Cannot find file***`);
+          if (error.message.includes('Cannot find module')) return message.channel.createMessage(`${this.client.stores.emojis.error} ***Could not find file***`);
           throw error;
         }
       }
