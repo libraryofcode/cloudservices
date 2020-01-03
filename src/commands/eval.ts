@@ -19,7 +19,7 @@ export default class Eval extends Command {
   public async run(message: Message, args: string[]) {
     try {
       // const evalMessage = message.content.slice(this.client.config.prefix.length).split(' ').slice(1).join(' ');
-      let evalString = args.join(' ').trim();
+      let evalString: string;
       let evaled: any;
       let depth = 0;
 
@@ -27,10 +27,11 @@ export default class Eval extends Command {
         depth = Number(args[0].replace('-d', ''));
         if (!depth || depth < 0) depth = 0;
         args.shift();
+        evalString = args.join(' ').trim();
       }
       if (args[0] === '-a' || args[0] === '-async') {
         args.shift();
-        evalString = `(async () => { ${evalString} })()`;
+        evalString = `(async () => { ${args.join(' ').trim()} })()`;
       }
 
       try {
