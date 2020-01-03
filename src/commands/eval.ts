@@ -29,8 +29,8 @@ export default class Eval extends Command {
         args.shift();
       }
       if (args[0] === '-a' || args[0] === '-async') {
-        evalString = `(async () => { ${evalString} })()`;
         args.shift();
+        evalString = `(async () => { ${evalString} })()`;
       }
 
       try {
