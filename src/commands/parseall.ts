@@ -39,7 +39,7 @@ export default class Parseall extends Command {
       // @ts-ignore
       const parsed: Promise<{status: 'fulfilled', value: Certificate}>[] | Promise<{status: 'rejected', reason: Error}>[] = await Promise.allSettled(certificates);
 
-      const final = search.map(async (a) => {
+      const final = await search.map(async (a) => {
         const result = await parsed[search.findIndex((acc) => acc === a)];
         if (result.status === 'rejected') {
           if (result.reason.message.includes('no such file or directory') || result.reason.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
