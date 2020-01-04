@@ -47,7 +47,7 @@ export default class Parseall extends Command {
           else final.push(`${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`);
         } catch (error) {
           if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) final.push(`${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`);
-          if (error.message.includes('panic: Certificate PEM Encode == nil')) final.push(`${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`);
+          else if (error.message.includes('panic: Certificate PEM Encode == nil')) final.push(`${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`);
           else throw error;
         }
       }
