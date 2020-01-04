@@ -37,10 +37,10 @@ export default class Parseall extends Command {
         return parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`);
       });
       // @ts-ignore
-      const parsed: {status: 'fulfilled', value: Certificate}[] | {status: 'rejected', reason: Error}[] = await Promise.allSettled(certificates);
+      const parsed: Promise<{status: 'fulfilled', value: Certificate}>[] | Promise<{status: 'rejected', reason: Error}>[] = await Promise.allSettled(certificates);
 
       const final = search.map(async (a) => {
-        const result = parsed[search.findIndex((acc) => acc === a)];
+        const result = await parsed[search.findIndex((acc) => acc === a)];
         if (result.status === 'rejected') {
           if (result.reason.message.includes('no such file or directory') || result.reason.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
           if (result.reason.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`;
