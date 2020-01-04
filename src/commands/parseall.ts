@@ -35,8 +35,9 @@ export default class Parseall extends Command {
       // @ts-ignore
       const parsed: ({ status: 'fulfilled', value: Certificate } | { status: 'rejected', reason: Error })[] = await Promise.allSettled(files.map((c) => parseCertificate(this.client, c)));
 
-      const final = search.map(async (a) => {
-        const result = await parsed[search.findIndex((acc) => acc === a)];
+      // @ts-ignore
+      const final: string[] = await Promise.allSettled(search.map(async (a) => {
+        const result = parsed[search.findIndex((acc) => acc === a)];
         if (result.status === 'rejected') {
           if (result.reason.message.includes('no such file or directory') || result.reason.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
           if (result.reason.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} **${a.username}** Invalid certificate`;
@@ -57,7 +58,7 @@ export default class Parseall extends Command {
 
         if (notAfter < new Date()) return `${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`;
         return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
-      });
+      }));
       this.client.signale.info(final);
 
       if (final.join('\n').length < 2048) embed.setDescription(final.join('\n'));
