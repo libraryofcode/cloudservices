@@ -60,9 +60,11 @@ export default class Parseall extends Command {
         return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
       }));
 
-      if (final.map((a) => a.value).join('\n').length < 2048) embed.setDescription(final.join('\n'));
+      const result = final.map((a) => a.value);
+
+      if (result.join('\n').length < 2048) embed.setDescription(result.join('\n'));
       else {
-        const split = this.client.util.splitString(final.join('\n'), 1024);
+        const split = this.client.util.splitString(result.join('\n'), 1024);
         split.forEach((s) => embed.addField('\u200B', s));
       }
 
