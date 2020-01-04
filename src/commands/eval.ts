@@ -23,6 +23,8 @@ export default class Eval extends Command {
       let evaled: any;
       let depth = 0;
       this.client.signale.note('Received');
+      this.client.signale.note(message);
+      this.client.signale.note(args);
 
       if (args[0] && args[0].startsWith('-d')) {
         this.client.signale.note('Depth flag');
@@ -32,20 +34,26 @@ export default class Eval extends Command {
         args.shift();
         evalString = args.join(' ').trim();
         this.client.signale.note('Eval reconfigured');
+        this.client.signale.note(args);
       }
       if (args[0] === '-a' || args[0] === '-async') {
         this.client.signale.note('Async flag');
         args.shift();
         evalString = `(async () => { ${args.join(' ').trim()} })()`;
         this.client.signale.note('Eval reconfigured');
+        this.client.signale.note(args);
       }
 
       this.client.signale.note('Main');
+      this.client.signale.note(args);
       try {
         evaled = await eval(evalString);
         this.client.signale.note('evaluated with success');
+        this.client.signale.note(evaled);
+        this.client.signale.note(typeof evaled);
         if (typeof evaled !== 'string') {
-          this.client.signale.note('Eval returned not a string');
+          this.client.signale.note('Eval returned not a string. Depth setting:');
+          this.client.signale.note(depth);
           evaled = inspect(evaled, { depth });
           this.client.signale.note('Inspected');
         }
