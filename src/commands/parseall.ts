@@ -38,7 +38,6 @@ export default class Parseall extends Command {
       const final = search.map(async (a) => {
         const result = await parsed[search.findIndex((acc) => acc === a)];
         if (result.status === 'rejected') {
-          this.client.signale.info(result.reason);
           if (result.reason.message.includes('no such file or directory') || result.reason.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
           if (result.reason.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} **${a.username}** Invalid certificate`;
           throw result.reason;
@@ -55,11 +54,11 @@ export default class Parseall extends Command {
           precise.push([t, measurements[index]]);
         });
         const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
-        this.client.signale.info(time);
 
         if (notAfter < new Date()) return `${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`;
         return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
       });
+      this.client.signale.info(final);
 
       if (final.join('\n').length < 2048) embed.setDescription(final.join('\n'));
       else {
