@@ -31,7 +31,7 @@ export default class Eval extends Command {
       }
       if (args[0] === '-a' || args[0] === '-async') {
         args.shift();
-        evalString = `(async () => { ${args.join(' ').trim()} })()`;
+        evalString = `const top = this; (async () => { ${args.join(' ').trim()} })()`;
       }
 
       try {

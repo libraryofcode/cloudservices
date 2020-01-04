@@ -25,13 +25,12 @@ export default class Parseall extends Command {
       embed.setFooter(`Requested by ${message.member.username}#${message.member.discriminator}`, message.member.avatarURL);
       embed.setTimestamp();
       const search = await this.client.db.Account.find();
-      const accounts = search;
       const final: string[] = [];
 
-      accounts.forEach(async (a) => {
+      for (const a of search) {
         try {
           const certFile = readdirSync(`${a.homepath}/Validation`)[0];
-          const { notAfter } = await parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`);
+          const { notAfter } = await parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`); // eslint-disable-line
           // @ts-ignore
           const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
           const precise: [number, string][] = [];
@@ -51,7 +50,7 @@ export default class Parseall extends Command {
           if (error.message.includes('panic: Certificate PEM Encode == nil')) final.push(`${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`);
           else throw error;
         }
-      });
+      }
 
       if (final.join('\n').length < 2048) embed.setDescription(final.join('\n'));
       else {
