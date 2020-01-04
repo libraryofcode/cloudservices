@@ -48,7 +48,6 @@ export default class Parseall extends Command {
           throw result.reason;
         }
         const { notAfter } = result.value;
-        this.client.signale.info(notAfter);
         // @ts-ignore
         const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
         const precise: [number, string][] = [];
@@ -60,6 +59,7 @@ export default class Parseall extends Command {
           precise.push([t, measurements[index]]);
         });
         const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
+        this.client.signale.info(time);
 
         if (notAfter < new Date()) return `${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`;
         return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
