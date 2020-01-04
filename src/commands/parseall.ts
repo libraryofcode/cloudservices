@@ -29,15 +29,11 @@ export default class Parseall extends Command {
       const files = search.map((acc) => {
         let certfile: string;
         try { certfile = readdirSync(`${acc.homepath}/Validation`)[0] } catch (error) { if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) certfile = 'not_found.crt' } // eslint-disable-line
-        this.client.signale.note('Cert directory set:');
-        this.client.signale.note(`${acc.homepath}/Validation/${certfile}`);
         return `${acc.homepath}/Validation/${certfile}`;
       });
 
       // @ts-ignore
       const parsed: ({ status: 'fulfilled', value: Certificate } | { status: 'rejected', reason: Error })[] = await Promise.allSettled(files.map((c) => parseCertificate(this.client, c)));
-      this.client.signale.note('Promise settled:');
-      this.client.signale.note(parsed);
 
       const final = search.map(async (a) => {
         const result = await parsed[search.findIndex((acc) => acc === a)];
