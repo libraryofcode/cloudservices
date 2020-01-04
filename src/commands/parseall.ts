@@ -37,9 +37,9 @@ export default class Parseall extends Command {
         return parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`);
       });
 
-      const parsed = await Promise.all(certificates);
-      const final = search.map((a) => {
+      const final = search.map(async (a) => {
         try {
+          const parsed = await Promise.all(certificates);
           const { notAfter } = parsed[search.findIndex((acc) => acc === a)];
           // @ts-ignore
           const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
