@@ -35,19 +35,20 @@ export default class Parseall extends Command {
       });
 
       // @ts-ignore
-      const parsed = await Promise.allSettled(files.map((c) => parseCertificate(this.client, c)));
+      const parsed: ({ status: 'fulfilled', value: Certificate } | { status: 'rejected', reason: Error })[] = await Promise.allSettled(files.map((c) => parseCertificate(this.client, c)));
       this.client.signale.note('Promise settled:');
       this.client.signale.note(parsed);
 
       const final = search.map(async (a) => {
         const result = await parsed[search.findIndex((acc) => acc === a)];
-        this.client.signale.note(result);
         if (result.status === 'rejected') {
+          this.client.signale.info(result.reason);
           if (result.reason.message.includes('no such file or directory') || result.reason.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
           if (result.reason.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} **${a.username}** Invalid certificate`;
           throw result.reason;
         }
         const { notAfter } = result.value;
+        this.client.signale.info(notAfter);
         // @ts-ignore
         const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
         const precise: [number, string][] = [];
