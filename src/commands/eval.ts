@@ -47,19 +47,20 @@ export default class Eval extends Command {
       this.client.signale.note('Main');
       this.client.signale.note(args);
       try {
+        this.client.signale.note(evalString);
         evaled = await eval(evalString);
         this.client.signale.note('evaluated with success');
         this.client.signale.note(evaled);
         this.client.signale.note(typeof evaled);
+        if (evaled === undefined) {
+          this.client.signale.note('Eval undefined');
+          evaled = 'undefined';
+        }
         if (typeof evaled !== 'string') {
           this.client.signale.note('Eval returned not a string. Depth setting:');
           this.client.signale.note(depth);
           evaled = inspect(evaled, { depth });
           this.client.signale.note('Inspected');
-        }
-        if (evaled === undefined) {
-          this.client.signale.note('Eval undefined');
-          evaled = 'undefined';
         }
       } catch (error) {
         this.client.signale.note('Error caught');
