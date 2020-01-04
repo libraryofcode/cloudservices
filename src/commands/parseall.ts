@@ -25,12 +25,22 @@ export default class Parseall extends Command {
       embed.setFooter(`Requested by ${message.member.username}#${message.member.discriminator}`, message.member.avatarURL);
       embed.setTimestamp();
       const search = await this.client.db.Account.find();
-      const final: string[] = [];
 
-      for (const a of search) {
+      const certificates = search.map((a) => {
+        let certFile: string;
         try {
-          const certFile = readdirSync(`${a.homepath}/Validation`)[0];
-          const { notAfter } = await parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`); // eslint-disable-line
+          certFile = readdirSync(`${a.homepath}/Validation`)[0]; // eslint-disable-line
+        } catch (error) {
+          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) certFile = 'not_found.crt';
+          else throw error;
+        }
+        return parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`);
+      });
+
+      const parsed = await Promise.all(certificates);
+      const final = search.map((a) => {
+        try {
+          const { notAfter } = parsed[search.findIndex((acc) => acc === a)];
           // @ts-ignore
           const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
           const precise: [number, string][] = [];
@@ -43,14 +53,14 @@ export default class Parseall extends Command {
           });
           const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
 
-          if (notAfter < new Date()) final.push(`${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`);
-          else final.push(`${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`);
+          if (notAfter < new Date()) return `${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`;
+          return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
         } catch (error) {
-          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) final.push(`${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`);
-          else if (error.message.includes('panic: Certificate PEM Encode == nil')) final.push(`${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`);
-          else throw error;
+          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
+          if (error.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`;
+          throw error;
         }
-      }
+      });
 
       if (final.join('\n').length < 2048) embed.setDescription(final.join('\n'));
       else {
