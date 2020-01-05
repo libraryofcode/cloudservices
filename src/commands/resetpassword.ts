@@ -23,7 +23,7 @@ export default class ResetPassword extends Command {
 
       const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Resetting password for ${account.username}...***`);
       const tempPass = this.client.util.randomPassword();
-      await this.client.util.exec(`echo '${account.username}:${tempPass}' | chpasswd`);
+      await this.client.util.exec(`echo '${account.username}:${tempPass}' | chpasswd && chage -d0 ${account.username}`);
 
       let completeMessage = `${this.client.stores.emojis.success} ***Password for ${account.username} reset to \`${tempPass}\`***`;
       const dmChannel = await this.client.getDMChannel(account.userID);
