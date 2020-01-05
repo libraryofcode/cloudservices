@@ -3,7 +3,6 @@ import moment from 'moment';
 import x509 from '@ghaiklor/x509';
 import { createPaginationEmbed } from 'eris-pagination';
 import { Message } from 'eris';
-import { promisify } from 'util';
 import { Command, RichEmbed } from '../class';
 import { Client } from '..';
 
@@ -21,7 +20,17 @@ export default class CWG_Data extends Command {
     try {
       if (!args[0]) return this.client.commands.get('help').run(message, ['cwg', this.name]);
       const dom = await this.client.db.Domain.find({ $or: [{ domain: args[0] }, { port: Number(args[0]) || '' }] });
-      if (!dom.length) return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
+      if (!dom.length) {
+        if (!Number.isNaN(Number(args[0]))) {
+          try {
+            await this.client.util.exec(`fuser ${args[0]}/tcp`);
+            return message.channel.createMessage(`***${this.client.stores.emojis.error} The port you provided is being used by a system process.***`);
+          } catch (error) {
+            return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
+          }
+        }
+        return message.channel.createMessage(`***${this.client.stores.emojis.error} The domain or port you provided could not be found.***`);
+      }
       const embeds = dom.map((domain) => {
         const cert = fs.readFileSync(domain.x509.cert, { encoding: 'utf8' });
         const embed = new RichEmbed();
