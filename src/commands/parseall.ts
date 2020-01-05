@@ -4,7 +4,7 @@ import { readdirSync } from 'fs';
 import moment from 'moment';
 import { Client } from '..';
 import { Command, RichEmbed } from '../class';
-import { parseCertificate } from '../functions';
+import { parseCertificate, Certificate } from '../functions';
 
 export default class Parseall extends Command {
   constructor(client: Client) {
@@ -19,6 +19,7 @@ export default class Parseall extends Command {
 
   public async run(message: Message, args: string[]) {
     try {
+      const msg = await message.channel.createMessage(`${this.client.stores.emojis.loading} ***Loading...***`);
       const embed = new RichEmbed();
       embed.setTitle('Certificate Validation');
       embed.setAuthor(this.client.user.username, this.client.user.avatarURL);
@@ -26,41 +27,38 @@ export default class Parseall extends Command {
       embed.setTimestamp();
       const search = await this.client.db.Account.find();
 
-      const certificates = search.map((a) => {
-        let certFile: string;
-        try {
-          certFile = readdirSync(`${a.homepath}/Validation`)[0]; // eslint-disable-line
-        } catch (error) {
-          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) certFile = 'not_found.crt';
-          else throw error;
-        }
-        return parseCertificate(this.client, `${a.homepath}/Validation/${certFile}`);
+      const files = search.map((acc) => {
+        let certfile: string;
+        try { certfile = readdirSync(`${acc.homepath}/Validation`)[0] } catch (error) { if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) certfile = 'not_found.crt' } // eslint-disable-line
+        return `${acc.homepath}/Validation/${certfile}`;
       });
 
-      const parsed = await Promise.all(certificates);
-      const final = search.map((a) => {
-        try {
-          const { notAfter } = parsed[search.findIndex((acc) => acc === a)];
-          // @ts-ignore
-          const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
-          const precise: [number, string][] = [];
-          // @ts-ignore
-          const timeArray: number[] = Object.values(timeObject).filter((v) => typeof v === 'number');
+      // @ts-ignore
+      const parsed: ({ status: 'fulfilled', value: Certificate } | { status: 'rejected', reason: Error })[] = await Promise.allSettled(files.map((c) => parseCertificate(this.client, c)));
+
+      const final: string[] = await Promise.all(search.map(async (a) => {
+        const result = parsed[search.findIndex((acc) => acc === a)];
+        if (result.status === 'rejected') {
+          if (result.reason.message.includes('no such file or directory') || result.reason.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
+          if (result.reason.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} **${a.username}** Invalid certificate`;
+          throw result.reason;
+        }
+        const { notAfter } = result.value;
+        // @ts-ignore
+        const timeObject: {years: number, months: number, days: number, hours: number, minutes: number, seconds: number, firstDateWasLater: boolean} = moment.preciseDiff(new Date(), notAfter, true);
+        const precise: [number, string][] = [];
+        // @ts-ignore
+        const timeArray: number[] = Object.values(timeObject).filter((v) => typeof v === 'number');
           timeArray.forEach((t) => { // eslint-disable-line
-            const index = timeArray.indexOf(t);
-            const measurements = ['yr', 'mo', 'd', 'h', 'm', 's'];
-            precise.push([t, measurements[index]]);
-          });
-          const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
+          const index = timeArray.indexOf(t);
+          const measurements = ['yr', 'mo', 'd', 'h', 'm', 's'];
+          precise.push([t, measurements[index]]);
+        });
+        const time = precise.filter((n) => n[0]).map(((v) => v.join(''))).join(', ');
 
-          if (notAfter < new Date()) return `${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`;
-          return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
-        } catch (error) {
-          if (error.message.includes('no such file or directory') || error.message.includes('File doesn\'t exist.')) return `${this.client.stores.emojis.error} **${a.username}** Unable to locate certificate`;
-          if (error.message.includes('panic: Certificate PEM Encode == nil')) return `${this.client.stores.emojis.error} ** ${a.username}** Invalid certificate`;
-          throw error;
-        }
-      });
+        if (notAfter < new Date()) return `${this.client.stores.emojis.error} **${a.username}** Expired ${time} ago`;
+        return `${this.client.stores.emojis.success} **${a.username}** Expires in ${time}`;
+      }));
 
       if (final.join('\n').length < 2048) embed.setDescription(final.join('\n'));
       else {
@@ -69,7 +67,7 @@ export default class Parseall extends Command {
       }
 
       // @ts-ignore
-      return await message.channel.createMessage({ embed });
+      return await msg.edit({ content: '', embed });
     } catch (error) {
       return this.client.util.handleError(error, message, this);
     }
