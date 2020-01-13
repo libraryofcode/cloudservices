@@ -95,11 +95,14 @@ func handler(status* bool) {
 func checkAccountSizeAndUpdate(username string, id string) {
 	var size float64 = 0
 	var userHomeDirectory string = strings.Replace(strings.Join([]string{"/home/", string(username)}, ""), "\"", "", -1)
-	fmt.Println(userHomeDirectory)
 	sizeHome := DirSize(&userHomeDirectory)
 	size += sizeHome
 	sizeMail := DirSize(&userHomeDirectory)
 	size += sizeMail
-	RedisClient.Set("storage"+"-"+string(id), size, 0)
+	status := RedisClient.Set("storage"+"-"+string(username), size, 0)
+	fmt.Println(status.Name())
+	if status.Err() != nil {
+		fmt.Println(status.Err())
+	}
 	fmt.Printf("Set Call | Username: %v, ID: %v | Bytes: %f\n", string(username), string(id), size)
 }
